@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Report - AyurAI Veda™</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .report-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .report-header {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--dark-blue), var(--saffron));
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        .report-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid var(--saffron);
+        }
+        .report-section h3 {
+            color: var(--dark-blue);
+            margin-bottom: 1rem;
+        }
+        .dosha-bar {
+            display: flex;
+            align-items: center;
+            margin: 1rem 0;
+            gap: 1rem;
+        }
+        .dosha-label {
+            width: 100px;
+            font-weight: bold;
+        }
+        .dosha-progress {
+            flex: 1;
+            height: 25px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+        .dosha-fill {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .vata-fill { background: #9C27B0; }
+        .pitta-fill { background: #FF5722; }
+        .kapha-fill { background: #4CAF50; }
+        .recommendation-item {
+            background: white;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 5px;
+            border-left: 3px solid var(--green);
+        }
+        .disease-item {
+            background: #fff3e0;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            border-radius: 5px;
+            border-left: 3px solid #ff9800;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .info-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 5px;
+        }
+        .info-item strong {
+            color: var(--dark-blue);
+        }
+        .risk-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            color: white;
+        }
+        .risk-high { background: #d32f2f; }
+        .risk-moderate { background: #f57c00; }
+        .risk-low { background: #388e3c; }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <div class="top-bar-left">
+                <span>🕉️ Indian Knowledge Systems</span>
+                <span>|</span>
+                <span>Ayurveda + AI</span>
+            </div>
+            <div class="top-bar-right">
+            </div>
+        </div>
+    </div>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>AyurAI Veda™</h1>
+                <p>Powered by Tridosha Intelligence Engine™</p>
+            </div>
+            <div class="badge">IKS + AI Powered</div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About Ayurveda</a></li>
+                <li><a href="/assessment">AI Health Assessment</a></li>
+                <li><a href="/chatbot">AyurVaani™ Chat</a></li>
+                <li><a href="/profile">👤 Profile</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="report-container">
+        <div class="report-header">
+            <h1>🌿 Health Assessment Report</h1>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem;">Report ID: AV-{{ '%06d'|format(assessment.id) }}</p>
+            <p style="font-size: 0.9rem;">Date: {{ assessment.created_at }}</p>
+        </div>
+
+        {% if assessment.patient_name %}
+        <div class="report-section">
+            <h3>👤 Patient Information</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <strong>Name:</strong> {{ assessment.patient_name }}
+                </div>
+                {% if assessment.patient_phone %}
+                <div class="info-item">
+                    <strong>Phone:</strong> {{ assessment.patient_phone }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="report-section">
+            <h3>📊 Clinical Summary</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <strong>Dominant Dosha:</strong><br>
+                    <span style="color: var(--saffron); font-size: 1.3rem; font-weight: bold;">{{ assessment.result_data.dominant }}</span>
+                </div>
+                <div class="info-item">
+                    <strong>Risk Level:</strong><br>
+                    <span class="risk-badge risk-{{ assessment.result_data.risk|lower }}">{{ assessment.result_data.risk }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="report-section">
+            <h3>🔬 Dosha Analysis</h3>
+            <div class="dosha-bar">
+                <div class="dosha-label">Vata</div>
+                <div class="dosha-progress">
+                    <div class="dosha-fill vata-fill" style="width: {{ assessment.result_data.scores.vata }}%">
+                        {{ assessment.result_data.scores.vata }}%
+                    </div>
+                </div>
+            </div>
+            <div class="dosha-bar">
+                <div class="dosha-label">Pitta</div>
+                <div class="dosha-progress">
+                    <div class="dosha-fill pitta-fill" style="width: {{ assessment.result_data.scores.pitta }}%">
+                        {{ assessment.result_data.scores.pitta }}%
+                    </div>
+                </div>
+            </div>
+            <div class="dosha-bar">
+                <div class="dosha-label">Kapha</div>
+                <div class="dosha-progress">
+                    <div class="dosha-fill kapha-fill" style="width: {{ assessment.result_data.scores.kapha }}%">
+                        {{ assessment.result_data.scores.kapha }}%
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if assessment.result_data.disease_prediction %}
+        <div class="report-section">
+            <h3>⚠️ AI Disease Risk Predictions</h3>
+            <p style="margin-bottom: 1rem; color: #666;">Based on your dosha imbalance pattern, the AI has identified potential health risks:</p>
+            {% for disease in assessment.result_data.disease_prediction.diseases[:5] %}
+            <div class="disease-item">
+                🔸 {{ disease }}
+            </div>
+            {% endfor %}
+            {% if assessment.result_data.disease_prediction.risk_factors %}
+            <p style="margin-top: 1.5rem; font-weight: bold; color: var(--dark-blue);">Risk Factors:</p>
+            {% for risk in assessment.result_data.disease_prediction.risk_factors[:3] %}
+            <div style="margin: 0.5rem 0; padding-left: 1rem;">
+                • {{ risk }}
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="report-section">
+            <h3>💡 Clinical Recommendations</h3>
+            {% for rec in assessment.result_data.recommendations %}
+            <div class="recommendation-item">
+                <strong>{{ loop.index }}.</strong> {{ rec }}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="action-buttons">
+            <a href="/profile" class="btn" style="text-decoration: none;">← Back to Profile</a>
+            <a href="/download-assessment-report/{{ assessment.id }}" class="btn" style="text-decoration: none; background: var(--green);">📥 Download PDF</a>
+            <a href="/assessment" class="btn" style="text-decoration: none; background: var(--saffron);">🔄 New Assessment</a>
+        </div>
+
+        <div style="background: #fff3cd; padding: 1rem; border-radius: 5px; margin-top: 2rem; border-left: 4px solid #ffc107;">
+            <strong>⚠️ Important Disclaimer:</strong> This report provides educational and preventive health insights only. It is NOT a medical diagnosis. Always consult qualified healthcare professionals for medical advice.
+        </div>
+    </div>
+
+    <footer>
+        <p><strong>AyurAI Veda™</strong> | Reviving Indian Knowledge Systems through Artificial Intelligence</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Powered by Tridosha Intelligence Engine™</p>
+    </footer>
+    <script src="{{ url_for('static', filename='js/security.js') }}"></script>
+</body>
+</html>

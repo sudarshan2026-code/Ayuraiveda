@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classical Ayurveda Knowledge Intelligence System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .mode-selector {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px var(--shadow);
+            border: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+        }
+        .mode-selector h4 {
+            color: var(--navy);
+            margin-bottom: 1rem;
+        }
+        .mode-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .mode-option {
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        .mode-option:hover {
+            border-color: var(--saffron);
+            background: #FFF8F0;
+        }
+        .mode-option.active {
+            border-color: var(--navy);
+            background: linear-gradient(135deg, #E6F3FF, #FFFFFF);
+        }
+        .mode-option input[type="radio"] {
+            margin-right: 0.5rem;
+        }
+        .mode-description {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+        .citation-box {
+            background: #FFF3CD;
+            border-left: 4px solid #FFC107;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <div class="top-bar-left">
+                <span>🕉️ Indian Knowledge Systems</span>
+                <span>|</span>
+                <span>Ayurveda + AI</span>
+            </div>
+            <div class="top-bar-right">
+            </div>
+        </div>
+    </div>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>AyurAI Veda™</h1>
+                <p>Powered by Tridosha Intelligence Engine™</p>
+            </div>
+            <div class="badge">IKS + AI Powered</div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About Ayurveda</a></li>
+                <li><a href="/assessment">AI Health Assessment</a></li>
+                <li><a href="/chatbot">AyurVaani™ Chat</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="section" style="text-align: center; background: linear-gradient(135deg, #FFF8F0, #F0F8FF); border-top: 4px solid var(--navy);">
+            <h2 style="color: var(--navy); margin-bottom: 0.5rem;">📚 Classical Ayurveda Knowledge Intelligence System</h2>
+            <p style="color: #666;">RAG-Powered AI trained on authentic Ayurvedic texts</p>
+        </div>
+
+        <div class="mode-selector">
+            <h4>🎯 Select Knowledge Mode</h4>
+            <div class="mode-options">
+                <label class="mode-option active" id="mode-charaka">
+                    <input type="radio" name="mode" value="charaka" checked>
+                    <strong>Charaka Mode</strong>
+                    <div class="mode-description">Internal medicine, dosha theory, diagnosis & treatment</div>
+                </label>
+                <label class="mode-option" id="mode-sushruta">
+                    <input type="radio" name="mode" value="sushruta">
+                    <strong>Sushruta Mode</strong>
+                    <div class="mode-description">Surgery, anatomy, marma science & instruments</div>
+                </label>
+                <label class="mode-option" id="mode-ashtanga">
+                    <input type="radio" name="mode" value="ashtanga">
+                    <strong>Ashtanga Mode</strong>
+                    <div class="mode-description">Balanced theory & practical formulations</div>
+                </label>
+                <label class="mode-option" id="mode-modern">
+                    <input type="radio" name="mode" value="modern">
+                    <strong>Modern Ayurveda</strong>
+                    <div class="mode-description">Contemporary interpretation & clinical application</div>
+                </label>
+            </div>
+        </div>
+
+        <div class="chat-container">
+            <div class="chat-header">
+                <h2>📖 Classical Text Query System</h2>
+                <p>Ask questions based on authentic Ayurvedic encyclopedia</p>
+                <p style="font-size: 0.75rem; margin-top: 0.25rem; opacity: 0.9;">Powered by RAG + Groq LLM</p>
+            </div>
+            
+            <div class="chat-disclaimer">
+                ⚠️ <strong>Source-Based Answers:</strong> All responses are strictly grounded in the provided Ayurvedic text. If information is not found, the system will indicate so.
+            </div>
+
+            <div class="chat-messages" id="ragChatMessages">
+                <div class="message bot">
+                    <div class="message-avatar">📚</div>
+                    <div class="message-content">
+                        Namaste! I'm your Classical Ayurveda Knowledge Assistant. I answer questions strictly based on authentic Ayurvedic texts. Select a knowledge mode above and ask your question!
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-area">
+                <form class="chat-input-form" id="ragChatForm">
+                    <input type="text" class="chat-input" id="ragUserInput" placeholder="Ask about classical Ayurveda..." autocomplete="off" required>
+                    <button type="submit" class="chat-send-btn">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p><strong>Classical Ayurveda Knowledge Intelligence System</strong> | RAG-Powered AI</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Retrieval-Augmented Generation with Authentic Texts</p>
+    </footer>
+
+    <script>
+        const chatMessages = document.getElementById('ragChatMessages');
+        const chatForm = document.getElementById('ragChatForm');
+        const userInput = document.getElementById('ragUserInput');
+        const modeOptions = document.querySelectorAll('.mode-option');
+
+        // Mode selection
+        modeOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                modeOptions.forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
+                this.querySelector('input[type="radio"]').checked = true;
+            });
+        });
+
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            const selectedMode = document.querySelector('input[name="mode"]:checked').value;
+
+            addMessage(message, 'user');
+            userInput.value = '';
+
+            // Show loading
+            const loadingId = addMessage('Searching classical texts...', 'bot', true);
+
+            try {
+                const response = await fetch('/rag-chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        message: message,
+                        mode: selectedMode
+                    })
+                });
+                const data = await response.json();
+                
+                // Remove loading message
+                document.getElementById(loadingId).remove();
+                
+                // Add response with citations
+                addMessage(data.response, 'bot', false, data.citations);
+            } catch (error) {
+                document.getElementById(loadingId).remove();
+                addMessage('Sorry, I encountered an error. Please try again.', 'bot');
+            }
+        });
+
+        function addMessage(text, sender, isLoading = false, citations = null) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            const messageId = 'msg-' + Date.now();
+            messageDiv.id = messageId;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = sender === 'bot' ? '📚' : '👤';
+            
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            content.textContent = text;
+            
+            if (citations && citations.length > 0) {
+                const citationBox = document.createElement('div');
+                citationBox.className = 'citation-box';
+                citationBox.innerHTML = '<strong>📖 Citations:</strong><br>' + citations.join('<br>');
+                content.appendChild(citationBox);
+            }
+            
+            if (sender === 'user') {
+                messageDiv.appendChild(content);
+                messageDiv.appendChild(avatar);
+            } else {
+                messageDiv.appendChild(avatar);
+                messageDiv.appendChild(content);
+            }
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            return messageId;
+        }
+    </script>
+</body>
+</html>

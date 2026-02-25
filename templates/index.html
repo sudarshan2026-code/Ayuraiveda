@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AyurAI Veda™ - Ancient Wisdom. Intelligent Health.</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <div class="top-bar-left">
+                <span>🕉️ Indian Knowledge Systems</span>
+                <span>|</span>
+                <span>Ayurveda + AI</span>
+            </div>
+            <div class="top-bar-right">
+            </div>
+        </div>
+    </div>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>AyurAI Veda™</h1>
+                <p>Powered by Tridosha Intelligence Engine™</p>
+            </div>
+            <div class="badge">IKS + AI Powered</div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About Ayurveda</a></li>
+                <li><a href="/assessment">AI Health Assessment</a></li>
+                <li><a href="/chatbot">AyurVaani™ Chat</a></li>
+                <li><a href="/contact">Contact</a></li>
+                {% if session.user_id %}
+                <li><a href="/profile">👤 {{ session.user_name }}</a></li>
+                <li><a href="/logout">Logout</a></li>
+                {% else %}
+                <li><a href="/login">🔐 Login</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="hero">
+            <h2>Ancient Wisdom. Intelligent Health.</h2>
+            <p>Experience the fusion of 5000-year-old Ayurvedic wisdom with cutting-edge Artificial Intelligence. Our Tridosha Intelligence Engine™ analyzes your health patterns to provide personalized preventive guidance.</p>
+            <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="/assessment" class="btn" style="text-decoration: none;">🔬 Start Health Assessment</a>
+                <a href="/chatbot" class="btn" style="text-decoration: none; background: linear-gradient(135deg, var(--green), var(--navy));">💬 Chat with AyurVaani™</a>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+            <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px var(--shadow); border: 1px solid var(--border); border-top: 4px solid #9C27B0; text-align: center;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🌬️</div>
+                <h3 style="color: #9C27B0; margin-bottom: 0.5rem;">Vata Dosha</h3>
+                <p style="color: #666; font-size: 0.95rem;">Air + Space | Movement, Creativity, Nervous System</p>
+            </div>
+            <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px var(--shadow); border: 1px solid var(--border); border-top: 4px solid #FF5722; text-align: center;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🔥</div>
+                <h3 style="color: #FF5722; margin-bottom: 0.5rem;">Pitta Dosha</h3>
+                <p style="color: #666; font-size: 0.95rem;">Fire + Water | Metabolism, Digestion, Transformation</p>
+            </div>
+            <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px var(--shadow); border: 1px solid var(--border); border-top: 4px solid #4CAF50; text-align: center;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🌊</div>
+                <h3 style="color: #4CAF50; margin-bottom: 0.5rem;">Kapha Dosha</h3>
+                <p style="color: #666; font-size: 0.95rem;">Water + Earth | Structure, Stability, Immunity</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🧠 What is AyurAI Veda™?</h3>
+            <p>AyurAI Veda™ is an AI-powered health prediction system rooted in Indian Knowledge Systems (IKS), specifically Ayurveda. Using the Tridosha Intelligence Engine™, we analyze your lifestyle patterns to identify potential health imbalances in Vata, Pitta, and Kapha doshas.</p>
+            <p style="margin-top: 1rem;"><strong>Purpose:</strong> Educational and preventive health insights for students, researchers, and wellness enthusiasts.</p>
+        </div>
+
+        <div class="section">
+            <h3>🤖 NEW: AyurVaani™ AI Chatbot</h3>
+            <div style="background: linear-gradient(135deg, #FFF8F0, #F0F8FF); padding: 2rem; border-radius: 8px; border-left: 4px solid var(--saffron);">
+                <h4 style="color: var(--navy); margin-bottom: 1rem; font-size: 1.3rem;">💬 Conversational Ayurveda, Rooted in Ancient Wisdom</h4>
+                <p style="margin-bottom: 1rem;">Introducing <strong>AyurVaani™</strong> - Your personal Ayurveda knowledge assistant powered by Tridosha Intelligence Engine™. Get instant answers to your Ayurveda questions!</p>
+                <ul style="list-style: none; padding: 0; margin-bottom: 1.5rem;">
+                    <li style="padding: 0.5rem 0;">✓ Comprehensive Ayurveda knowledge base</li>
+                    <li style="padding: 0.5rem 0;">✓ Instant answers on Doshas, diet, yoga, and lifestyle</li>
+                    <li style="padding: 0.5rem 0;">✓ Rule-validated responses (no misinformation)</li>
+                    <li style="padding: 0.5rem 0;">✓ Educational and preventive guidance</li>
+                    <li style="padding: 0.5rem 0;">✓ Available 24/7, completely free</li>
+                </ul>
+                <a href="/chatbot" class="btn" style="display: inline-block; text-decoration: none;">🚀 Chat with AyurVaani™ Now →</a>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🔬 How It Works</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 1.5rem;">
+                <div style="text-align: center;">
+                    <h4 style="color: #FF9933; margin-bottom: 0.5rem;">1. Input</h4>
+                    <p>Answer questions about your lifestyle, diet, sleep, and stress patterns</p>
+                </div>
+                <div style="text-align: center;">
+                    <h4 style="color: #FF9933; margin-bottom: 0.5rem;">2. AI Analysis</h4>
+                    <p>Tridosha Intelligence Engine™ processes your data using Ayurvedic principles</p>
+                </div>
+                <div style="text-align: center;">
+                    <h4 style="color: #FF9933; margin-bottom: 0.5rem;">3. Insights</h4>
+                    <p>Receive personalized preventive recommendations for diet, yoga, and lifestyle</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>💬 Ask AyurVaani™ Chatbot</h3>
+            <div style="background: linear-gradient(135deg, #FFF8F0, #F0F8FF); padding: 2rem; border-radius: 8px; border-left: 4px solid var(--green); text-align: center;">
+                <p style="font-size: 1.1rem; margin-bottom: 1.5rem;">Have questions about Ayurveda? Chat with our AI assistant powered by Groq LLM for instant, detailed answers!</p>
+                <a href="/chatbot" class="btn" style="display: inline-block; text-decoration: none;">💬 Chat with AyurVaani™ →</a>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>✨ Key Features</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+                <div style="background: linear-gradient(135deg, #FFF8F0, #FFFFFF); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--saffron);">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🧠</div>
+                    <h4 style="color: var(--navy); margin-bottom: 0.5rem;">AI-Powered Analysis</h4>
+                    <p style="font-size: 0.9rem; color: #666;">Advanced Tridosha Intelligence Engine for accurate health assessment</p>
+                </div>
+                <div style="background: linear-gradient(135deg, #F0F8FF, #FFFFFF); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--green);">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">💬</div>
+                    <h4 style="color: var(--navy); margin-bottom: 0.5rem;">AyurVaani™ Chatbot</h4>
+                    <p style="font-size: 0.9rem; color: #666;">24/7 AI assistant with comprehensive Ayurvedic knowledge base</p>
+                </div>
+                <div style="background: linear-gradient(135deg, #FFF0F5, #FFFFFF); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--navy);">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">📊</div>
+                    <h4 style="color: var(--navy); margin-bottom: 0.5rem;">Personalized Reports</h4>
+                    <p style="font-size: 0.9rem; color: #666;">Detailed recommendations with downloadable PDF reports</p>
+                </div>
+                <div style="background: linear-gradient(135deg, #F0FFF0, #FFFFFF); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--saffron);">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔒</div>
+                    <h4 style="color: var(--navy); margin-bottom: 0.5rem;">Privacy First</h4>
+                    <p style="font-size: 0.9rem; color: #666;">No data storage, completely secure and confidential</p>
+                </div>
+                <div style="background: linear-gradient(135deg, #FFFACD, #FFFFFF); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--green);">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🌿</div>
+                    <h4 style="color: var(--navy); margin-bottom: 0.5rem;">Holistic Guidance</h4>
+                    <p style="font-size: 0.9rem; color: #666;">Diet, yoga, pranayama, and lifestyle recommendations</p>
+                </div>
+                <div style="background: linear-gradient(135deg, #E6F3FF, #FFFFFF); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--navy);">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎓</div>
+                    <h4 style="color: var(--navy); margin-bottom: 0.5rem;">Educational Focus</h4>
+                    <p style="font-size: 0.9rem; color: #666;">Learn authentic Ayurvedic principles and IKS integration</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <strong>⚠️ Important Disclaimer:</strong> This system provides educational and preventive insights only. It is NOT a medical diagnosis platform. Always consult qualified healthcare professionals for medical advice.
+        </div>
+
+        <div style="text-align: center; margin: 2rem 0;">
+            <a href="/assessment" class="btn">Start Your AI Health Assessment →</a>
+        </div>
+    </div>
+
+    <footer>
+        <p><strong>AyurAI Veda™</strong> | Reviving Indian Knowledge Systems through Artificial Intelligence</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Powered by Tridosha Intelligence Engine™</p>
+    </footer>
+    
+    <script src="{{ url_for('static', filename='js/security.js') }}"></script>
+</body>
+</html>
