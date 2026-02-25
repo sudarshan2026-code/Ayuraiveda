@@ -881,6 +881,3 @@ What would you like to know about Ayurveda today?"""
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-# Vercel serverless function handler
-app = app
