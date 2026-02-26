@@ -32,16 +32,21 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# Try to use ML-enhanced engine, fallback to basic
+# Try to use advanced engine, fallback to ML, then basic
 try:
-    from ml_assessment_engine import MLTridoshaEngine
-    tie = MLTridoshaEngine()
-    tie.load_model()
-    print("Using ML-enhanced assessment engine")
+    from advanced_ai_engine import AdvancedTridoshaEngine
+    tie = AdvancedTridoshaEngine()
+    print("✓ Using Advanced Tridosha Engine (Ayurvedic Logic)")
 except:
-    from ai_engine import TridoshaIntelligenceEngine
-    tie = TridoshaIntelligenceEngine()
-    print("Using basic assessment engine")
+    try:
+        from ml_assessment_engine import MLTridoshaEngine
+        tie = MLTridoshaEngine()
+        tie.load_model()
+        print("✓ Using ML-enhanced assessment engine")
+    except:
+        from ai_engine import TridoshaIntelligenceEngine
+        tie = TridoshaIntelligenceEngine()
+        print("✓ Using basic assessment engine")
 
 # Load disease predictor
 from disease_predictor import DiseasePredictor
