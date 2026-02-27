@@ -322,7 +322,8 @@
             </div>
 
             <div style="text-align: center; margin-top: 2rem;">
-                <button class="btn" onclick="location.reload()">🔄 New Assessment</button>
+                <button class="btn" onclick="downloadClinicalReport()">📥 Download PDF Report</button>
+                <button class="btn" onclick="location.reload()" style="background: #666; margin-left: 1rem;">🔄 New Assessment</button>
             </div>
         </div>
     </div>
@@ -401,6 +402,9 @@
             });
             
             function displayResults(result) {
+                // Store result globally
+                window.clinicalResult = result;
+                
                 // Update text fields
                 setText('dominant', result.dominant || 'N/A');
                 setText('dosha-state', result.dosha_state || 'N/A');
@@ -463,7 +467,37 @@
                 }
             }
             
+            // Store result globally for PDF download
+            window.clinicalResult = null;
+            
         })();
+        
+        function downloadClinicalReport() {
+            if (!window.clinicalResult) {
+                alert('No assessment data available');
+                return;
+            }
+            
+            fetch('/download-report', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(window.clinicalResult)
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'AyurAI_Clinical_Report.pdf';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            })
+            .catch(error => {
+                console.error('Download error:', error);
+                alert('Error downloading report');
+            });
+        }
     </script>
 </body>
 </html>

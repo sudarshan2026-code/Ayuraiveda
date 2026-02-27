@@ -695,17 +695,18 @@ def chat():
         if not message:
             return jsonify({'response': 'Please enter a message.'})
         
-        # Try ML chatbot first
+        # Try ML chatbot first (trained model)
         try:
             from ml_chatbot import AyurvedaMLChatbot
             ml_bot = AyurvedaMLChatbot()
             
             if ml_bot.load_model():
                 response = ml_bot.get_response(message)
-                response = refine_text(response)
-                return jsonify({'response': response})
-        except:
-            pass
+                if response and len(response) > 50:
+                    response = refine_text(response)
+                    return jsonify({'response': response})
+        except Exception as e:
+            print(f"ML chatbot error: {e}")
         
         # Fallback to simple knowledge base
         from simple_pdf_reader import SimplePDFKnowledge

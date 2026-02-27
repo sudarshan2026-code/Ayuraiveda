@@ -7,8 +7,15 @@ class ClinicalTridoshaEngine:
         
         # Convert numeric strings to integers
         for key in ['mala', 'mutra_frequency', 'tongue_coating', 'bloating']:
-            if key in data:
+            if key in data and isinstance(data[key], str):
                 data[key] = int(data[key]) if data[key].isdigit() else 0
+        
+        # Map text values to numeric scores
+        stress_map = {'low': 0, 'moderate': 1, 'high': 2}
+        anxiety_map = {'none': 0, 'moderate': 1, 'high': 2}
+        
+        stress_score = stress_map.get(data.get('stress', 'low'), 0)
+        anxiety_score = anxiety_map.get(data.get('anxiety', 'none'), 0)
         
         # FOUNDATION LAYER
         prakriti = self._assess_prakriti(data)
@@ -18,10 +25,10 @@ class ClinicalTridoshaEngine:
         # DIGESTIVE & ELIMINATION (Weight: 2x)
         vata += data.get('mala', 0) * 2
         vata += data.get('mutra_frequency', 0) * 1.5
-        vata += data.get('tongue_dry', 0) * 2
-        pitta += data.get('appetite_excessive', 0) * 2
-        pitta += data.get('acidity', 0) * 3
-        kapha += data.get('tongue_coating', 0) * 2
+        vata += data.get('tongue_coating', 0) if data.get('tongue_coating', 0) == 2 else 0
+        pitta += 2 if data.get('appetite') == 'excessive' else 0
+        pitta += 3 if data.get('digestion') == 'acidity' else 0
+        kapha += data.get('tongue_coating', 0) if data.get('tongue_coating', 0) >= 1 else 0
         kapha += data.get('bloating', 0) * 1.5
         
         # PHYSICAL OBSERVATION (Weight: 1x)
@@ -40,8 +47,8 @@ class ClinicalTridoshaEngine:
         pitta += 2 if data.get('sweat') == 'excessive' else 0
         
         # MENTAL & NERVOUS (Weight: 1.5x)
-        vata += data.get('stress', 0) * 1.5
-        vata += data.get('anxiety', 0) * 2
+        vata += stress_score * 1.5
+        vata += anxiety_score * 2
         vata += 3 if data.get('sleep') in ['poor', 'very_poor'] else 0
         pitta += 2 if data.get('sleep') == 'disturbed' else 0
         kapha += 2 if data.get('sleep') == 'excessive' else 0
