@@ -5,6 +5,11 @@ class ClinicalTridoshaEngine:
         # Initialize scores
         vata = pitta = kapha = 0
         
+        # Convert numeric strings to integers
+        for key in ['mala', 'mutra_frequency', 'tongue_coating', 'bloating']:
+            if key in data:
+                data[key] = int(data[key]) if data[key].isdigit() else 0
+        
         # FOUNDATION LAYER
         prakriti = self._assess_prakriti(data)
         agni_state = self._assess_agni(data)

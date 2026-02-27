@@ -333,49 +333,137 @@
     </footer>
 
     <script>
-        document.getElementById('clinicalForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            const data = Object.fromEntries(formData);
+        // Robust error handling and validation
+        (function() {
+            'use strict';
             
-            const response = await fetch('/clinical-analyze', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(data)
-            });
+            const form = document.getElementById('clinicalForm');
+            const resultsSection = document.getElementById('results');
+            const formSection = document.getElementById('assessment-form');
             
-            const result = await response.json();
-            
-            document.getElementById('dominant').textContent = result.dominant;
-            document.getElementById('dosha-state').textContent = result.dosha_state;
-            document.getElementById('agni-state').textContent = result.agni_state;
-            document.getElementById('ama-status').textContent = result.ama_status;
-            document.getElementById('risk-level').textContent = result.risk;
-            document.getElementById('justification').textContent = result.justification;
-            
-            if (result.primary_risk) {
-                document.getElementById('primary-risk').textContent = result.primary_risk;
-                document.getElementById('primary-risk-container').style.display = 'block';
+            if (!form) {
+                console.error('Form not found: clinicalForm');
+                return;
             }
             
-            document.getElementById('vata-fill').style.width = result.scores.vata + '%';
-            document.getElementById('vata-fill').textContent = result.scores.vata + '%';
-            document.getElementById('pitta-fill').style.width = result.scores.pitta + '%';
-            document.getElementById('pitta-fill').textContent = result.scores.pitta + '%';
-            document.getElementById('kapha-fill').style.width = result.scores.kapha + '%';
-            document.getElementById('kapha-fill').textContent = result.scores.kapha + '%';
-            
-            const recList = document.getElementById('recommendations-list');
-            recList.innerHTML = '';
-            result.recommendations.forEach(rec => {
-                const li = document.createElement('li');
-                li.textContent = rec;
-                recList.appendChild(li);
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                try {
+                    // Collect form data
+                    const formData = new FormData(form);
+                    const data = {};
+                    
+                    // Convert FormData to object with validation
+                    for (let [key, value] of formData.entries()) {
+                        data[key] = value;
+                    }
+                    
+                    // Validate all 20 required fields
+                    const requiredFields = [
+                        'body_structure', 'vikriti', 'appetite', 'digestion', 'mala',
+                        'mutra_frequency', 'tongue_coating', 'bloating', 'skin', 'temperature',
+                        'sweat', 'energy', 'stress', 'anxiety', 'sleep', 'mental_clarity',
+                        'exercise_tolerance', 'climate', 'food_tolerance', 'immunity'
+                    ];
+                    
+                    const missingFields = requiredFields.filter(field => !data[field]);
+                    if (missingFields.length > 0) {
+                        alert('Please fill all required fields: ' + missingFields.join(', '));
+                        return;
+                    }
+                    
+                    console.log('Submitting data:', data);
+                    
+                    // Send to backend
+                    const response = await fetch('/clinical-analyze', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Server error: ' + response.status);
+                    }
+                    
+                    const result = await response.json();
+                    console.log('Analysis result:', result);
+                    
+                    // Display results
+                    displayResults(result);
+                    
+                } catch (error) {
+                    console.error('Analysis error:', error);
+                    alert('Error analyzing data: ' + error.message);
+                }
             });
             
-            document.getElementById('assessment-form').style.display = 'none';
-            document.getElementById('results').style.display = 'block';
-        });
+            function displayResults(result) {
+                // Update text fields
+                setText('dominant', result.dominant || 'N/A');
+                setText('dosha-state', result.dosha_state || 'N/A');
+                setText('agni-state', result.agni_state || 'N/A');
+                setText('ama-status', result.ama_status || 'N/A');
+                setText('risk-level', result.risk || 'N/A');
+                setText('justification', result.justification || 'No justification provided');
+                
+                // Show/hide primary risk
+                const riskContainer = document.getElementById('primary-risk-container');
+                if (result.primary_risk) {
+                    setText('primary-risk', result.primary_risk);
+                    riskContainer.style.display = 'block';
+                } else {
+                    riskContainer.style.display = 'none';
+                }
+                
+                // Update dosha meters
+                if (result.scores) {
+                    updateMeter('vata-fill', result.scores.vata || 0);
+                    updateMeter('pitta-fill', result.scores.pitta || 0);
+                    updateMeter('kapha-fill', result.scores.kapha || 0);
+                }
+                
+                // Update recommendations
+                const recList = document.getElementById('recommendations-list');
+                if (recList && result.recommendations) {
+                    recList.innerHTML = '';
+                    result.recommendations.forEach(rec => {
+                        const li = document.createElement('li');
+                        li.textContent = rec;
+                        recList.appendChild(li);
+                    });
+                }
+                
+                // Show results, hide form
+                if (formSection) formSection.style.display = 'none';
+                if (resultsSection) resultsSection.style.display = 'block';
+                
+                // Scroll to results
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            function setText(id, text) {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.textContent = text;
+                } else {
+                    console.warn('Element not found:', id);
+                }
+            }
+            
+            function updateMeter(id, percentage) {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.style.width = percentage + '%';
+                    element.textContent = percentage + '%';
+                } else {
+                    console.warn('Meter not found:', id);
+                }
+            }
+            
+        })();
     </script>
 </body>
 </html>
