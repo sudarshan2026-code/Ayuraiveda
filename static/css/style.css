@@ -491,3 +491,12 @@ input, textarea {
     -ms-user-select: text;
     user-select: text;
 }
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}

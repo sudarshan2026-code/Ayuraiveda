@@ -321,9 +321,13 @@
                 <ul id="recommendations-list"></ul>
             </div>
 
-            <div style="text-align: center; margin-top: 2rem;">
-                <button class="btn" onclick="downloadClinicalReport()">📥 Download PDF Report</button>
-                <button class="btn" onclick="location.reload()" style="background: #666; margin-left: 1rem;">🔄 New Assessment</button>
+            <div class="action-buttons">
+                <button id="downloadBtn" class="btn" onclick="downloadClinicalReport()">
+                    📥 Download Report
+                </button>
+                <button class="btn" onclick="location.reload()">
+                    🔄 New Assessment
+                </button>
             </div>
         </div>
     </div>
@@ -440,9 +444,18 @@
                     });
                 }
                 
-                // Show results, hide form
+                // Show results section, hide form
                 if (formSection) formSection.style.display = 'none';
                 if (resultsSection) resultsSection.style.display = 'block';
+                
+                // CRITICAL: Show download button after results are displayed
+                const downloadBtn = document.getElementById('downloadBtn');
+                if (downloadBtn) {
+                    downloadBtn.style.display = 'inline-block';
+                    console.log('✅ SUCCESS: Download button is now visible');
+                } else {
+                    console.error('❌ ERROR: Download button element not found in DOM');
+                }
                 
                 // Scroll to results
                 resultsSection.scrollIntoView({ behavior: 'smooth' });
@@ -472,30 +485,43 @@
             
         })();
         
+        // Download report function
         function downloadClinicalReport() {
+            console.log('📥 Download button clicked');
+            
             if (!window.clinicalResult) {
-                alert('No assessment data available');
+                alert('⚠️ No assessment data available. Please complete an assessment first.');
+                console.error('No clinical result data found');
                 return;
             }
+            
+            console.log('Sending download request with data:', window.clinicalResult);
             
             fetch('/download-report', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(window.clinicalResult)
             })
-            .then(response => response.blob())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Server returned ' + response.status);
+                }
+                return response.blob();
+            })
             .then(blob => {
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = 'AyurAI_Clinical_Report.pdf';
+                a.download = 'AyurAI_Clinical_Report_' + new Date().getTime() + '.pdf';
                 document.body.appendChild(a);
                 a.click();
                 a.remove();
+                window.URL.revokeObjectURL(url);
+                console.log('✅ PDF download initiated successfully');
             })
             .catch(error => {
-                console.error('Download error:', error);
-                alert('Error downloading report');
+                console.error('❌ Download error:', error);
+                alert('❌ Error downloading report: ' + error.message);
             });
         }
     </script>
