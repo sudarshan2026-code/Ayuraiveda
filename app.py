@@ -32,17 +32,16 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# Try to use advanced engine, fallback to ML, then basic
+# Use strict validated engine (classical Ayurvedic principles)
 try:
-    from advanced_ai_engine import AdvancedTridoshaEngine
-    tie = AdvancedTridoshaEngine()
-    print("✓ Using Advanced Tridosha Engine (Ayurvedic Logic)")
+    from strict_ai_engine import StrictTridoshaEngine
+    tie = StrictTridoshaEngine()
+    print("✓ Using Strict Tridosha Engine (Classical Ayurvedic Validation)")
 except:
     try:
-        from ml_assessment_engine import MLTridoshaEngine
-        tie = MLTridoshaEngine()
-        tie.load_model()
-        print("✓ Using ML-enhanced assessment engine")
+        from corrected_ai_engine import CorrectedTridoshaEngine
+        tie = CorrectedTridoshaEngine()
+        print("✓ Using Corrected Tridosha Engine (Disease-Risk Consistency)")
     except:
         from ai_engine import TridoshaIntelligenceEngine
         tie = TridoshaIntelligenceEngine()
@@ -314,6 +313,18 @@ def download_assessment_report(assessment_id):
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
+
+@app.route('/clinical-assessment')
+def clinical_assessment():
+    return render_template('clinical_assessment.html')
+
+@app.route('/clinical-analyze', methods=['POST'])
+def clinical_analyze():
+    from clinical_engine import ClinicalTridoshaEngine
+    engine = ClinicalTridoshaEngine()
+    data = request.json
+    result = engine.analyze(data)
+    return jsonify(result)
 
 @app.route('/analyze', methods=['POST'])
 @login_required
