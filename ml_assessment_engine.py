@@ -9,7 +9,7 @@ class MLTridoshaEngine:
         self.dosha_weights = {'vata': 0, 'pitta': 0, 'kapha': 0}
         self.vectorizer = None
         self.dosha_knowledge = {'vata': [], 'pitta': [], 'kapha': []}
-        self.model_path = 'dosha_assessment_model.pkl'
+        self.model_path = 'assessment_model.pkl'
     
     def train_from_pdfs(self, pdf_paths):
         """Train model on PDF knowledge"""

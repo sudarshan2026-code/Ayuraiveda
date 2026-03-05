@@ -3,312 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clinical Assessment - AyurAI Veda™</title>
+    <title>59-Point Assessment - AyurAI Veda™</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        .form-group input, .form-group select { width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; }
+        h4 { color: var(--navy); margin-top: 2rem; border-bottom: 2px solid var(--saffron); padding-bottom: 0.5rem; }
+        .action-buttons { display: flex; gap: 1rem; margin-top: 2rem; }
+    </style>
 </head>
 <body>
     <div class="top-bar">
         <div class="top-bar-content">
-            <div class="top-bar-left">
-                <span>🕉️ Indian Knowledge Systems</span>
-                <span>|</span>
-                <span>Ayurveda + AI</span>
-            </div>
-            <div class="top-bar-right"></div>
+            <div class="top-bar-left"><span>🕉️ Indian Knowledge Systems</span><span>|</span><span>Ayurveda + AI</span></div>
         </div>
     </div>
     <header>
         <div class="header-content">
-            <div class="logo">
-                <h1>AyurAI Veda™</h1>
-                <p>20-Parameter Clinical Diagnostic Engine</p>
-            </div>
+            <div class="logo"><h1>AyurAI Veda™</h1><p>59-Point Comprehensive Prakriti Assessment</p></div>
             <div class="badge">Clinical Grade</div>
         </div>
         <nav>
             <ul>
                 <li><a href="/">Home</a></li>
-                <li><a href="/about">About Ayurveda</a></li>
-                <li><a href="/clinical-assessment">Clinical Assessment</a></li>
-                <li><a href="/chatbot">AyurVaani™ Chat</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/clinical-assessment">Assessment</a></li>
+                <li><a href="/chatbot">Chat</a></li>
                 <li><a href="/contact">Contact</a></li>
             </ul>
         </nav>
     </header>
 
     <div class="container">
-        <div class="disclaimer">
-            <strong>⚠️ Clinical Assessment:</strong> This is a structured diagnostic tool based on classical Ayurvedic Parikshan. Not a substitute for medical consultation.
-        </div>
+        <div class="disclaimer"><strong>⚠️ Comprehensive Assessment:</strong> Complete 59-point Ayurvedic Prakriti analysis. Not a substitute for medical consultation.</div>
 
         <div class="section" id="assessment-form">
-            <h3>🔬 20-Parameter Clinical Parikshan</h3>
+            <h3>🔬 Complete 59-Point Prakriti Assessment</h3>
             <form id="clinicalForm">
                 
-                <!-- FOUNDATION LAYER -->
-                <h4 style="color: var(--navy); margin-top: 2rem;">Foundation Layer</h4>
+                <h4>Personal Information</h4>
+                <div class="form-group"><label>1. Name</label><input type="text" name="name" placeholder="Full Name" required></div>
+                <div class="form-group"><label>2. Age *</label><input type="number" name="age" placeholder="Age" required></div>
+                <div class="form-group"><label>3. Gender *</label><select name="gender" required><option value="">Select</option><option value="male">Male</option><option value="female">Female</option></select></div>
                 
-                <div class="form-group">
-                    <label>1. Body Structure (Prakriti Indicator) *</label>
-                    <select name="body_structure" required>
-                        <option value="">Select...</option>
-                        <option value="lean">Lean / Thin (Vata tendency)</option>
-                        <option value="moderate">Moderate / Athletic (Pitta tendency)</option>
-                        <option value="heavy">Heavy / Stocky (Kapha tendency)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>2. Current Health State (Vikriti) *</label>
-                    <select name="vikriti" required>
-                        <option value="">Select...</option>
-                        <option value="balanced">Feeling balanced and healthy</option>
-                        <option value="mild">Mild discomfort or symptoms</option>
-                        <option value="moderate">Moderate health concerns</option>
-                        <option value="severe">Significant health issues</option>
-                    </select>
-                </div>
-
-                <!-- DIGESTIVE & ELIMINATION -->
-                <h4 style="color: var(--navy); margin-top: 2rem;">Digestive & Elimination (Agni Parikshan)</h4>
-
-                <div class="form-group">
-                    <label>3. Appetite Pattern *</label>
-                    <select name="appetite" required>
-                        <option value="">Select...</option>
-                        <option value="regular">Regular and consistent</option>
-                        <option value="irregular">Irregular / Skips meals</option>
-                        <option value="excessive">Always hungry / Excessive</option>
-                        <option value="low">Poor appetite / Rarely hungry</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>4. Digestion Quality *</label>
-                    <select name="digestion" required>
-                        <option value="">Select...</option>
-                        <option value="normal">Normal / No issues</option>
-                        <option value="gas">Gas / Bloating</option>
-                        <option value="acidity">Acidity / Heartburn</option>
-                        <option value="constipation">Constipation</option>
-                        <option value="slow">Slow / Heavy feeling</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>5. Bowel Movement (Mala) *</label>
-                    <select name="mala" required>
-                        <option value="">Select...</option>
-                        <option value="0">Regular and formed</option>
-                        <option value="3">Constipation / Dry / Hard</option>
-                        <option value="2">Loose / Frequent</option>
-                        <option value="1">Irregular pattern</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>6. Urination Pattern (Mutra) *</label>
-                    <select name="mutra_frequency" required>
-                        <option value="">Select...</option>
-                        <option value="0">Normal frequency (4-7 times/day)</option>
-                        <option value="2">Frequent (8+ times/day)</option>
-                        <option value="1">Infrequent (less than 4 times/day)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>7. Tongue Examination *</label>
-                    <select name="tongue_coating" required>
-                        <option value="">Select...</option>
-                        <option value="0">Clean / Pink</option>
-                        <option value="1">Light coating</option>
-                        <option value="3">Thick white/yellow coating</option>
-                        <option value="2">Cracks / Dryness</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>8. Gas & Bloating *</label>
-                    <select name="bloating" required>
-                        <option value="">Select...</option>
-                        <option value="0">None</option>
-                        <option value="1">Occasional</option>
-                        <option value="2">Frequent</option>
-                        <option value="3">Severe / Daily</option>
-                    </select>
-                </div>
-
-                <!-- PHYSICAL OBSERVATION -->
-                <h4 style="color: var(--navy); margin-top: 2rem;">Physical Observation</h4>
-
-                <div class="form-group">
-                    <label>9. Skin Type *</label>
-                    <select name="skin" required>
-                        <option value="">Select...</option>
-                        <option value="normal">Normal / Balanced</option>
-                        <option value="dry">Dry / Rough / Flaky</option>
-                        <option value="oily">Oily / Shiny</option>
-                        <option value="sensitive">Sensitive / Rashes / Redness</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>10. Body Temperature Tendency *</label>
-                    <select name="temperature" required>
-                        <option value="">Select...</option>
-                        <option value="normal">Normal</option>
-                        <option value="cold">Feel cold often / Cold hands-feet</option>
-                        <option value="hot">Feel hot often / Heat intolerance</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>11. Sweat Pattern *</label>
-                    <select name="sweat" required>
-                        <option value="">Select...</option>
-                        <option value="normal">Normal</option>
-                        <option value="minimal">Minimal / Dry</option>
-                        <option value="excessive">Excessive / Profuse</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>12. Energy Level *</label>
-                    <select name="energy" required>
-                        <option value="">Select...</option>
-                        <option value="stable">Stable throughout day</option>
-                        <option value="fluctuating">Fluctuating / Unpredictable</option>
-                        <option value="heavy">Heavy / Lethargic</option>
-                        <option value="hyperactive">Hyperactive / Restless</option>
-                    </select>
-                </div>
-
-                <!-- MENTAL & NERVOUS -->
-                <h4 style="color: var(--navy); margin-top: 2rem;">Mental & Nervous System</h4>
-
-                <div class="form-group">
-                    <label>13. Stress Level *</label>
-                    <select name="stress" required>
-                        <option value="">Select...</option>
-                        <option value="low">Low / Calm</option>
-                        <option value="moderate">Moderate / Manageable</option>
-                        <option value="high">High / Frequent tension</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>14. Anxiety Tendency *</label>
-                    <select name="anxiety" required>
-                        <option value="">Select...</option>
-                        <option value="none">None / Rarely anxious</option>
-                        <option value="moderate">Occasional worry</option>
-                        <option value="high">Frequent anxiety / Nervousness</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>15. Sleep Quality *</label>
-                    <select name="sleep" required>
-                        <option value="">Select...</option>
-                        <option value="excellent">Deep and restful (7-8 hours)</option>
-                        <option value="good">Good (6-7 hours)</option>
-                        <option value="poor">Light / Disturbed (5-6 hours)</option>
-                        <option value="very_poor">Insomnia (less than 5 hours)</option>
-                        <option value="excessive">Excessive (9+ hours)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>16. Mental Clarity *</label>
-                    <select name="mental_clarity" required>
-                        <option value="">Select...</option>
-                        <option value="clear">Clear and focused</option>
-                        <option value="foggy">Brain fog / Confusion</option>
-                        <option value="sharp">Very sharp / Intense</option>
-                        <option value="dull">Dull / Slow thinking</option>
-                    </select>
-                </div>
-
-                <!-- STRENGTH & ADAPTABILITY -->
-                <h4 style="color: var(--navy); margin-top: 2rem;">Strength & Adaptability</h4>
-
-                <div class="form-group">
-                    <label>17. Exercise Tolerance *</label>
-                    <select name="exercise_tolerance" required>
-                        <option value="">Select...</option>
-                        <option value="high">High / Athletic</option>
-                        <option value="moderate">Moderate</option>
-                        <option value="low">Low / Gets tired easily</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>18. Climate Adaptability *</label>
-                    <select name="climate" required>
-                        <option value="">Select...</option>
-                        <option value="good">Adapts well to all climates</option>
-                        <option value="cold_sensitive">Sensitive to cold</option>
-                        <option value="heat_sensitive">Sensitive to heat</option>
-                        <option value="humidity_sensitive">Sensitive to humidity</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>19. Food Tolerance (Satmya) *</label>
-                    <select name="food_tolerance" required>
-                        <option value="">Select...</option>
-                        <option value="good">Can eat variety of foods</option>
-                        <option value="sensitive">Sensitive stomach / Food allergies</option>
-                        <option value="specific">Needs specific diet</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>20. Overall Immunity *</label>
-                    <select name="immunity" required>
-                        <option value="">Select...</option>
-                        <option value="strong">Strong / Rarely sick</option>
-                        <option value="moderate">Moderate / Occasional illness</option>
-                        <option value="weak">Weak / Frequent infections</option>
-                    </select>
-                </div>
-
-                <button type="submit" class="btn" style="margin-top: 2rem;">🔬 Analyze with Clinical Engine</button>
+                <h4>Body Measurements</h4>
+                <div class="form-group"><label>4. Weight (kg) *</label><input type="number" name="weight" step="0.1" required></div>
+                <div class="form-group"><label>5. Height (cm) *</label><input type="number" name="height" required></div>
+                <div class="form-group"><label>6. BMI</label><input type="number" name="bmi" id="bmi" readonly></div>
+                
+                <h4>Body Structure</h4>
+                <div class="form-group"><label>7. Body Frame *</label><select name="body_frame" required><option value="">Select</option><option value="thin">Thin</option><option value="medium">Medium</option><option value="heavy">Heavy</option></select></div>
+                <div class="form-group"><label>8. Build *</label><select name="body_build" required><option value="">Select</option><option value="lean">Lean</option><option value="muscular">Muscular</option><option value="stocky">Stocky</option></select></div>
+                <div class="form-group"><label>9. Muscle Tone *</label><select name="muscle_tone" required><option value="">Select</option><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select></div>
+                
+                <h4>Physical Characteristics</h4>
+                <div class="form-group"><label>10. Weight Tendency *</label><select name="weight_tendency" required><option value="">Select</option><option value="hard_to_gain">Hard to Gain</option><option value="stable">Stable</option><option value="easy_to_gain">Easy to Gain</option></select></div>
+                <div class="form-group"><label>11. Joints *</label><select name="joints" required><option value="">Select</option><option value="prominent">Prominent</option><option value="normal">Normal</option><option value="well_covered">Well Covered</option></select></div>
+                <div class="form-group"><label>12. Veins *</label><select name="veins" required><option value="">Select</option><option value="prominent">Prominent</option><option value="visible">Visible</option><option value="hidden">Hidden</option></select></div>
+                <div class="form-group"><label>13. Bone Structure *</label><select name="bone_structure" required><option value="">Select</option><option value="light">Light</option><option value="medium">Medium</option><option value="heavy">Heavy</option></select></div>
+                
+                <h4>Skin Characteristics</h4>
+                <div class="form-group"><label>14. Skin Type *</label><select name="skin_type" required><option value="">Select</option><option value="dry">Dry</option><option value="sensitive">Sensitive</option><option value="oily">Oily</option></select></div>
+                <div class="form-group"><label>15. Texture *</label><select name="skin_texture" required><option value="">Select</option><option value="rough">Rough</option><option value="soft">Soft</option><option value="smooth">Smooth</option></select></div>
+                <div class="form-group"><label>16. Temperature *</label><select name="skin_temperature" required><option value="">Select</option><option value="cold">Cold</option><option value="warm">Warm</option></select></div>
+                <div class="form-group"><label>17. Complexion *</label><select name="complexion" required><option value="">Select</option><option value="dark">Dark</option><option value="fair">Fair</option><option value="pale">Pale</option></select></div>
+                <div class="form-group"><label>18. Luster *</label><select name="skin_luster" required><option value="">Select</option><option value="dull">Dull</option><option value="radiant">Radiant</option><option value="glowing">Glowing</option></select></div>
+                
+                <h4>Hair & Nails</h4>
+                <div class="form-group"><label>19. Hair Type *</label><select name="hair_type" required><option value="">Select</option><option value="dry">Dry</option><option value="thin">Thin</option><option value="thick">Thick</option></select></div>
+                <div class="form-group"><label>20. Hair Texture *</label><select name="hair_texture" required><option value="">Select</option><option value="rough">Rough</option><option value="fine">Fine</option><option value="smooth">Smooth</option></select></div>
+                <div class="form-group"><label>21. Nails *</label><select name="nails" required><option value="">Select</option><option value="brittle">Brittle</option><option value="soft">Soft</option><option value="strong">Strong</option></select></div>
+                
+                <h4>Appetite & Digestion</h4>
+                <div class="form-group"><label>22. Appetite *</label><select name="appetite" required><option value="">Select</option><option value="irregular">Irregular</option><option value="strong">Strong</option><option value="low">Low</option></select></div>
+                <div class="form-group"><label>23. Hunger *</label><select name="hunger" required><option value="">Select</option><option value="variable">Variable</option><option value="intense">Intense</option><option value="mild">Mild</option></select></div>
+                <div class="form-group"><label>24. Thirst *</label><select name="thirst" required><option value="">Select</option><option value="variable">Variable</option><option value="high">High</option><option value="low">Low</option></select></div>
+                <div class="form-group"><label>25. Digestion *</label><select name="digestion" required><option value="">Select</option><option value="irregular">Irregular</option><option value="fast">Fast</option><option value="slow">Slow</option></select></div>
+                <div class="form-group"><label>26. Bowel *</label><select name="bowel" required><option value="">Select</option><option value="constipation">Constipation</option><option value="loose">Loose</option><option value="regular">Regular</option><option value="heavy">Heavy</option></select></div>
+                <div class="form-group"><label>27. Gas *</label><select name="gas" required><option value="">Select</option><option value="frequent">Frequent</option><option value="occasional">Occasional</option><option value="none">None</option></select></div>
+                
+                <h4>Food & Metabolism</h4>
+                <div class="form-group"><label>28. Food Preference *</label><select name="food_preference" required><option value="">Select</option><option value="warm">Warm</option><option value="cold">Cold</option><option value="spicy">Spicy</option></select></div>
+                <div class="form-group"><label>29. Metabolism *</label><select name="metabolism" required><option value="">Select</option><option value="fast">Fast</option><option value="moderate">Moderate</option><option value="slow">Slow</option></select></div>
+                
+                <h4>Lifestyle & Physiology</h4>
+                <div class="form-group"><label>30. Sleep Pattern *</label><select name="sleep_pattern" required><option value="">Select</option><option value="light">Light</option><option value="moderate">Moderate</option><option value="deep">Deep</option></select></div>
+                <div class="form-group"><label>31. Sleep Duration *</label><select name="sleep_duration" required><option value="">Select</option><option value="less_6">Less than 6h</option><option value="6_8">6-8h</option><option value="more_8">More than 8h</option></select></div>
+                <div class="form-group"><label>32. Dreams *</label><select name="dreams" required><option value="">Select</option><option value="active">Active</option><option value="colorful">Colorful</option><option value="few">Few</option></select></div>
+                <div class="form-group"><label>33. Energy Level *</label><select name="energy_level" required><option value="">Select</option><option value="variable">Variable</option><option value="moderate">Moderate</option><option value="steady">Steady</option></select></div>
+                <div class="form-group"><label>34. Stamina *</label><select name="stamina" required><option value="">Select</option><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select></div>
+                <div class="form-group"><label>35. Physical Activity *</label><select name="physical_activity" required><option value="">Select</option><option value="restless">Restless</option><option value="moderate">Moderate</option><option value="slow">Slow</option></select></div>
+                <div class="form-group"><label>36. Exercise Tolerance *</label><select name="exercise_tolerance" required><option value="">Select</option><option value="low">Low</option><option value="high">High</option><option value="moderate">Moderate</option></select></div>
+                
+                <h4>Body Response</h4>
+                <div class="form-group"><label>37. Sweat *</label><select name="sweat" required><option value="">Select</option><option value="minimal">Minimal</option><option value="profuse">Profuse</option><option value="moderate">Moderate</option></select></div>
+                <div class="form-group"><label>38. Body Odor *</label><select name="body_odor" required><option value="">Select</option><option value="minimal">Minimal</option><option value="strong">Strong</option><option value="mild">Mild</option></select></div>
+                
+                <h4>Climate Response</h4>
+                <div class="form-group"><label>39. Weather Preference *</label><select name="weather_preference" required><option value="">Select</option><option value="warm">Warm</option><option value="cool">Cool</option></select></div>
+                <div class="form-group"><label>40. Season Discomfort *</label><select name="season_discomfort" required><option value="">Select</option><option value="winter">Winter</option><option value="summer">Summer</option><option value="spring">Spring</option></select></div>
+                
+                <h4>General Health</h4>
+                <div class="form-group"><label>41. Immunity *</label><select name="immunity" required><option value="">Select</option><option value="weak">Weak</option><option value="moderate">Moderate</option><option value="strong">Strong</option></select></div>
+                <div class="form-group"><label>42. Disease Tendency *</label><select name="disease_tendency" required><option value="">Select</option><option value="nervous">Nervous</option><option value="inflammatory">Inflammatory</option><option value="congestion">Congestion</option></select></div>
+                
+                <h4>Speech Characteristics</h4>
+                <div class="form-group"><label>43. Speech Pace *</label><select name="speech_pace" required><option value="">Select</option><option value="fast">Fast</option><option value="moderate">Moderate</option><option value="slow">Slow</option></select></div>
+                <div class="form-group"><label>44. Voice Quality *</label><select name="voice_quality" required><option value="">Select</option><option value="weak">Weak</option><option value="sharp">Sharp</option><option value="deep">Deep</option></select></div>
+                <div class="form-group"><label>45. Communication *</label><select name="communication" required><option value="">Select</option><option value="talkative">Talkative</option><option value="precise">Precise</option><option value="reserved">Reserved</option></select></div>
+                
+                <h4>Body Movements</h4>
+                <div class="form-group"><label>46. Movements *</label><select name="movements" required><option value="">Select</option><option value="quick">Quick</option><option value="purposeful">Purposeful</option><option value="slow">Slow</option></select></div>
+                
+                <h4>Mental Characteristics</h4>
+                <div class="form-group"><label>47. Mental State *</label><select name="mental_state" required><option value="">Select</option><option value="anxious">Anxious</option><option value="focused">Focused</option><option value="calm">Calm</option></select></div>
+                
+                <h4>Memory & Mind</h4>
+                <div class="form-group"><label>48. Memory *</label><select name="memory" required><option value="">Select</option><option value="quick_forget">Quick to Forget</option><option value="sharp">Sharp</option><option value="slow_retain">Slow but Retain</option></select></div>
+                <div class="form-group"><label>49. Learning *</label><select name="learning" required><option value="">Select</option><option value="quick">Quick</option><option value="moderate">Moderate</option><option value="slow">Slow</option></select></div>
+                <div class="form-group"><label>50. Concentration *</label><select name="concentration" required><option value="">Select</option><option value="poor">Poor</option><option value="good">Good</option><option value="excellent">Excellent</option></select></div>
+                <div class="form-group"><label>51. Decision Making *</label><select name="decision_making" required><option value="">Select</option><option value="quick">Quick</option><option value="analytical">Analytical</option><option value="slow">Slow</option></select></div>
+                
+                <h4>Behavior</h4>
+                <div class="form-group"><label>52. Emotional Response *</label><select name="emotional_response" required><option value="">Select</option><option value="fearful">Fearful</option><option value="angry">Angry</option><option value="attached">Attached</option></select></div>
+                <div class="form-group"><label>53. Stress Response *</label><select name="stress_response" required><option value="">Select</option><option value="anxious">Anxious</option><option value="irritable">Irritable</option><option value="withdrawn">Withdrawn</option></select></div>
+                
+                <h4>Additional Characteristics</h4>
+                <div class="form-group"><label>54. Teeth & Gums *</label><select name="teeth_gums" required><option value="">Select</option><option value="weak">Weak/Sensitive</option><option value="normal">Normal</option><option value="strong">Strong</option></select></div>
+                <div class="form-group"><label>55. Eyes Appearance *</label><select name="eyes_appearance" required><option value="">Select</option><option value="small">Small/Dry</option><option value="medium">Medium/Sharp</option><option value="large">Large/Moist</option></select></div>
+                <div class="form-group"><label>56. Lips Condition *</label><select name="lips_condition" required><option value="">Select</option><option value="dry">Dry/Cracked</option><option value="normal">Normal</option><option value="moist">Moist/Full</option></select></div>
+                <div class="form-group"><label>57. Body Temperature Regulation *</label><select name="temp_regulation" required><option value="">Select</option><option value="poor">Poor (Always Cold/Hot)</option><option value="moderate">Moderate</option><option value="good">Good Adaptation</option></select></div>
+                <div class="form-group"><label>58. Pain Tolerance *</label><select name="pain_tolerance" required><option value="">Select</option><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select></div>
+                <div class="form-group"><label>59. Healing Speed *</label><select name="healing_speed" required><option value="">Select</option><option value="slow">Slow</option><option value="moderate">Moderate</option><option value="fast">Fast</option></select></div>
+                
+                <button type="submit" class="btn" style="margin-top: 2rem;">🔬 Analyze All 59 Points</button>
             </form>
         </div>
 
         <div class="section results" id="results" style="display: none;">
-            <h3>📊 Clinical Diagnostic Report</h3>
-            
+            <h3>📊 Comprehensive Diagnostic Report</h3>
             <div style="background: #f5f5f5; padding: 2rem; border-radius: 8px; margin: 2rem 0;">
                 <h4 style="color: var(--navy);">Clinical Summary</h4>
                 <p><strong>Dominant Dosha:</strong> <span id="dominant" style="color: var(--saffron); font-size: 1.3rem;"></span></p>
                 <p><strong>Dosha State:</strong> <span id="dosha-state"></span></p>
                 <p><strong>Agni State:</strong> <span id="agni-state"></span></p>
                 <p><strong>Ama Status:</strong> <span id="ama-status"></span></p>
-                <p><strong>Risk Level:</strong> <span id="risk-level" class="risk-badge"></span></p>
+                <p><strong>Risk Level:</strong> <span id="risk-level"></span></p>
                 <p id="primary-risk-container" style="display: none;"><strong>Primary Risk:</strong> <span id="primary-risk" style="color: #d32f2f;"></span></p>
             </div>
 
             <div class="dosha-meters">
-                <div class="meter">
-                    <h4>🌬️ Vata</h4>
-                    <div class="meter-bar">
-                        <div class="meter-fill vata-fill" id="vata-fill"></div>
-                    </div>
-                </div>
-                <div class="meter">
-                    <h4>🔥 Pitta</h4>
-                    <div class="meter-bar">
-                        <div class="meter-fill pitta-fill" id="pitta-fill"></div>
-                    </div>
-                </div>
-                <div class="meter">
-                    <h4>🌊 Kapha</h4>
-                    <div class="meter-bar">
-                        <div class="meter-fill kapha-fill" id="kapha-fill"></div>
-                    </div>
-                </div>
+                <div class="meter"><h4>🌬️ Vata</h4><div class="meter-bar"><div class="meter-fill vata-fill" id="vata-fill"></div></div></div>
+                <div class="meter"><h4>🔥 Pitta</h4><div class="meter-bar"><div class="meter-fill pitta-fill" id="pitta-fill"></div></div></div>
+                <div class="meter"><h4>🌊 Kapha</h4><div class="meter-bar"><div class="meter-fill kapha-fill" id="kapha-fill"></div></div></div>
             </div>
 
             <div style="background: #e3f2fd; padding: 1.5rem; border-radius: 8px; margin: 2rem 0;">
@@ -322,208 +170,103 @@
             </div>
 
             <div class="action-buttons">
-                <button id="downloadBtn" class="btn" onclick="downloadClinicalReport()">
-                    📥 Download Report
-                </button>
-                <button class="btn" onclick="location.reload()">
-                    🔄 New Assessment
-                </button>
+                <button class="btn" id="downloadBtn" onclick="downloadReport()">📥 Download Report</button>
+                <button class="btn" onclick="location.reload()">🔄 New Assessment</button>
             </div>
         </div>
     </div>
 
     <footer>
-        <p><strong>AyurAI Veda™</strong> | Clinical Ayurvedic Diagnostic System</p>
-        <p style="margin-top: 0.5rem; font-size: 0.9rem;">20-Parameter Parikshan Engine</p>
+        <p><strong>AyurAI Veda™</strong> | 59-Point Comprehensive Prakriti Assessment</p>
     </footer>
 
     <script>
-        // Robust error handling and validation
-        (function() {
-            'use strict';
+        document.querySelector('[name="weight"]').addEventListener('input', calcBMI);
+        document.querySelector('[name="height"]').addEventListener('input', calcBMI);
+        
+        function calcBMI() {
+            const w = parseFloat(document.querySelector('[name="weight"]').value);
+            const h = parseFloat(document.querySelector('[name="height"]').value) / 100;
+            if (w && h) document.getElementById('bmi').value = (w / (h * h)).toFixed(1);
+        }
+
+        document.getElementById('clinicalForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(e.target));
             
-            const form = document.getElementById('clinicalForm');
-            const resultsSection = document.getElementById('results');
-            const formSection = document.getElementById('assessment-form');
-            
-            if (!form) {
-                console.error('Form not found: clinicalForm');
-                return;
-            }
-            
-            form.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                try {
-                    // Collect form data
-                    const formData = new FormData(form);
-                    const data = {};
-                    
-                    // Convert FormData to object with validation
-                    for (let [key, value] of formData.entries()) {
-                        data[key] = value;
-                    }
-                    
-                    // Validate all 20 required fields
-                    const requiredFields = [
-                        'body_structure', 'vikriti', 'appetite', 'digestion', 'mala',
-                        'mutra_frequency', 'tongue_coating', 'bloating', 'skin', 'temperature',
-                        'sweat', 'energy', 'stress', 'anxiety', 'sleep', 'mental_clarity',
-                        'exercise_tolerance', 'climate', 'food_tolerance', 'immunity'
-                    ];
-                    
-                    const missingFields = requiredFields.filter(field => !data[field]);
-                    if (missingFields.length > 0) {
-                        alert('Please fill all required fields: ' + missingFields.join(', '));
-                        return;
-                    }
-                    
-                    console.log('Submitting data:', data);
-                    
-                    // Send to backend
-                    const response = await fetch('/clinical-analyze', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(data)
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error('Server error: ' + response.status);
-                    }
-                    
-                    const result = await response.json();
-                    console.log('Analysis result:', result);
-                    
-                    // Display results
-                    displayResults(result);
-                    
-                } catch (error) {
-                    console.error('Analysis error:', error);
-                    alert('Error analyzing data: ' + error.message);
-                }
+            const response = await fetch('/clinical-analyze', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
             });
             
-            function displayResults(result) {
-                // Store result globally
-                window.clinicalResult = result;
-                
-                // Update text fields
-                setText('dominant', result.dominant || 'N/A');
-                setText('dosha-state', result.dosha_state || 'N/A');
-                setText('agni-state', result.agni_state || 'N/A');
-                setText('ama-status', result.ama_status || 'N/A');
-                setText('risk-level', result.risk || 'N/A');
-                setText('justification', result.justification || 'No justification provided');
-                
-                // Show/hide primary risk
-                const riskContainer = document.getElementById('primary-risk-container');
-                if (result.primary_risk) {
-                    setText('primary-risk', result.primary_risk);
-                    riskContainer.style.display = 'block';
-                } else {
-                    riskContainer.style.display = 'none';
-                }
-                
-                // Update dosha meters
-                if (result.scores) {
-                    updateMeter('vata-fill', result.scores.vata || 0);
-                    updateMeter('pitta-fill', result.scores.pitta || 0);
-                    updateMeter('kapha-fill', result.scores.kapha || 0);
-                }
-                
-                // Update recommendations
-                const recList = document.getElementById('recommendations-list');
-                if (recList && result.recommendations) {
-                    recList.innerHTML = '';
-                    result.recommendations.forEach(rec => {
-                        const li = document.createElement('li');
-                        li.textContent = rec;
-                        recList.appendChild(li);
-                    });
-                }
-                
-                // Show results section, hide form
-                if (formSection) formSection.style.display = 'none';
-                if (resultsSection) resultsSection.style.display = 'block';
-                
-                // CRITICAL: Show download button after results are displayed
-                const downloadBtn = document.getElementById('downloadBtn');
-                if (downloadBtn) {
-                    downloadBtn.style.display = 'inline-block';
-                    console.log('✅ SUCCESS: Download button is now visible');
-                } else {
-                    console.error('❌ ERROR: Download button element not found in DOM');
-                }
-                
-                // Scroll to results
-                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            const result = await response.json();
+            
+            window.clinicalResult = result;
+            
+            document.getElementById('dominant').textContent = result.dominant;
+            document.getElementById('dosha-state').textContent = result.dosha_state;
+            document.getElementById('agni-state').textContent = result.agni_state;
+            document.getElementById('ama-status').textContent = result.ama_status;
+            document.getElementById('risk-level').textContent = result.risk;
+            document.getElementById('justification').textContent = result.justification;
+            
+            if (result.primary_risk) {
+                document.getElementById('primary-risk').textContent = result.primary_risk;
+                document.getElementById('primary-risk-container').style.display = 'block';
             }
             
-            function setText(id, text) {
-                const element = document.getElementById(id);
-                if (element) {
-                    element.textContent = text;
-                } else {
-                    console.warn('Element not found:', id);
-                }
-            }
+            document.getElementById('vata-fill').style.width = result.scores.vata + '%';
+            document.getElementById('vata-fill').textContent = result.scores.vata + '%';
+            document.getElementById('pitta-fill').style.width = result.scores.pitta + '%';
+            document.getElementById('pitta-fill').textContent = result.scores.pitta + '%';
+            document.getElementById('kapha-fill').style.width = result.scores.kapha + '%';
+            document.getElementById('kapha-fill').textContent = result.scores.kapha + '%';
             
-            function updateMeter(id, percentage) {
-                const element = document.getElementById(id);
-                if (element) {
-                    element.style.width = percentage + '%';
-                    element.textContent = percentage + '%';
-                } else {
-                    console.warn('Meter not found:', id);
-                }
-            }
+            const recList = document.getElementById('recommendations-list');
+            recList.innerHTML = '';
+            result.recommendations.forEach(rec => {
+                const li = document.createElement('li');
+                li.textContent = rec;
+                recList.appendChild(li);
+            });
             
-            // Store result globally for PDF download
-            window.clinicalResult = null;
-            
-        })();
+            document.getElementById('assessment-form').style.display = 'none';
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        });
         
-        // Download report function
-        function downloadClinicalReport() {
-            console.log('📥 Download button clicked');
-            
+        function downloadReport() {
             if (!window.clinicalResult) {
-                alert('⚠️ No assessment data available. Please complete an assessment first.');
-                console.error('No clinical result data found');
+                alert('No assessment data available');
                 return;
             }
-            
-            console.log('Sending download request with data:', window.clinicalResult);
             
             fetch('/download-report', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(window.clinicalResult)
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Server returned ' + response.status);
-                }
-                return response.blob();
-            })
+            .then(response => response.blob())
             .then(blob => {
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = 'AyurAI_Clinical_Report_' + new Date().getTime() + '.pdf';
+                a.download = 'AyurAI_Report_' + new Date().getTime() + '.pdf';
                 document.body.appendChild(a);
                 a.click();
                 a.remove();
                 window.URL.revokeObjectURL(url);
-                console.log('✅ PDF download initiated successfully');
             })
-            .catch(error => {
-                console.error('❌ Download error:', error);
-                alert('❌ Error downloading report: ' + error.message);
-            });
+            .catch(error => alert('Error downloading report: ' + error));
         }
+        
+        window.clinicalResult = null;
     </script>
 </body>
 </html>
+
+
+
+
+

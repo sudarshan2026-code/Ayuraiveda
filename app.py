@@ -318,8 +318,20 @@ def contact():
 def clinical_assessment():
     return render_template('clinical_assessment.html')
 
+@app.route('/comprehensive-assessment')
+def comprehensive_assessment():
+    return render_template('comprehensive_assessment.html')
+
 @app.route('/clinical-analyze', methods=['POST'])
 def clinical_analyze():
+    from clinical_engine import ClinicalTridoshaEngine
+    engine = ClinicalTridoshaEngine()
+    data = request.json
+    result = engine.analyze(data)
+    return jsonify(result)
+
+@app.route('/comprehensive-analyze', methods=['POST'])
+def comprehensive_analyze():
     from clinical_engine import ClinicalTridoshaEngine
     engine = ClinicalTridoshaEngine()
     data = request.json

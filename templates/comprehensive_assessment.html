@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>59-Point Prakriti Assessment - AyurAI Veda™</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>AyurAI Veda™</h1>
+                <p>59-Point Comprehensive Prakriti Assessment</p>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/comprehensive-assessment">Full Assessment</a></li>
+                <li><a href="/chatbot">Chat</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="section">
+            <h3>🔬 Complete 59-Point Prakriti Assessment</h3>
+            <form id="assessmentForm">
+                
+                <h4>Personal Information</h4>
+                <input type="text" name="name" placeholder="Full Name" required>
+                <input type="number" name="age" placeholder="Age" required>
+                <select name="gender" required><option value="">Gender</option><option value="male">Male</option><option value="female">Female</option></select>
+                
+                <h4>Body Measurements</h4>
+                <input type="number" name="weight" placeholder="Weight (kg)" step="0.1" required>
+                <input type="number" name="height" placeholder="Height (cm)" required>
+                <input type="number" name="bmi" placeholder="BMI (auto-calculated)" readonly id="bmi">
+                
+                <h4>Body Structure</h4>
+                <select name="body_frame" required><option value="">Body Frame</option><option value="thin">Thin</option><option value="medium">Medium</option><option value="heavy">Heavy</option></select>
+                <select name="body_build" required><option value="">Build</option><option value="lean">Lean</option><option value="muscular">Muscular</option><option value="stocky">Stocky</option></select>
+                <select name="muscle_tone" required><option value="">Muscle Tone</option><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select>
+                
+                <h4>Physical Characteristics</h4>
+                <select name="weight_tendency" required><option value="">Weight Tendency</option><option value="hard_to_gain">Hard to Gain</option><option value="stable">Stable</option><option value="easy_to_gain">Easy to Gain</option></select>
+                <select name="joints" required><option value="">Joints</option><option value="prominent">Prominent</option><option value="normal">Normal</option><option value="well_covered">Well Covered</option></select>
+                <select name="veins" required><option value="">Veins</option><option value="prominent">Prominent</option><option value="visible">Visible</option><option value="hidden">Hidden</option></select>
+                <select name="bone_structure" required><option value="">Bone Structure</option><option value="light">Light</option><option value="medium">Medium</option><option value="heavy">Heavy</option></select>
+                
+                <h4>Skin Characteristics</h4>
+                <select name="skin_type" required><option value="">Skin Type</option><option value="dry">Dry</option><option value="sensitive">Sensitive</option><option value="oily">Oily</option></select>
+                <select name="skin_texture" required><option value="">Texture</option><option value="rough">Rough</option><option value="soft">Soft</option><option value="smooth">Smooth</option></select>
+                <select name="skin_temperature" required><option value="">Temperature</option><option value="cold">Cold</option><option value="warm">Warm</option></select>
+                <select name="complexion" required><option value="">Complexion</option><option value="dark">Dark</option><option value="fair">Fair</option><option value="pale">Pale</option></select>
+                <select name="skin_luster" required><option value="">Luster</option><option value="dull">Dull</option><option value="radiant">Radiant</option><option value="glowing">Glowing</option></select>
+                
+                <h4>Hair & Nails</h4>
+                <select name="hair_type" required><option value="">Hair Type</option><option value="dry">Dry</option><option value="thin">Thin</option><option value="thick">Thick</option></select>
+                <select name="hair_texture" required><option value="">Hair Texture</option><option value="rough">Rough</option><option value="fine">Fine</option><option value="smooth">Smooth</option></select>
+                <select name="nails" required><option value="">Nails</option><option value="brittle">Brittle</option><option value="soft">Soft</option><option value="strong">Strong</option></select>
+                
+                <h4>Appetite & Digestion</h4>
+                <select name="appetite" required><option value="">Appetite</option><option value="irregular">Irregular</option><option value="strong">Strong</option><option value="low">Low</option></select>
+                <select name="hunger" required><option value="">Hunger</option><option value="variable">Variable</option><option value="intense">Intense</option><option value="mild">Mild</option></select>
+                <select name="thirst" required><option value="">Thirst</option><option value="variable">Variable</option><option value="high">High</option><option value="low">Low</option></select>
+                <select name="digestion" required><option value="">Digestion</option><option value="irregular">Irregular</option><option value="fast">Fast</option><option value="slow">Slow</option></select>
+                <select name="bowel" required><option value="">Bowel</option><option value="constipation">Constipation</option><option value="loose">Loose</option><option value="regular">Regular</option><option value="heavy">Heavy</option></select>
+                <select name="gas" required><option value="">Gas</option><option value="frequent">Frequent</option><option value="occasional">Occasional</option><option value="none">None</option></select>
+                
+                <h4>Food & Metabolism</h4>
+                <select name="food_preference" required><option value="">Food Preference</option><option value="warm">Warm</option><option value="cold">Cold</option><option value="spicy">Spicy</option></select>
+                <select name="metabolism" required><option value="">Metabolism</option><option value="fast">Fast</option><option value="moderate">Moderate</option><option value="slow">Slow</option></select>
+                
+                <h4>Lifestyle & Physiology</h4>
+                <select name="sleep_pattern" required><option value="">Sleep Pattern</option><option value="light">Light</option><option value="moderate">Moderate</option><option value="deep">Deep</option></select>
+                <select name="sleep_duration" required><option value="">Sleep Duration</option><option value="less_6">Less than 6h</option><option value="6_8">6-8h</option><option value="more_8">More than 8h</option></select>
+                <select name="dreams" required><option value="">Dreams</option><option value="active">Active</option><option value="colorful">Colorful</option><option value="few">Few</option></select>
+                <select name="energy_level" required><option value="">Energy Level</option><option value="variable">Variable</option><option value="moderate">Moderate</option><option value="steady">Steady</option></select>
+                <select name="stamina" required><option value="">Stamina</option><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option></select>
+                <select name="physical_activity" required><option value="">Physical Activity</option><option value="restless">Restless</option><option value="moderate">Moderate</option><option value="slow">Slow</option></select>
+                <select name="exercise_tolerance" required><option value="">Exercise Tolerance</option><option value="low">Low</option><option value="high">High</option><option value="moderate">Moderate</option></select>
+                
+                <h4>Body Response</h4>
+                <select name="sweat" required><option value="">Sweat</option><option value="minimal">Minimal</option><option value="profuse">Profuse</option><option value="moderate">Moderate</option></select>
+                <select name="body_odor" required><option value="">Body Odor</option><option value="minimal">Minimal</option><option value="strong">Strong</option><option value="mild">Mild</option></select>
+                
+                <h4>Climate Response</h4>
+                <select name="weather_preference" required><option value="">Weather Preference</option><option value="warm">Warm</option><option value="cool">Cool</option></select>
+                <select name="season_discomfort" required><option value="">Season Discomfort</option><option value="winter">Winter</option><option value="summer">Summer</option><option value="spring">Spring</option></select>
+                
+                <h4>General Health</h4>
+                <select name="immunity" required><option value="">Immunity</option><option value="weak">Weak</option><option value="moderate">Moderate</option><option value="strong">Strong</option></select>
+                <select name="disease_tendency" required><option value="">Disease Tendency</option><option value="nervous">Nervous</option><option value="inflammatory">Inflammatory</option><option value="congestion">Congestion</option></select>
+                
+                <h4>Speech Characteristics</h4>
+                <select name="speech_pace" required><option value="">Speech Pace</option><option value="fast">Fast</option><option value="moderate">Moderate</option><option value="slow">Slow</option></select>
+                <select name="voice_quality" required><option value="">Voice Quality</option><option value="weak">Weak</option><option value="sharp">Sharp</option><option value="deep">Deep</option></select>
+                <select name="communication" required><option value="">Communication</option><option value="talkative">Talkative</option><option value="precise">Precise</option><option value="reserved">Reserved</option></select>
+                
+                <h4>Body Movements</h4>
+                <select name="movements" required><option value="">Movements</option><option value="quick">Quick</option><option value="purposeful">Purposeful</option><option value="slow">Slow</option></select>
+                
+                <h4>Mental Characteristics</h4>
+                <select name="mental_state" required><option value="">Mental State</option><option value="anxious">Anxious</option><option value="focused">Focused</option><option value="calm">Calm</option></select>
+                
+                <h4>Memory & Mind</h4>
+                <select name="memory" required><option value="">Memory</option><option value="quick_forget">Quick to Forget</option><option value="sharp">Sharp</option><option value="slow_retain">Slow but Retain</option></select>
+                <select name="learning" required><option value="">Learning</option><option value="quick">Quick</option><option value="moderate">Moderate</option><option value="slow">Slow</option></select>
+                <select name="concentration" required><option value="">Concentration</option><option value="poor">Poor</option><option value="good">Good</option><option value="excellent">Excellent</option></select>
+                <select name="decision_making" required><option value="">Decision Making</option><option value="quick">Quick</option><option value="analytical">Analytical</option><option value="slow">Slow</option></select>
+                
+                <h4>Behavior</h4>
+                <select name="emotional_response" required><option value="">Emotional Response</option><option value="fearful">Fearful</option><option value="angry">Angry</option><option value="attached">Attached</option></select>
+                <select name="stress_response" required><option value="">Stress Response</option><option value="anxious">Anxious</option><option value="irritable">Irritable</option><option value="withdrawn">Withdrawn</option></select>
+                
+                <button type="submit" class="btn">🔬 Analyze All 59 Points</button>
+            </form>
+        </div>
+
+        <div class="section results" id="results" style="display: none;">
+            <h3>📊 Comprehensive Diagnostic Report</h3>
+            <div style="background: #f5f5f5; padding: 2rem; border-radius: 8px;">
+                <p><strong>Dominant Dosha:</strong> <span id="dominant" style="color: var(--saffron); font-size: 1.3rem;"></span></p>
+                <p><strong>Dosha State:</strong> <span id="dosha-state"></span></p>
+                <p><strong>Agni State:</strong> <span id="agni-state"></span></p>
+                <p><strong>Risk Level:</strong> <span id="risk-level"></span></p>
+                <p id="primary-risk-container" style="display: none;"><strong>Primary Risk:</strong> <span id="primary-risk"></span></p>
+            </div>
+
+            <div class="dosha-meters">
+                <div class="meter"><h4>🌬️ Vata</h4><div class="meter-bar"><div class="meter-fill vata-fill" id="vata-fill"></div></div></div>
+                <div class="meter"><h4>🔥 Pitta</h4><div class="meter-bar"><div class="meter-fill pitta-fill" id="pitta-fill"></div></div></div>
+                <div class="meter"><h4>🌊 Kapha</h4><div class="meter-bar"><div class="meter-fill kapha-fill" id="kapha-fill"></div></div></div>
+            </div>
+
+            <div class="recommendations">
+                <h4>🌿 Recommendations</h4>
+                <ul id="recommendations-list"></ul>
+            </div>
+
+            <button class="btn" onclick="location.reload()">🔄 New Assessment</button>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('[name="weight"]').addEventListener('input', calcBMI);
+        document.querySelector('[name="height"]').addEventListener('input', calcBMI);
+        
+        function calcBMI() {
+            const w = parseFloat(document.querySelector('[name="weight"]').value);
+            const h = parseFloat(document.querySelector('[name="height"]').value) / 100;
+            if (w && h) document.getElementById('bmi').value = (w / (h * h)).toFixed(1);
+        }
+
+        document.getElementById('assessmentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = Object.fromEntries(new FormData(e.target));
+            
+            const response = await fetch('/comprehensive-analyze', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+            
+            const result = await response.json();
+            
+            document.getElementById('dominant').textContent = result.dominant;
+            document.getElementById('dosha-state').textContent = result.dosha_state;
+            document.getElementById('agni-state').textContent = result.agni_state;
+            document.getElementById('risk-level').textContent = result.risk;
+            
+            if (result.primary_risk) {
+                document.getElementById('primary-risk').textContent = result.primary_risk;
+                document.getElementById('primary-risk-container').style.display = 'block';
+            }
+            
+            document.getElementById('vata-fill').style.width = result.scores.vata + '%';
+            document.getElementById('vata-fill').textContent = result.scores.vata + '%';
+            document.getElementById('pitta-fill').style.width = result.scores.pitta + '%';
+            document.getElementById('pitta-fill').textContent = result.scores.pitta + '%';
+            document.getElementById('kapha-fill').style.width = result.scores.kapha + '%';
+            document.getElementById('kapha-fill').textContent = result.scores.kapha + '%';
+            
+            const recList = document.getElementById('recommendations-list');
+            recList.innerHTML = '';
+            result.recommendations.forEach(rec => {
+                const li = document.createElement('li');
+                li.textContent = rec;
+                recList.appendChild(li);
+            });
+            
+            document.querySelector('form').style.display = 'none';
+            document.getElementById('results').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

@@ -1,6 +1,16 @@
 class ClinicalTridoshaEngine:
     """20-Parameter Clinical Diagnostic Engine - Classical Ayurveda"""
     
+    def __init__(self):
+        # Try to initialize ML model API client
+        try:
+            from model_api_client import ModelAPIClient
+            self.ml_client = ModelAPIClient()
+            print("✓ ML Model API client initialized")
+        except:
+            self.ml_client = None
+            print("⚠ ML Model API not available, using rule-based only")
+    
     def analyze(self, data):
         # Initialize scores
         vata = pitta = kapha = 0
@@ -18,46 +28,203 @@ class ClinicalTridoshaEngine:
         anxiety_score = anxiety_map.get(data.get('anxiety', 'none'), 0)
         
         # FOUNDATION LAYER
-        prakriti = self._assess_prakriti(data)
         agni_state = self._assess_agni(data)
         ama_status = self._assess_ama(data)
         
-        # DIGESTIVE & ELIMINATION (Weight: 2x)
-        vata += data.get('mala', 0) * 2
-        vata += data.get('mutra_frequency', 0) * 1.5
-        vata += data.get('tongue_coating', 0) if data.get('tongue_coating', 0) == 2 else 0
-        pitta += 2 if data.get('appetite') == 'excessive' else 0
-        pitta += 3 if data.get('digestion') == 'acidity' else 0
-        kapha += data.get('tongue_coating', 0) if data.get('tongue_coating', 0) >= 1 else 0
-        kapha += data.get('bloating', 0) * 1.5
+        # 1-10: Personal Info
+        age = int(data.get('age', 25))
+        if age < 18: kapha += 2
+        elif age > 50: vata += 3
+        elif 18 <= age <= 50: pitta += 2
+        if data.get('gender') == 'male': pitta += 1
+        elif data.get('gender') == 'female': kapha += 1
         
-        # PHYSICAL OBSERVATION (Weight: 1x)
-        vata += 4 if data.get('body_structure') == 'lean' else 0
-        pitta += 4 if data.get('body_structure') == 'moderate' else 0
-        kapha += 4 if data.get('body_structure') == 'heavy' else 0
+        # 11-12: Body Measurements
+        bmi = float(data.get('bmi', 22))
+        if bmi < 18.5: vata += 4
+        elif 18.5 <= bmi < 25: pitta += 2
+        elif bmi >= 25: kapha += 4
         
-        vata += 3 if data.get('skin') == 'dry' else 0
-        pitta += 3 if data.get('skin') == 'sensitive' else 0
-        kapha += 3 if data.get('skin') == 'oily' else 0
+        # 13-15: Body Structure
+        if data.get('body_frame') == 'thin': vata += 4
+        elif data.get('body_frame') == 'medium': pitta += 3
+        elif data.get('body_frame') == 'heavy': kapha += 4
+        if data.get('body_build') == 'lean': vata += 3
+        elif data.get('body_build') == 'muscular': pitta += 3
+        elif data.get('body_build') == 'stocky': kapha += 3
+        if data.get('muscle_tone') == 'low': vata += 2
+        elif data.get('muscle_tone') == 'medium': pitta += 2
+        elif data.get('muscle_tone') == 'high': kapha += 2
         
-        vata += 3 if data.get('temperature') == 'cold' else 0
-        pitta += 3 if data.get('temperature') == 'hot' else 0
+        # 16-19: Physical Characteristics
+        if data.get('weight_tendency') == 'hard_to_gain': vata += 4
+        elif data.get('weight_tendency') == 'stable': pitta += 2
+        elif data.get('weight_tendency') == 'easy_to_gain': kapha += 4
+        if data.get('joints') == 'prominent': vata += 3
+        elif data.get('joints') == 'normal': pitta += 1
+        elif data.get('joints') == 'well_covered': kapha += 2
+        if data.get('veins') == 'prominent': vata += 2
+        elif data.get('veins') == 'visible': pitta += 1
+        elif data.get('veins') == 'hidden': kapha += 2
+        if data.get('bone_structure') == 'light': vata += 3
+        elif data.get('bone_structure') == 'medium': pitta += 2
+        elif data.get('bone_structure') == 'heavy': kapha += 3
         
-        kapha += 2 if data.get('sweat') == 'minimal' else 0
-        pitta += 2 if data.get('sweat') == 'excessive' else 0
+        # 20-24: Skin
+        if data.get('skin_type') == 'dry': vata += 4
+        elif data.get('skin_type') == 'sensitive': pitta += 4
+        elif data.get('skin_type') == 'oily': kapha += 4
+        if data.get('skin_texture') == 'rough': vata += 3
+        elif data.get('skin_texture') == 'soft': pitta += 2
+        elif data.get('skin_texture') == 'smooth': kapha += 3
+        if data.get('skin_temperature') == 'cold': vata += 3; kapha += 1
+        elif data.get('skin_temperature') == 'warm': pitta += 4
+        if data.get('complexion') == 'dark': vata += 2
+        elif data.get('complexion') == 'fair': pitta += 2
+        elif data.get('complexion') == 'pale': kapha += 2
+        if data.get('skin_luster') == 'dull': vata += 2
+        elif data.get('skin_luster') == 'radiant': pitta += 2
+        elif data.get('skin_luster') == 'glowing': kapha += 2
         
-        # MENTAL & NERVOUS (Weight: 1.5x)
-        vata += stress_score * 1.5
-        vata += anxiety_score * 2
-        vata += 3 if data.get('sleep') in ['poor', 'very_poor'] else 0
-        pitta += 2 if data.get('sleep') == 'disturbed' else 0
-        kapha += 2 if data.get('sleep') == 'excessive' else 0
+        # 25-27: Hair & Nails
+        if data.get('hair_type') == 'dry': vata += 3
+        elif data.get('hair_type') == 'thin': pitta += 3
+        elif data.get('hair_type') == 'thick': kapha += 3
+        if data.get('hair_texture') == 'rough': vata += 2
+        elif data.get('hair_texture') == 'fine': pitta += 2
+        elif data.get('hair_texture') == 'smooth': kapha += 2
+        if data.get('nails') == 'brittle': vata += 2
+        elif data.get('nails') == 'soft': pitta += 2
+        elif data.get('nails') == 'strong': kapha += 2
         
-        # STRENGTH & ADAPTABILITY
-        vata += 2 if data.get('energy') == 'fluctuating' else 0
-        kapha += 2 if data.get('energy') == 'heavy' else 0
-        vata += 2 if data.get('exercise_tolerance') == 'low' else 0
-        kapha += 2 if data.get('exercise_tolerance') == 'low' else 0
+        # 28-33: Appetite & Digestion
+        if data.get('appetite') == 'irregular': vata += 4
+        elif data.get('appetite') == 'strong': pitta += 4
+        elif data.get('appetite') == 'low': kapha += 3
+        if data.get('hunger') == 'variable': vata += 3
+        elif data.get('hunger') == 'intense': pitta += 3
+        elif data.get('hunger') == 'mild': kapha += 2
+        if data.get('thirst') == 'variable': vata += 2
+        elif data.get('thirst') == 'high': pitta += 3
+        elif data.get('thirst') == 'low': kapha += 2
+        if data.get('digestion') == 'irregular': vata += 4
+        elif data.get('digestion') == 'fast': pitta += 4
+        elif data.get('digestion') == 'slow': kapha += 4
+        if data.get('bowel') == 'constipation': vata += 5
+        elif data.get('bowel') == 'loose': pitta += 4
+        elif data.get('bowel') == 'heavy': kapha += 3
+        if data.get('gas') == 'frequent': vata += 3
+        
+        # 34-35: Food & Metabolism
+        if data.get('food_preference') == 'warm': vata += 2
+        elif data.get('food_preference') == 'cold': pitta += 2
+        elif data.get('food_preference') == 'spicy': kapha += 2
+        if data.get('metabolism') == 'fast': vata += 2; pitta += 2
+        elif data.get('metabolism') == 'slow': kapha += 3
+        
+        # 36-42: Lifestyle & Physiology
+        if data.get('sleep_pattern') == 'light': vata += 4
+        elif data.get('sleep_pattern') == 'moderate': pitta += 2
+        elif data.get('sleep_pattern') == 'deep': kapha += 4
+        if data.get('sleep_duration') == 'less_6': vata += 3; pitta += 2
+        elif data.get('sleep_duration') == 'more_8': kapha += 3
+        if data.get('dreams') == 'active': vata += 3
+        elif data.get('dreams') == 'colorful': pitta += 2
+        elif data.get('dreams') == 'few': kapha += 2
+        if data.get('energy_level') == 'variable': vata += 3
+        elif data.get('energy_level') == 'moderate': pitta += 2
+        elif data.get('energy_level') == 'steady': kapha += 3
+        if data.get('stamina') == 'low': vata += 3
+        elif data.get('stamina') == 'medium': pitta += 2
+        elif data.get('stamina') == 'high': kapha += 3
+        if data.get('physical_activity') == 'restless': vata += 4
+        elif data.get('physical_activity') == 'moderate': pitta += 2
+        elif data.get('physical_activity') == 'slow': kapha += 3
+        if data.get('exercise_tolerance') == 'low': vata += 2
+        elif data.get('exercise_tolerance') == 'high': pitta += 3
+        
+        # 43-44: Body Response
+        if data.get('sweat') == 'minimal': vata += 3
+        elif data.get('sweat') == 'profuse': pitta += 4
+        elif data.get('sweat') == 'moderate': kapha += 2
+        if data.get('body_odor') == 'strong': pitta += 2
+        
+        # 45-46: Climate
+        if data.get('weather_preference') == 'warm': vata += 3; kapha += 2
+        elif data.get('weather_preference') == 'cool': pitta += 3
+        if data.get('season_discomfort') == 'winter': vata += 2
+        elif data.get('season_discomfort') == 'summer': pitta += 3
+        elif data.get('season_discomfort') == 'spring': kapha += 2
+        
+        # 47-48: General Health
+        if data.get('immunity') == 'weak': vata += 3
+        elif data.get('immunity') == 'moderate': pitta += 2
+        elif data.get('immunity') == 'strong': kapha += 3
+        if data.get('disease_tendency') == 'nervous': vata += 4
+        elif data.get('disease_tendency') == 'inflammatory': pitta += 4
+        elif data.get('disease_tendency') == 'congestion': kapha += 4
+        
+        # 49-51: Speech
+        if data.get('speech_pace') == 'fast': vata += 3
+        elif data.get('speech_pace') == 'moderate': pitta += 2
+        elif data.get('speech_pace') == 'slow': kapha += 3
+        if data.get('voice_quality') == 'weak': vata += 2
+        elif data.get('voice_quality') == 'sharp': pitta += 2
+        elif data.get('voice_quality') == 'deep': kapha += 2
+        if data.get('communication') == 'talkative': vata += 2
+        elif data.get('communication') == 'precise': pitta += 2
+        elif data.get('communication') == 'reserved': kapha += 2
+        
+        # 52: Movements
+        if data.get('movements') == 'quick': vata += 3
+        elif data.get('movements') == 'purposeful': pitta += 2
+        elif data.get('movements') == 'slow': kapha += 3
+        
+        # 53: Mental State
+        if data.get('mental_state') == 'anxious': vata += 5
+        elif data.get('mental_state') == 'focused': pitta += 3
+        elif data.get('mental_state') == 'calm': kapha += 3
+        
+        # 54-57: Memory & Mind
+        if data.get('memory') == 'quick_forget': vata += 3
+        elif data.get('memory') == 'sharp': pitta += 3
+        elif data.get('memory') == 'slow_retain': kapha += 3
+        if data.get('learning') == 'quick': vata += 2; pitta += 2
+        elif data.get('learning') == 'slow': kapha += 2
+        if data.get('concentration') == 'poor': vata += 3
+        elif data.get('concentration') == 'good': pitta += 3
+        elif data.get('concentration') == 'excellent': kapha += 2
+        if data.get('decision_making') == 'quick': vata += 2
+        elif data.get('decision_making') == 'analytical': pitta += 3
+        elif data.get('decision_making') == 'slow': kapha += 2
+        
+        # 58-59: Behavior
+        if data.get('emotional_response') == 'fearful': vata += 4
+        elif data.get('emotional_response') == 'angry': pitta += 4
+        elif data.get('emotional_response') == 'attached': kapha += 3
+        if data.get('stress_response') == 'anxious': vata += 4
+        elif data.get('stress_response') == 'irritable': pitta += 3
+        elif data.get('stress_response') == 'withdrawn': kapha += 3
+        
+        # 54-59: Additional Characteristics
+        if data.get('teeth_gums') == 'weak': vata += 2
+        elif data.get('teeth_gums') == 'strong': kapha += 2
+        
+        if data.get('eyes_appearance') == 'small': vata += 2
+        elif data.get('eyes_appearance') == 'medium': pitta += 2
+        elif data.get('eyes_appearance') == 'large': kapha += 2
+        
+        if data.get('lips_condition') == 'dry': vata += 2
+        elif data.get('lips_condition') == 'moist': kapha += 2
+        
+        if data.get('temp_regulation') == 'poor': vata += 2
+        elif data.get('temp_regulation') == 'good': pitta += 1
+        
+        if data.get('pain_tolerance') == 'low': vata += 2
+        elif data.get('pain_tolerance') == 'high': kapha += 2
+        
+        if data.get('healing_speed') == 'slow': vata += 2; kapha += 1
+        elif data.get('healing_speed') == 'fast': pitta += 2
         
         # Agni modifier (±10%)
         agni_modifier = {'sama': 1.0, 'vishama': 1.1, 'tikshna': 0.95, 'manda': 1.15}
