@@ -4,6 +4,14 @@ efficientnetv2-b3_notop.h5
 *.pkl
 *.db
 
+# Original Flask app (too heavy for serverless)
+app_original.py
+chat_db.py
+auth_db.py
+enhanced_clinical_engine.py
+disease_predictor.py
+ml_*.py
+
 # Documentation files
 *.md
 *.txt
