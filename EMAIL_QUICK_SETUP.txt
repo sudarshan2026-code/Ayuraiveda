@@ -1,0 +1,86 @@
+# 📧 Email System - Quick Setup
+
+## 🚀 3-Minute Setup
+
+### Step 1: Get Gmail App Password (2 min)
+1. Go to: https://myaccount.google.com/apppasswords
+2. Enable 2-Step Verification (if needed)
+3. Generate App Password for "Mail"
+4. Copy the 16-character password
+
+### Step 2: Add to Vercel (1 min)
+1. Go to: https://vercel.com/dashboard
+2. Your Project → Settings → Environment Variables
+3. Add these 3 variables:
+
+```
+SENDER_EMAIL = zjay5398@gmail.com
+GMAIL_APP_PASSWORD = your_16_char_password
+ADMIN_EMAIL = zjay5398@gmail.com
+```
+
+4. Save and redeploy
+
+### Step 3: Test ✅
+- Submit feedback form
+- Check your email
+- Done!
+
+---
+
+## 📧 What You Get
+
+### 1. Feedback Emails
+- User submits feedback → You receive email
+- Contains: Name, mobile, institute, feedback
+- Beautiful HTML template
+
+### 2. Assessment Report Emails
+- User completes assessment → Gets email report
+- Contains: Dosha analysis, recommendations
+- Professional HTML template
+
+---
+
+## 🔑 Environment Variables
+
+| Variable | Value | Purpose |
+|----------|-------|---------|
+| `SENDER_EMAIL` | Your Gmail | Sends emails from |
+| `GMAIL_APP_PASSWORD` | 16-char code | Authentication |
+| `ADMIN_EMAIL` | Your email | Receives feedback |
+
+---
+
+## ✅ Features
+
+- ✅ Secure Gmail SMTP
+- ✅ HTML email templates
+- ✅ Mobile-responsive
+- ✅ Input validation
+- ✅ Error handling
+- ✅ Fallback logging
+- ✅ Professional design
+
+---
+
+## 🆘 Quick Troubleshooting
+
+**Email not sending?**
+- Check App Password is correct
+- Verify 2-Step Verification enabled
+- Check environment variables in Vercel
+
+**Emails in spam?**
+- Add sender to contacts
+- Mark as "Not Spam"
+
+---
+
+## 📖 Full Guide
+
+See `EMAIL_SETUP.md` for detailed instructions.
+
+---
+
+**🎉 Your email system is ready!**
