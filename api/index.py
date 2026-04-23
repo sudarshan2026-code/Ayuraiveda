@@ -598,8 +598,8 @@ def send_assessment_report_email(recipient_email, report_data):
                     <h3 style="color: #1a237e; margin-top: 0;">⚖️ Dosha Distribution</h3>
                     <div style="margin-bottom: 15px;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                            <span style="font-weight: bold;">🌬️ Vata</span>
-                            <span>{report_data['scores']['vata']}%</span>
+                            <span style="font-weight: bold; color: #333;">🌬️ Vata</span>
+                            <span style="color: #333;">{report_data['scores']['vata']}%</span>
                         </div>
                         <div style="background: #e0e0e0; height: 20px; border-radius: 10px; overflow: hidden;">
                             <div style="background: #9C27B0; height: 100%; width: {report_data['scores']['vata']}%;"></div>
@@ -607,8 +607,8 @@ def send_assessment_report_email(recipient_email, report_data):
                     </div>
                     <div style="margin-bottom: 15px;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                            <span style="font-weight: bold;">🔥 Pitta</span>
-                            <span>{report_data['scores']['pitta']}%</span>
+                            <span style="font-weight: bold; color: #333;">🔥 Pitta</span>
+                            <span style="color: #333;">{report_data['scores']['pitta']}%</span>
                         </div>
                         <div style="background: #e0e0e0; height: 20px; border-radius: 10px; overflow: hidden;">
                             <div style="background: #FF5722; height: 100%; width: {report_data['scores']['pitta']}%;"></div>
@@ -616,8 +616,8 @@ def send_assessment_report_email(recipient_email, report_data):
                     </div>
                     <div>
                         <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                            <span style="font-weight: bold;">🌊 Kapha</span>
-                            <span>{report_data['scores']['kapha']}%</span>
+                            <span style="font-weight: bold; color: #333;">🌊 Kapha</span>
+                            <span style="color: #333;">{report_data['scores']['kapha']}%</span>
                         </div>
                         <div style="background: #e0e0e0; height: 20px; border-radius: 10px; overflow: hidden;">
                             <div style="background: #4CAF50; height: 100%; width: {report_data['scores']['kapha']}%;"></div>
@@ -627,8 +627,8 @@ def send_assessment_report_email(recipient_email, report_data):
                 
                 <div style="background: #e8f5e9; padding: 20px; border-radius: 6px; border-left: 4px solid #138808; margin-bottom: 20px;">
                     <h3 style="color: #2e7d32; margin-top: 0;">✨ Personalized Recommendations</h3>
-                    <ul style="margin: 0; padding-left: 20px;">
-                        {''.join([f'<li style="margin-bottom: 8px;">{rec}</li>' for rec in report_data['recommendations']])}
+                    <ul style="margin: 0; padding-left: 20px; color: #333;">
+                        {''.join([f'<li style="margin-bottom: 8px; color: #333;">{rec}</li>' for rec in report_data['recommendations']])}
                     </ul>
                 </div>
                 

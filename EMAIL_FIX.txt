@@ -1,0 +1,202 @@
+# 📧 EMAIL NOT WORKING? - QUICK FIX
+
+## 🚨 Most Common Issue: App Password Not Set
+
+### ✅ 3-Step Fix (5 Minutes)
+
+---
+
+## STEP 1: Get Gmail App Password
+
+1. **Enable 2-Step Verification** (REQUIRED!)
+   - Go to: https://myaccount.google.com/security
+   - Turn ON "2-Step Verification"
+   - Follow the setup
+
+2. **Generate App Password**
+   - Go to: https://myaccount.google.com/apppasswords
+   - Select: Mail → Other (Custom name)
+   - Name it: AyurAI Veda
+   - Click Generate
+   - **COPY THE 16-CHARACTER PASSWORD**
+   - Example: `abcdefghijklmnop` (NO SPACES!)
+
+---
+
+## STEP 2: Add to Vercel
+
+1. Go to: https://vercel.com/dashboard
+2. Select your project
+3. Settings → Environment Variables
+4. Add these 3 variables:
+
+```
+Name: SENDER_EMAIL
+Value: zjay5398@gmail.com
+Environment: ✅ Production ✅ Preview ✅ Development
+
+Name: GMAIL_APP_PASSWORD  
+Value: your_16_char_password (NO SPACES!)
+Environment: ✅ Production ✅ Preview ✅ Development
+
+Name: ADMIN_EMAIL
+Value: zjay5398@gmail.com
+Environment: ✅ Production ✅ Preview ✅ Development
+```
+
+5. Click Save for each
+
+---
+
+## STEP 3: Redeploy
+
+### Option A: Via Dashboard
+1. Go to Deployments tab
+2. Click "..." on latest deployment
+3. Click "Redeploy"
+
+### Option B: Via Git
+```bash
+git commit --allow-empty -m "Redeploy for email config"
+git push
+```
+
+### Option C: Via CLI
+```bash
+vercel --prod --force
+```
+
+---
+
+## ✅ Test It
+
+1. Wait 2-3 minutes after redeploy
+2. Go to: `https://your-app.vercel.app/feedback`
+3. Submit feedback
+4. Check email: zjay5398@gmail.com
+5. Check spam folder too!
+
+---
+
+## 🧪 Test Locally First
+
+Run this to verify your App Password works:
+
+```bash
+python test_email.py
+```
+
+Enter your credentials when prompted.
+
+If this works, the issue is with Vercel environment variables.
+
+---
+
+## 🔍 Check Vercel Logs
+
+```bash
+vercel logs --follow
+```
+
+Look for:
+- ✅ "Email sent successfully"
+- ❌ "Email error: ..."
+
+---
+
+## ❌ Common Mistakes
+
+1. **Using Gmail password instead of App Password**
+   - ❌ Your regular Gmail password
+   - ✅ 16-character App Password
+
+2. **App Password has spaces**
+   - ❌ `abcd efgh ijkl mnop`
+   - ✅ `abcdefghijklmnop`
+
+3. **2-Step Verification not enabled**
+   - Must be ON to generate App Passwords
+
+4. **Environment variables not set for all environments**
+   - Must check: Production, Preview, Development
+
+5. **Forgot to redeploy after adding variables**
+   - Variables only work after redeploy
+
+---
+
+## 📋 Verification Checklist
+
+- [ ] 2-Step Verification is ON
+- [ ] App Password generated (16 chars)
+- [ ] App Password has NO spaces
+- [ ] SENDER_EMAIL added to Vercel
+- [ ] GMAIL_APP_PASSWORD added to Vercel
+- [ ] ADMIN_EMAIL added to Vercel
+- [ ] All variables set for Production
+- [ ] Application redeployed
+- [ ] Waited 2-3 minutes
+- [ ] Tested feedback form
+- [ ] Checked email inbox
+- [ ] Checked spam folder
+
+---
+
+## 🆘 Still Not Working?
+
+### Check These:
+
+1. **Verify environment variables are set**:
+   - Vercel Dashboard → Settings → Environment Variables
+   - Should see all 3 variables with `***` values
+
+2. **Check Vercel logs for errors**:
+   ```bash
+   vercel logs
+   ```
+
+3. **Test locally first**:
+   ```bash
+   python test_email.py
+   ```
+
+4. **Try regenerating App Password**:
+   - Delete old one
+   - Generate new one
+   - Update in Vercel
+   - Redeploy
+
+---
+
+## 📖 Full Guide
+
+See `EMAIL_TROUBLESHOOTING.md` for complete troubleshooting guide.
+
+---
+
+## 💡 Quick Test Command
+
+```bash
+# Test email locally
+python test_email.py
+
+# Check Vercel logs
+vercel logs --follow
+
+# Force redeploy
+vercel --prod --force
+```
+
+---
+
+## ✅ Success = Email in Inbox!
+
+When working correctly:
+- Feedback form shows success message
+- Email arrives within 1-2 minutes
+- Vercel logs show "Email sent successfully"
+- No errors in console
+
+---
+
+**Need help? Check EMAIL_TROUBLESHOOTING.md or email: zjay5398@gmail.com**
