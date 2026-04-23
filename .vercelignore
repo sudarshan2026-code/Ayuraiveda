@@ -5,6 +5,7 @@ efficientnetv2-b3_notop.h5
 *.db
 
 # Original Flask app (too heavy for serverless)
+app.py
 app_original.py
 chat_db.py
 auth_db.py
