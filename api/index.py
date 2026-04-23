@@ -1,656 +1,428 @@
-from flask import Flask, request, jsonify, render_template_string
+from flask import Flask, request, jsonify, render_template, send_file, session
 import json
+import io
+import os
 from datetime import datetime
-import random
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='../templates', static_folder='../static')
+app.secret_key = os.getenv('SECRET_KEY', 'ayurveda_secret_key_2024')
 
-# CSS Styles
-STYLES = """
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #0a0a0a, #1a1a2e, #16213e);
-    color: #ffffff;
-    min-height: 100vh;
-    line-height: 1.6;
-}
-.container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
-.header { text-align: center; margin-bottom: 3rem; }
-.logo { 
-    font-size: 3rem; font-weight: bold; margin-bottom: 1rem; 
-    background: linear-gradient(45deg, #00D9FF, #7B2FFF, #FF2E97);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-}
-.subtitle { font-size: 1.2rem; opacity: 0.8; margin-bottom: 2rem; }
-.nav { display: flex; justify-content: center; gap: 2rem; margin: 2rem 0; flex-wrap: wrap; }
-.nav a { 
-    color: #00D9FF; text-decoration: none; padding: 0.5rem 1rem;
-    border: 1px solid rgba(0,217,255,0.3); border-radius: 8px;
-    transition: all 0.3s;
-}
-.nav a:hover { background: rgba(0,217,255,0.1); transform: translateY(-2px); }
-.features { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 3rem 0; }
-.feature { 
-    background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 12px; 
-    border: 1px solid rgba(0,217,255,0.3); transition: transform 0.3s;
-}
-.feature:hover { transform: translateY(-5px); }
-.feature h3 { color: #00D9FF; margin-bottom: 1rem; }
-.btn { 
-    display: inline-block; padding: 1rem 2rem; margin: 1rem;
-    background: linear-gradient(45deg, #00D9FF, #7B2FFF);
-    color: white; text-decoration: none; border-radius: 8px;
-    font-weight: bold; transition: transform 0.3s; border: none; cursor: pointer;
-}
-.btn:hover { transform: translateY(-2px); }
-.status { background: rgba(0,255,0,0.1); padding: 1rem; border-radius: 8px; margin: 2rem 0; }
-.form-group { margin: 1rem 0; }
-.form-group label { display: block; margin-bottom: 0.5rem; color: #00D9FF; }
-.form-group select, .form-group input { 
-    width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid rgba(0,217,255,0.3);
-    background: rgba(255,255,255,0.1); color: #fff;
-}
-.results { background: rgba(123,47,255,0.1); padding: 2rem; border-radius: 12px; margin: 2rem 0; }
-.dosha-meter { background: rgba(0,0,0,0.3); height: 30px; border-radius: 15px; margin: 1rem 0; overflow: hidden; }
-.dosha-fill { height: 100%; border-radius: 15px; transition: width 0.5s; }
-.vata { background: linear-gradient(45deg, #00D9FF, #0099CC); }
-.pitta { background: linear-gradient(45deg, #FF2E97, #CC2577); }
-.kapha { background: linear-gradient(45deg, #7B2FFF, #5522CC); }
-.chat-container { max-width: 800px; margin: 0 auto; }
-.chat-messages { 
-    height: 400px; overflow-y: auto; background: rgba(0,0,0,0.3); 
-    padding: 1rem; border-radius: 12px; margin-bottom: 1rem;
-}
-.message { margin: 1rem 0; padding: 1rem; border-radius: 8px; }
-.user-message { background: rgba(0,217,255,0.2); text-align: right; }
-.bot-message { background: rgba(123,47,255,0.2); }
-.chat-input { display: flex; gap: 1rem; }
-.chat-input input { flex: 1; padding: 1rem; border-radius: 8px; border: 1px solid rgba(0,217,255,0.3); background: rgba(255,255,255,0.1); color: #fff; }
-.footer { text-align: center; margin-top: 3rem; opacity: 0.7; border-top: 1px solid rgba(0,217,255,0.3); padding-top: 2rem; }
-</style>
-"""
+# ============= ROUTES =============
 
-# HTML Templates
-HOME_TEMPLATE = f"""
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AyurAI Veda - Ancient Wisdom. Intelligent Health.</title>
-    {STYLES}
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">🕉️ AyurAI Veda</div>
-            <div class="subtitle">Ancient Wisdom. Intelligent Health.</div>
-            <nav class="nav">
-                <a href="/">Home</a>
-                <a href="/about">About</a>
-                <a href="/assessment">Clinical Assessment</a>
-                <a href="/chat">AyurVaani Chat</a>
-                <a href="/contact">Contact</a>
-            </nav>
-        </div>
-        
-        <div class="status">
-            <h3>✅ Vercel Deployment: WORKING PERFECTLY!</h3>
-            <p>Serverless AyurAI Veda is running successfully with all features!</p>
-        </div>
-        
-        <div class="features">
-            <div class="feature">
-                <h3>🧠 Tridosha Intelligence Engine</h3>
-                <p>AI-powered analysis of Vata, Pitta, and Kapha doshas for personalized health insights based on ancient Ayurvedic principles.</p>
-                <a href="/assessment" class="btn">Start Assessment</a>
-            </div>
-            <div class="feature">
-                <h3>💬 AyurVaani AI Chatbot</h3>
-                <p>Conversational AI assistant with comprehensive Ayurvedic knowledge base for instant health guidance.</p>
-                <a href="/chat" class="btn">Chat Now</a>
-            </div>
-            <div class="feature">
-                <h3>📊 Comprehensive Analysis</h3>
-                <p>Detailed constitutional analysis with personalized diet, yoga, and lifestyle recommendations.</p>
-                <a href="/about" class="btn">Learn More</a>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>© 2026 AyurAI Veda. All rights reserved.</p>
-            <p>A Sudarshan Technologies Production</p>
-        </div>
-    </div>
-</body>
-</html>
-"""
-
-ABOUT_TEMPLATE = f"""
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - AyurAI Veda</title>
-    {STYLES}
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">🕉️ AyurAI Veda</div>
-            <div class="subtitle">Ancient Wisdom. Intelligent Health.</div>
-            <nav class="nav">
-                <a href="/">Home</a>
-                <a href="/about">About</a>
-                <a href="/assessment">Clinical Assessment</a>
-                <a href="/chat">AyurVaani Chat</a>
-                <a href="/contact">Contact</a>
-            </nav>
-        </div>
-        
-        <div class="features">
-            <div class="feature">
-                <h3>🌿 What is Ayurveda?</h3>
-                <p>Ayurveda is a 5,000-year-old system of natural healing from India. It emphasizes prevention and treatment through lifestyle practices, diet, herbal remedies, and spiritual practices.</p>
-            </div>
-            <div class="feature">
-                <h3>⚖️ The Three Doshas</h3>
-                <p><strong>Vata (Air + Space):</strong> Governs movement, creativity, nervous system<br>
-                <strong>Pitta (Fire + Water):</strong> Governs metabolism, digestion, transformation<br>
-                <strong>Kapha (Water + Earth):</strong> Governs structure, stability, immunity</p>
-            </div>
-            <div class="feature">
-                <h3>🤖 AI Enhancement</h3>
-                <p>Our Tridosha Intelligence Engine combines traditional Ayurvedic wisdom with modern AI to provide personalized health insights and recommendations.</p>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>© 2026 AyurAI Veda. All rights reserved.</p>
-            <p>A Sudarshan Technologies Production</p>
-        </div>
-    </div>
-</body>
-</html>
-"""
-
-ASSESSMENT_TEMPLATE = f"""
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clinical Assessment - AyurAI Veda</title>
-    {STYLES}
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">🕉️ AyurAI Veda</div>
-            <div class="subtitle">Tridosha Intelligence Engine Assessment</div>
-            <nav class="nav">
-                <a href="/">Home</a>
-                <a href="/about">About</a>
-                <a href="/assessment">Clinical Assessment</a>
-                <a href="/chat">AyurVaani Chat</a>
-                <a href="/contact">Contact</a>
-            </nav>
-        </div>
-        
-        <form id="assessmentForm" onsubmit="analyzeHealth(event)">
-            <div class="features">
-                <div class="feature">
-                    <h3>🏃‍♂️ Physical Constitution</h3>
-                    <div class="form-group">
-                        <label>Body Build:</label>
-                        <select name="body_build" required>
-                            <option value="">Select...</option>
-                            <option value="thin">Thin/Lean (Vata)</option>
-                            <option value="medium">Medium/Athletic (Pitta)</option>
-                            <option value="heavy">Heavy/Stocky (Kapha)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Skin Type:</label>
-                        <select name="skin" required>
-                            <option value="">Select...</option>
-                            <option value="dry">Dry/Rough (Vata)</option>
-                            <option value="oily">Oily/Sensitive (Pitta)</option>
-                            <option value="smooth">Smooth/Thick (Kapha)</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="feature">
-                    <h3>🍽️ Digestion & Appetite</h3>
-                    <div class="form-group">
-                        <label>Appetite:</label>
-                        <select name="appetite" required>
-                            <option value="">Select...</option>
-                            <option value="variable">Variable/Irregular (Vata)</option>
-                            <option value="strong">Strong/Sharp (Pitta)</option>
-                            <option value="steady">Steady/Slow (Kapha)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Digestion:</label>
-                        <select name="digestion" required>
-                            <option value="">Select...</option>
-                            <option value="irregular">Irregular/Gas (Vata)</option>
-                            <option value="quick">Quick/Acidic (Pitta)</option>
-                            <option value="slow">Slow/Heavy (Kapha)</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="feature">
-                    <h3>😴 Sleep & Energy</h3>
-                    <div class="form-group">
-                        <label>Sleep Pattern:</label>
-                        <select name="sleep" required>
-                            <option value="">Select...</option>
-                            <option value="light">Light/Restless (Vata)</option>
-                            <option value="moderate">Moderate/Sound (Pitta)</option>
-                            <option value="deep">Deep/Heavy (Kapha)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Energy Level:</label>
-                        <select name="energy" required>
-                            <option value="">Select...</option>
-                            <option value="variable">Variable/Bursts (Vata)</option>
-                            <option value="moderate">Moderate/Steady (Pitta)</option>
-                            <option value="steady">Steady/Enduring (Kapha)</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            
-            <div style="text-align: center;">
-                <button type="submit" class="btn">🔍 Analyze with Tridosha Intelligence Engine</button>
-            </div>
-        </form>
-        
-        <div id="results" style="display: none;"></div>
-        
-        <div class="footer">
-            <p>© 2026 AyurAI Veda. All rights reserved.</p>
-            <p>A Sudarshan Technologies Production</p>
-        </div>
-    </div>
-    
-    <script>
-    async function analyzeHealth(event) {{
-        event.preventDefault();
-        const formData = new FormData(event.target);
-        const data = Object.fromEntries(formData);
-        
-        try {{
-            const response = await fetch('/api/analyze', {{
-                method: 'POST',
-                headers: {{ 'Content-Type': 'application/json' }},
-                body: JSON.stringify(data)
-            }});
-            const result = await response.json();
-            displayResults(result);
-        }} catch (error) {{
-            console.error('Error:', error);
-        }}
-    }}
-    
-    function displayResults(result) {{
-        const resultsDiv = document.getElementById('results');
-        resultsDiv.innerHTML = `
-            <div class="results">
-                <h2>🎯 Your Tridosha Analysis Results</h2>
-                <div class="feature">
-                    <h3>Dominant Dosha: ${{result.dominant}}</h3>
-                    <p>Risk Level: <strong>${{result.risk}}</strong></p>
-                    
-                    <h4>Dosha Distribution:</h4>
-                    <div>
-                        <label>Vata: ${{result.scores.vata}}%</label>
-                        <div class="dosha-meter">
-                            <div class="dosha-fill vata" style="width: ${{result.scores.vata}}%"></div>
-                        </div>
-                    </div>
-                    <div>
-                        <label>Pitta: ${{result.scores.pitta}}%</label>
-                        <div class="dosha-meter">
-                            <div class="dosha-fill pitta" style="width: ${{result.scores.pitta}}%"></div>
-                        </div>
-                    </div>
-                    <div>
-                        <label>Kapha: ${{result.scores.kapha}}%</label>
-                        <div class="dosha-meter">
-                            <div class="dosha-fill kapha" style="width: ${{result.scores.kapha}}%"></div>
-                        </div>
-                    </div>
-                    
-                    <h4>🍎 Personalized Recommendations:</h4>
-                    <ul>
-                        ${{result.recommendations.map(rec => `<li>${{rec}}</li>`).join('')}}
-                    </ul>
-                </div>
-            </div>
-        `;
-        resultsDiv.style.display = 'block';
-        resultsDiv.scrollIntoView({{ behavior: 'smooth' }});
-    }}
-    </script>
-</body>
-</html>
-"""
-
-CHAT_TEMPLATE = f"""
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AyurVaani Chat - AyurAI Veda</title>
-    {STYLES}
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">🕉️ AyurAI Veda</div>
-            <div class="subtitle">AyurVaani AI Chatbot</div>
-            <nav class="nav">
-                <a href="/">Home</a>
-                <a href="/about">About</a>
-                <a href="/assessment">Clinical Assessment</a>
-                <a href="/chat">AyurVaani Chat</a>
-                <a href="/contact">Contact</a>
-            </nav>
-        </div>
-        
-        <div class="chat-container">
-            <div class="feature">
-                <h3>💬 Chat with AyurVaani</h3>
-                <p>Ask questions about Ayurveda, doshas, health tips, and lifestyle recommendations.</p>
-            </div>
-            
-            <div class="chat-messages" id="chatMessages">
-                <div class="message bot-message">
-                    <strong>AyurVaani:</strong> Namaste! I'm AyurVaani, your Ayurvedic AI assistant. How can I help you with your health and wellness journey today?
-                </div>
-            </div>
-            
-            <div class="chat-input">
-                <input type="text" id="userInput" placeholder="Ask about Ayurveda, doshas, diet, yoga..." onkeypress="handleKeyPress(event)">
-                <button onclick="sendMessage()" class="btn">Send</button>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>© 2026 AyurAI Veda. All rights reserved.</p>
-            <p>A Sudarshan Technologies Production</p>
-        </div>
-    </div>
-    
-    <script>
-    function handleKeyPress(event) {{
-        if (event.key === 'Enter') {{
-            sendMessage();
-        }}
-    }}
-    
-    async function sendMessage() {{
-        const input = document.getElementById('userInput');
-        const message = input.value.trim();
-        if (!message) return;
-        
-        // Add user message
-        addMessage(message, 'user');
-        input.value = '';
-        
-        try {{
-            const response = await fetch('/api/chat', {{
-                method: 'POST',
-                headers: {{ 'Content-Type': 'application/json' }},
-                body: JSON.stringify({{ message: message }})
-            }});
-            const result = await response.json();
-            addMessage(result.response, 'bot');
-        }} catch (error) {{
-            addMessage('Sorry, I encountered an error. Please try again.', 'bot');
-        }}
-    }}
-    
-    function addMessage(message, sender) {{
-        const messagesDiv = document.getElementById('chatMessages');
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${{sender}}-message`;
-        messageDiv.innerHTML = `<strong>${{sender === 'user' ? 'You' : 'AyurVaani'}}:</strong> ${{message}}`;
-        messagesDiv.appendChild(messageDiv);
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    }}
-    </script>
-</body>
-</html>
-"""
-
-CONTACT_TEMPLATE = f"""
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact - AyurAI Veda</title>
-    {STYLES}
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">🕉️ AyurAI Veda</div>
-            <div class="subtitle">Contact & Information</div>
-            <nav class="nav">
-                <a href="/">Home</a>
-                <a href="/about">About</a>
-                <a href="/assessment">Clinical Assessment</a>
-                <a href="/chat">AyurVaani Chat</a>
-                <a href="/contact">Contact</a>
-            </nav>
-        </div>
-        
-        <div class="features">
-            <div class="feature">
-                <h3>📧 Contact Information</h3>
-                <p><strong>Email:</strong> zjay5398@gmail.com</p>
-                <p><strong>Project:</strong> AyurAI Veda - AI-Powered Ayurvedic Health System</p>
-                <p><strong>Technology:</strong> Flask, Python, Vercel Serverless</p>
-            </div>
-            <div class="feature">
-                <h3>⚠️ Important Disclaimer</h3>
-                <p><strong>This system provides educational and preventive insights only. It is NOT a medical diagnosis platform.</strong></p>
-                <p>Always consult qualified healthcare professionals for medical advice.</p>
-            </div>
-            <div class="feature">
-                <h3>🏆 About the Project</h3>
-                <p>AyurAI Veda integrates ancient Ayurvedic wisdom with modern AI technology to provide personalized health insights based on the Tridosha system.</p>
-                <p><strong>A Sudarshan Technologies Production</strong></p>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>© 2026 AyurAI Veda. All rights reserved.</p>
-            <p>A Sudarshan Technologies Production</p>
-        </div>
-    </div>
-</body>
-</html>
-"""
-
-# Routes
 @app.route('/')
 def home():
-    return HOME_TEMPLATE
+    return render_template('index.html')
 
 @app.route('/about')
 def about():
-    return ABOUT_TEMPLATE
+    return render_template('about.html')
 
 @app.route('/assessment')
 def assessment():
-    return ASSESSMENT_TEMPLATE
+    return render_template('assessment.html')
 
-@app.route('/chat')
-def chat():
-    return CHAT_TEMPLATE
+@app.route('/chatbot')
+def chatbot():
+    return render_template('chatbot.html')
 
 @app.route('/contact')
 def contact():
-    return CONTACT_TEMPLATE
+    return render_template('contact.html')
 
-@app.route('/api/analyze', methods=['POST'])
-def analyze():
-    try:
-        data = request.get_json()
-        
-        # Simple scoring logic
-        vata_score = 0
-        pitta_score = 0
-        kapha_score = 0
-        
-        # Body build scoring
-        if data.get('body_build') == 'thin': vata_score += 25
-        elif data.get('body_build') == 'medium': pitta_score += 25
-        elif data.get('body_build') == 'heavy': kapha_score += 25
-        
-        # Skin scoring
-        if data.get('skin') == 'dry': vata_score += 20
-        elif data.get('skin') == 'oily': pitta_score += 20
-        elif data.get('skin') == 'smooth': kapha_score += 20
-        
-        # Appetite scoring
-        if data.get('appetite') == 'variable': vata_score += 15
-        elif data.get('appetite') == 'strong': pitta_score += 15
-        elif data.get('appetite') == 'steady': kapha_score += 15
-        
-        # Digestion scoring
-        if data.get('digestion') == 'irregular': vata_score += 20
-        elif data.get('digestion') == 'quick': pitta_score += 20
-        elif data.get('digestion') == 'slow': kapha_score += 20
-        
-        # Sleep scoring
-        if data.get('sleep') == 'light': vata_score += 10
-        elif data.get('sleep') == 'moderate': pitta_score += 10
-        elif data.get('sleep') == 'deep': kapha_score += 10
-        
-        # Energy scoring
-        if data.get('energy') == 'variable': vata_score += 10
-        elif data.get('energy') == 'moderate': pitta_score += 10
-        elif data.get('energy') == 'steady': kapha_score += 10
-        
-        # Normalize scores
-        total = vata_score + pitta_score + kapha_score
-        if total > 0:
-            vata_percent = round((vata_score / total) * 100)
-            pitta_percent = round((pitta_score / total) * 100)
-            kapha_percent = round((kapha_score / total) * 100)
-        else:
-            vata_percent = pitta_percent = kapha_percent = 33
-        
-        # Determine dominant dosha
-        scores = {'vata': vata_percent, 'pitta': pitta_percent, 'kapha': kapha_percent}
-        dominant = max(scores, key=scores.get)
-        
-        # Risk level
-        max_score = max(vata_percent, pitta_percent, kapha_percent)
-        if max_score >= 50: risk = 'High'
-        elif max_score >= 40: risk = 'Moderate'
-        else: risk = 'Low'
-        
-        # Recommendations based on dominant dosha
-        recommendations = {
-            'vata': [
-                'Follow regular daily routine',
-                'Eat warm, cooked foods',
-                'Practice oil massage (abhyanga)',
-                'Get adequate sleep (7-8 hours)',
-                'Avoid cold, dry foods',
-                'Practice gentle yoga and meditation'
-            ],
-            'pitta': [
-                'Avoid spicy, hot foods',
-                'Stay cool and avoid overheating',
-                'Practice moderation in activities',
-                'Eat cooling foods like cucumber, coconut',
-                'Avoid excessive sun exposure',
-                'Practice calming pranayama'
-            ],
-            'kapha': [
-                'Engage in regular vigorous exercise',
-                'Eat light, warm, spicy foods',
-                'Avoid heavy, oily foods',
-                'Wake up early (before 6 AM)',
-                'Stay active and avoid sedentary lifestyle',
-                'Practice energizing breathing exercises'
-            ]
-        }
-        
-        return jsonify({
-            'status': 'success',
-            'dominant': dominant.capitalize(),
-            'scores': scores,
-            'risk': risk,
-            'recommendations': recommendations[dominant],
-            'timestamp': datetime.now().isoformat()
-        })
-        
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+@app.route('/clinical-assessment')
+def clinical_assessment():
+    return render_template('clinical_assessment.html')
 
-@app.route('/api/chat', methods=['POST'])
-def chat_api():
-    try:
-        data = request.get_json()
-        message = data.get('message', '').lower()
-        
-        # Simple chatbot responses
-        responses = {
-            'vata': 'Vata dosha governs movement and is associated with air and space elements. When balanced, it promotes creativity and flexibility. When imbalanced, it can cause anxiety, dry skin, and digestive issues. Balance vata with warm foods, regular routines, and oil massage.',
-            'pitta': 'Pitta dosha governs metabolism and is associated with fire and water elements. When balanced, it promotes good digestion and sharp intellect. When imbalanced, it can cause acidity, anger, and skin inflammation. Balance pitta with cooling foods and avoiding excessive heat.',
-            'kapha': 'Kapha dosha governs structure and is associated with water and earth elements. When balanced, it provides strength and immunity. When imbalanced, it can cause weight gain, congestion, and lethargy. Balance kapha with light foods, regular exercise, and staying active.',
-            'diet': 'Ayurvedic diet is based on your dosha constitution. Vata types need warm, moist foods. Pitta types need cooling, less spicy foods. Kapha types need light, warm, spicy foods. Eat fresh, seasonal foods and avoid processed items.',
-            'yoga': 'Yoga is an integral part of Ayurveda. Vata types benefit from gentle, grounding poses. Pitta types need cooling, moderate practices. Kapha types need energizing, vigorous sequences. Practice regularly for best results.',
-            'sleep': 'Good sleep is crucial for health. Vata types need 7-8 hours with regular bedtime. Pitta types need 6-7 hours in cool environment. Kapha types need 6-7 hours and should wake early. Avoid screens before bed.',
-            'meditation': 'Meditation balances all doshas. Vata types benefit from grounding meditations. Pitta types need cooling, calming practices. Kapha types benefit from energizing techniques. Start with 10-15 minutes daily.'
-        }
-        
-        # Find matching response
-        response = "I'm AyurVaani, your Ayurvedic AI assistant. I can help you with questions about doshas (vata, pitta, kapha), diet, yoga, sleep, meditation, and general Ayurvedic principles. What would you like to know?"
-        
-        for keyword, resp in responses.items():
-            if keyword in message:
-                response = resp
-                break
-        
-        # Add some variety
-        greetings = ['Namaste!', 'Great question!', 'According to Ayurveda,', 'Here\'s what I can tell you:']
-        response = f"{random.choice(greetings)} {response}"
-        
-        return jsonify({
-            'response': response,
-            'timestamp': datetime.now().isoformat()
-        })
-        
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+@app.route('/comprehensive-assessment')
+def comprehensive_assessment():
+    return render_template('comprehensive_assessment.html')
 
-@app.route('/api/health')
-def health():
+@app.route('/feedback')
+def feedback():
+    return render_template('feedback.html')
+
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
+
+# ============= API ENDPOINTS =============
+
+@app.route('/health')
+def health_check():
     return jsonify({
         'status': 'healthy',
         'service': 'AyurAI Veda',
         'version': '2.0.0',
-        'features': ['Assessment', 'Chat', 'Analysis'],
-        'timestamp': datetime.now().isoformat()
+        'timestamp': datetime.now().isoformat(),
+        'environment': 'vercel' if os.getenv('VERCEL') else 'local'
     })
 
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.route('/api/status')
+def api_status():
+    return jsonify({
+        'api': 'AyurAI Veda API',
+        'status': 'operational',
+        'features': {
+            'clinical_assessment': True,
+            'comprehensive_assessment': True,
+            'chatbot': True,
+            'feedback': True
+        }
+    })
+
+@app.route('/analyze', methods=['POST'])
+def analyze():
+    try:
+        data = request.json
+        result = analyze_tridosha(data)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/clinical-analyze', methods=['POST'])
+def clinical_analyze():
+    try:
+        data = request.json
+        result = analyze_clinical(data)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/comprehensive-analyze', methods=['POST'])
+def comprehensive_analyze():
+    try:
+        data = request.json
+        result = analyze_comprehensive(data)
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    try:
+        data = request.json
+        message = data.get('message', '').lower()
+        response = get_chatbot_response(message)
+        return jsonify({'response': response})
+    except Exception as e:
+        return jsonify({'response': 'Sorry, I encountered an error. Please try again.'}), 500
+
+@app.route('/submit-feedback', methods=['POST'])
+def submit_feedback():
+    try:
+        data = request.json
+        # Validate required fields
+        required = ['name', 'mobile', 'institute', 'designation', 'feedback']
+        for field in required:
+            if not data.get(field):
+                return jsonify({'success': False, 'message': f'{field.title()} is required'})
+        
+        # Log feedback (in production, save to database)
+        print(f"Feedback from {data['name']}: {data['feedback']}")
+        return jsonify({'success': True, 'message': 'Feedback submitted successfully'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': 'An error occurred'}), 500
+
+# ============= ANALYSIS FUNCTIONS =============
+
+def analyze_tridosha(data):
+    """Basic Tridosha analysis"""
+    vata_score = pitta_score = kapha_score = 0
+    
+    # Body build
+    if data.get('body_build') == 'thin': vata_score += 25
+    elif data.get('body_build') == 'medium': pitta_score += 25
+    elif data.get('body_build') == 'heavy': kapha_score += 25
+    
+    # Skin
+    if data.get('skin') == 'dry': vata_score += 20
+    elif data.get('skin') == 'oily': pitta_score += 20
+    elif data.get('skin') == 'smooth': kapha_score += 20
+    
+    # Appetite
+    if data.get('appetite') == 'variable': vata_score += 15
+    elif data.get('appetite') == 'strong': pitta_score += 15
+    elif data.get('appetite') == 'steady': kapha_score += 15
+    
+    # Digestion
+    if data.get('digestion') == 'irregular': vata_score += 20
+    elif data.get('digestion') == 'quick': pitta_score += 20
+    elif data.get('digestion') == 'slow': kapha_score += 20
+    
+    # Sleep
+    if data.get('sleep') == 'light': vata_score += 10
+    elif data.get('sleep') == 'moderate': pitta_score += 10
+    elif data.get('sleep') == 'deep': kapha_score += 10
+    
+    # Energy
+    if data.get('energy') == 'variable': vata_score += 10
+    elif data.get('energy') == 'moderate': pitta_score += 10
+    elif data.get('energy') == 'steady': kapha_score += 10
+    
+    # Calculate percentages
+    total = vata_score + pitta_score + kapha_score
+    if total > 0:
+        vata_percent = round((vata_score / total) * 100)
+        pitta_percent = round((pitta_score / total) * 100)
+        kapha_percent = round((kapha_score / total) * 100)
+    else:
+        vata_percent = pitta_percent = kapha_percent = 33
+    
+    scores = {'vata': vata_percent, 'pitta': pitta_percent, 'kapha': kapha_percent}
+    dominant = max(scores, key=scores.get)
+    
+    # Risk level
+    max_score = max(vata_percent, pitta_percent, kapha_percent)
+    if max_score >= 50: risk = 'High'
+    elif max_score >= 40: risk = 'Moderate'
+    else: risk = 'Low'
+    
+    return {
+        'dominant': dominant.capitalize(),
+        'scores': scores,
+        'risk': risk,
+        'recommendations': get_recommendations(dominant),
+        'timestamp': datetime.now().isoformat()
+    }
+
+def analyze_clinical(data):
+    """Clinical assessment analysis"""
+    vata_score = pitta_score = kapha_score = 0
+    
+    # Body structure
+    if data.get('body_structure') == 'lean': vata_score += 20
+    elif data.get('body_structure') == 'moderate': pitta_score += 20
+    elif data.get('body_structure') == 'heavy': kapha_score += 20
+    
+    # Skin
+    if data.get('skin') == 'dry': vata_score += 15
+    elif data.get('skin') == 'normal': pitta_score += 15
+    elif data.get('skin') == 'oily': kapha_score += 15
+    
+    # Appetite
+    if data.get('appetite') == 'irregular': vata_score += 15
+    elif data.get('appetite') == 'excessive': pitta_score += 15
+    elif data.get('appetite') == 'low': kapha_score += 15
+    
+    # Digestion
+    if data.get('digestion') == 'gas': vata_score += 15
+    elif data.get('digestion') == 'normal': pitta_score += 15
+    elif data.get('digestion') == 'slow': kapha_score += 15
+    
+    # Sleep
+    if data.get('sleep') == 'poor': vata_score += 10
+    elif data.get('sleep') == 'good': pitta_score += 10
+    elif data.get('sleep') == 'excellent': kapha_score += 10
+    
+    # Energy
+    if data.get('energy') == 'fluctuating': vata_score += 10
+    elif data.get('energy') == 'hyperactive': pitta_score += 10
+    elif data.get('energy') == 'stable': kapha_score += 10
+    
+    # Calculate percentages
+    total = vata_score + pitta_score + kapha_score
+    if total > 0:
+        vata_percent = round((vata_score / total) * 100)
+        pitta_percent = round((pitta_score / total) * 100)
+        kapha_percent = round((kapha_score / total) * 100)
+    else:
+        vata_percent = pitta_percent = kapha_percent = 33
+    
+    scores = {'vata': vata_percent, 'pitta': pitta_percent, 'kapha': kapha_percent}
+    dominant = max(scores, key=scores.get)
+    
+    max_score = max(vata_percent, pitta_percent, kapha_percent)
+    if max_score >= 50: risk = 'High'
+    elif max_score >= 40: risk = 'Moderate'
+    else: risk = 'Low'
+    
+    return {
+        'dominant': dominant.capitalize(),
+        'scores': scores,
+        'risk': risk,
+        'dosha_state': 'Balanced' if max_score < 45 else 'Imbalanced',
+        'agni_state': 'Strong' if data.get('digestion') == 'normal' else 'Weak',
+        'recommendations': get_recommendations(dominant),
+        'diet_suggestions': get_diet_suggestions(dominant),
+        'lifestyle_tips': get_lifestyle_tips(dominant),
+        'timestamp': datetime.now().isoformat()
+    }
+
+def analyze_comprehensive(data):
+    """Comprehensive 59-question analysis"""
+    vata_count = pitta_count = kapha_count = 0
+    total_questions = 0
+    
+    for key, value in data.items():
+        if key.startswith('q') and value:
+            total_questions += 1
+            if value == 'A': vata_count += 1
+            elif value == 'B': pitta_count += 1
+            elif value == 'C': kapha_count += 1
+    
+    if total_questions == 0:
+        return {'error': 'No valid responses found'}
+    
+    vata_percent = int((vata_count / total_questions) * 100)
+    pitta_percent = int((pitta_count / total_questions) * 100)
+    kapha_percent = int((kapha_count / total_questions) * 100)
+    
+    scores = {'vata': vata_percent, 'pitta': pitta_percent, 'kapha': kapha_percent}
+    dominant = max(scores, key=scores.get)
+    
+    max_score = max(vata_percent, pitta_percent, kapha_percent)
+    if max_score >= 50: risk = 'High'
+    elif max_score >= 40: risk = 'Moderate'
+    else: risk = 'Low'
+    
+    return {
+        'dominant': dominant.capitalize(),
+        'scores': scores,
+        'risk': risk,
+        'assessment_type': 'Comprehensive Prakriti Assessment',
+        'total_questions': total_questions,
+        'dosha_state': 'Balanced' if max_score < 45 else 'Imbalanced',
+        'recommendations': get_recommendations(dominant),
+        'diet_suggestions': get_diet_suggestions(dominant),
+        'lifestyle_tips': get_lifestyle_tips(dominant),
+        'timestamp': datetime.now().isoformat()
+    }
+
+# ============= RECOMMENDATION FUNCTIONS =============
+
+def get_recommendations(dominant):
+    recommendations = {
+        'vata': [
+            'Follow regular daily routine',
+            'Eat warm, cooked foods',
+            'Practice oil massage (abhyanga)',
+            'Get adequate sleep (7-8 hours)',
+            'Avoid cold, dry foods',
+            'Practice gentle yoga and meditation'
+        ],
+        'pitta': [
+            'Avoid spicy, hot foods',
+            'Stay cool and avoid overheating',
+            'Practice moderation in activities',
+            'Eat cooling foods like cucumber, coconut',
+            'Avoid excessive sun exposure',
+            'Practice calming pranayama'
+        ],
+        'kapha': [
+            'Engage in regular vigorous exercise',
+            'Eat light, warm, spicy foods',
+            'Avoid heavy, oily foods',
+            'Wake up early (before 6 AM)',
+            'Stay active and avoid sedentary lifestyle',
+            'Practice energizing breathing exercises'
+        ]
+    }
+    return recommendations.get(dominant, recommendations['vata'])
+
+def get_diet_suggestions(dominant):
+    diet_plans = {
+        'vata': {
+            'foods_to_favor': ['Warm cooked grains', 'Sweet fruits', 'Healthy fats', 'Warm spices'],
+            'foods_to_avoid': ['Cold foods', 'Raw vegetables', 'Dry foods', 'Stimulants'],
+            'meal_timing': ['Regular meal times', 'Largest meal at lunch', 'Warm environment']
+        },
+        'pitta': {
+            'foods_to_favor': ['Cooling foods', 'Sweet fruits', 'Leafy greens', 'Cooling spices'],
+            'foods_to_avoid': ['Spicy foods', 'Sour foods', 'Salty foods', 'Alcohol'],
+            'meal_timing': ['Never skip meals', 'Cool environment', 'Avoid eating when stressed']
+        },
+        'kapha': {
+            'foods_to_favor': ['Light foods', 'Warming spices', 'Astringent fruits', 'Light proteins'],
+            'foods_to_avoid': ['Heavy foods', 'Sweet foods', 'Dairy products', 'Cold foods'],
+            'meal_timing': ['Light breakfast', 'Main meal at lunch', 'Early light dinner']
+        }
+    }
+    return diet_plans.get(dominant, diet_plans['vata'])
+
+def get_lifestyle_tips(dominant):
+    tips = {
+        'vata': {
+            'daily_routine': ['Wake at 6 AM', 'Oil massage', 'Regular meals', 'Sleep by 10 PM'],
+            'seasonal_care': ['Extra care in autumn', 'Stay warm', 'Avoid cold winds'],
+            'exercise': ['Gentle yoga', 'Walking', 'Swimming', 'Avoid excessive cardio']
+        },
+        'pitta': {
+            'daily_routine': ['Wake at 5:30 AM', 'Cool shower', 'Moderate exercise', 'Sleep by 10:30 PM'],
+            'seasonal_care': ['Extra care in summer', 'Stay cool', 'Avoid midday sun'],
+            'exercise': ['Swimming', 'Yoga in cool place', 'Moderate cardio', 'Avoid competition']
+        },
+        'kapha': {
+            'daily_routine': ['Wake at 5 AM', 'Vigorous exercise', 'Light meals', 'Stay active'],
+            'seasonal_care': ['Extra care in spring', 'Increase activity', 'Reduce heavy foods'],
+            'exercise': ['High-intensity cardio', 'Weight training', 'Running', 'Dynamic yoga']
+        }
+    }
+    return tips.get(dominant, tips['vata'])
+
+# ============= CHATBOT FUNCTION =============
+
+def get_chatbot_response(message):
+    """Enhanced chatbot with comprehensive responses"""
+    
+    if 'tridosha' in message or 'tri dosha' in message or 'three dosha' in message:
+        return """<strong>Tridosha - The Three Fundamental Energies</strong><br><br>
+Tridosha is the foundation of Ayurveda, consisting of three biological energies (doshas) that govern all physical and mental processes:<br><br>
+<strong>🌬️ Vata (Air + Space)</strong><br>
+• Governs: Movement, breathing, circulation, nervous system<br>
+• Qualities: Dry, light, cold, mobile, irregular<br>
+• Imbalance: Anxiety, insomnia, constipation, dry skin<br>
+• Balance: Warm foods, routine, oil massage<br><br>
+<strong>🔥 Pitta (Fire + Water)</strong><br>
+• Governs: Metabolism, digestion, body temperature, intelligence<br>
+• Qualities: Hot, sharp, intense, oily, penetrating<br>
+• Imbalance: Acidity, inflammation, anger, skin rashes<br>
+• Balance: Cooling foods, meditation, avoid spicy items<br><br>
+<strong>🌊 Kapha (Water + Earth)</strong><br>
+• Governs: Structure, stability, lubrication, immunity<br>
+• Qualities: Heavy, slow, cool, oily, stable<br>
+• Imbalance: Weight gain, lethargy, congestion<br>
+• Balance: Light foods, exercise, avoid dairy<br><br>
+Everyone has a unique combination of these three doshas, called their <strong>Prakriti</strong> (constitution). Take our AI Health Assessment to discover your dominant dosha! 🌿"""
+    
+    elif 'vata' in message:
+        return "Vata dosha (Air + Space) governs movement, creativity, and the nervous system. When balanced, it promotes creativity and flexibility. When imbalanced, it can cause anxiety, dry skin, and digestive issues. Balance vata with warm foods, regular routines, and oil massage."
+    
+    elif 'pitta' in message:
+        return "Pitta dosha (Fire + Water) governs metabolism and is associated with fire and water elements. When balanced, it promotes good digestion and sharp intellect. When imbalanced, it can cause acidity, anger, and skin inflammation. Balance pitta with cooling foods and avoiding excessive heat."
+    
+    elif 'kapha' in message:
+        return "Kapha dosha (Water + Earth) governs structure and is associated with water and earth elements. When balanced, it provides strength and immunity. When imbalanced, it can cause weight gain, congestion, and lethargy. Balance kapha with light foods, regular exercise, and staying active."
+    
+    elif 'diet' in message or 'food' in message:
+        return "Ayurvedic diet is based on your dosha constitution. Vata types need warm, moist foods. Pitta types need cooling, less spicy foods. Kapha types need light, warm, spicy foods. Eat fresh, seasonal foods and avoid processed items."
+    
+    elif 'yoga' in message or 'exercise' in message:
+        return "Yoga is an integral part of Ayurveda. Vata types benefit from gentle, grounding poses. Pitta types need cooling, moderate practices. Kapha types need energizing, vigorous sequences. Practice regularly for best results."
+    
+    elif 'sleep' in message or 'insomnia' in message:
+        return "Good sleep is crucial for health. Vata types need 7-8 hours with regular bedtime. Pitta types need 6-7 hours in cool environment. Kapha types need 6-7 hours and should wake early. Avoid screens before bed."
+    
+    elif 'stress' in message or 'anxiety' in message:
+        return "Ayurvedic stress management: Regular routine, adequate sleep, meditation, pranayama (breathing exercises), Abhyanga (oil massage), and adaptogenic herbs like Ashwagandha. Stress is seen as Vata imbalance affecting the mind."
+    
+    elif 'digestion' in message or 'agni' in message:
+        return "To improve digestion (Agni): Eat at regular times, use digestive spices (ginger, cumin, fennel), avoid overeating, drink warm water, and walk after meals. Strong Agni is key to health in Ayurveda."
+    
+    elif 'meditation' in message:
+        return "Meditation balances all doshas. Vata types benefit from grounding meditations. Pitta types need cooling, calming practices. Kapha types benefit from energizing techniques. Start with 10-15 minutes daily."
+    
+    elif 'herb' in message or 'ashwagandha' in message or 'turmeric' in message:
+        return "Key Ayurvedic herbs: Ashwagandha (stress relief, strength), Turmeric (anti-inflammatory), Tulsi (immunity, stress), Amla (Vitamin C, rejuvenation), Brahmi (memory, clarity), and Neem (blood purification)."
+    
+    else:
+        return """Hello! I'm AyurVaani™, your Ayurvedic wellness assistant. I can help you with:<br><br>
+🌬️ Understanding Vata, Pitta, and Kapha doshas<br>
+🍽️ Personalized diet recommendations<br>
+🌿 Herbal remedies and natural treatments<br>
+🧘 Yoga and pranayama practices<br>
+😌 Stress management and sleep improvement<br>
+🔥 Digestive health and Agni strengthening<br><br>
+What would you like to know about Ayurveda today?"""
+
+# Vercel serverless handler
+handler = app
