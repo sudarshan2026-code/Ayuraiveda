@@ -12,6 +12,11 @@ class EnhancedClinicalEngine:
     def load_model(self):
         """Load the trained ML model"""
         try:
+            # Check if running on Vercel (serverless environment)
+            if os.getenv('VERCEL') or os.getenv('VERCEL_ENV'):
+                print("⚠ Running on Vercel - ML model disabled, using rule-based system")
+                return False
+                
             if os.path.exists(self.model_path):
                 with open(self.model_path, 'rb') as f:
                     loaded_data = pickle.load(f)

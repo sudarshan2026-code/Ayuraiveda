@@ -39,22 +39,53 @@ def login_required(f):
 
 # Use strict validated engine (classical Ayurvedic principles)
 try:
-    from strict_ai_engine import StrictTridoshaEngine
-    tie = StrictTridoshaEngine()
-    print("✓ Using Strict Tridosha Engine (Classical Ayurvedic Validation)")
-except:
+    from enhanced_clinical_engine import EnhancedClinicalEngine
+    print("✓ Using Enhanced Clinical Engine (ML + Classical Validation)")
+except Exception as e:
+    print(f"⚠ Enhanced engine not available: {e}")
     try:
-        from corrected_ai_engine import CorrectedTridoshaEngine
-        tie = CorrectedTridoshaEngine()
-        print("✓ Using Corrected Tridosha Engine (Disease-Risk Consistency)")
+        from strict_ai_engine import StrictTridoshaEngine
+        tie = StrictTridoshaEngine()
+        print("✓ Using Strict Tridosha Engine (Classical Ayurvedic Validation)")
     except:
-        from ai_engine import TridoshaIntelligenceEngine
-        tie = TridoshaIntelligenceEngine()
-        print("✓ Using basic assessment engine")
+        try:
+            from corrected_ai_engine import CorrectedTridoshaEngine
+            tie = CorrectedTridoshaEngine()
+            print("✓ Using Corrected Tridosha Engine (Disease-Risk Consistency)")
+        except:
+            from ai_engine import TridoshaIntelligenceEngine
+            tie = TridoshaIntelligenceEngine()
+            print("✓ Using basic assessment engine")
 
 # Load disease predictor
 from disease_predictor import DiseasePredictor
 disease_predictor = DiseasePredictor()
+
+@app.route('/health')
+def health_check():
+    """Health check endpoint for Vercel"""
+    return jsonify({
+        'status': 'healthy',
+        'service': 'AyurAI Veda',
+        'version': '1.0.0',
+        'timestamp': datetime.now().isoformat(),
+        'environment': 'vercel' if os.getenv('VERCEL') else 'local'
+    })
+
+@app.route('/api/status')
+def api_status():
+    """API status endpoint"""
+    return jsonify({
+        'api': 'AyurAI Veda API',
+        'status': 'operational',
+        'features': {
+            'clinical_assessment': True,
+            'comprehensive_assessment': True,
+            'chatbot': bool(os.getenv('GROQ_API_KEY')),
+            'email_feedback': bool(os.getenv('GMAIL_APP_PASSWORD')),
+            'ml_model': False  # Disabled on Vercel
+        }
+    })
 
 @app.route('/')
 def home():
@@ -375,6 +406,17 @@ def send_feedback_email(data):
         sender_password = os.getenv('GMAIL_APP_PASSWORD', 'dexy zbgn qyte uhzl')  # Your Gmail App Password
         recipient_email = "zjay5398@gmail.com"
         
+        # Check if running on Vercel
+        is_vercel = os.getenv('VERCEL') or os.getenv('VERCEL_ENV')
+        
+        if not sender_password or sender_password == 'your_gmail_app_password_here':
+            print("⚠ Gmail App Password not configured")
+            if is_vercel:
+                print("ℹ Set GMAIL_APP_PASSWORD in Vercel environment variables")
+            # Log feedback even if email fails
+            log_feedback_to_console(data)
+            return False
+        
         # Create message
         msg = MIMEMultipart()
         msg['From'] = sender_email
@@ -458,14 +500,19 @@ def send_feedback_email(data):
     except Exception as e:
         print(f"❌ Email sending error: {e}")
         # Log the feedback even if email fails
-        print("=== FEEDBACK RECEIVED (Email Failed) ===")
-        print(f"Name: {data['name']}")
-        print(f"Mobile: {data['mobile']}")
-        print(f"Institute: {data['institute']}")
-        print(f"Designation: {data['designation']}")
-        print(f"Feedback: {data['feedback']}")
-        print("========================================")
+        log_feedback_to_console(data)
         return False
+
+def log_feedback_to_console(data):
+    """Log feedback to console when email fails"""
+    print("=== FEEDBACK RECEIVED (Email Failed) ===")
+    print(f"Name: {data['name']}")
+    print(f"Mobile: {data['mobile']}")
+    print(f"Institute: {data['institute']}")
+    print(f"Designation: {data['designation']}")
+    print(f"Feedback: {data['feedback']}")
+    print(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print("========================================")
 
 @app.route('/clinical-assessment')
 def clinical_assessment():
@@ -1308,4 +1355,5 @@ if __name__ == '__main__':
     app.run(debug=True)
 
 # Vercel serverless function handler
+handler = app
 app = app
