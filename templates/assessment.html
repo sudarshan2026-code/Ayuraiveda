@@ -3,8 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clinical Assessment - AyurAI Veda™</title>
+    <title>Clinical Assessment - AyurAI Veda</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+    
+    <style>
+        .form-group label {
+            color: var(--light-text) !important;
+            font-size: 1rem !important;
+            display: block !important;
+            font-weight: 600 !important;
+            margin-bottom: 0.5rem !important;
+        }
+        .form-group select {
+            color: var(--light-text) !important;
+            background: var(--darker) !important;
+            width: 100% !important;
+            padding: 0.75rem !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 4px !important;
+            font-size: 1rem !important;
+        }
+        .form-group select option {
+            color: var(--light-text) !important;
+            background: var(--darker) !important;
+            padding: 0.5rem !important;
+        }
+        h3, h4 {
+            color: var(--primary) !important;
+        }
+        .section {
+            color: var(--light-text) !important;
+        }
+        .section * {
+            color: var(--light-text) !important;
+        }
+        /* Ensure Gujarati font support */
+        body, .form-group label, .form-group select, .form-group option {
+            font-family: 'Segoe UI', 'Noto Sans Gujarati', 'Gujarati Sangam MN', Arial, sans-serif !important;
+        }
+        
+        /* Enhanced results styling */
+        .diet-section, .disease-section, .lifestyle-section {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--darker);
+            border-radius: 6px;
+            border-left: 3px solid var(--primary);
+        }
+        
+        .diet-section h5, .disease-section h5, .lifestyle-section h5 {
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .diet-section ul, .disease-section ul, .lifestyle-section ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .diet-section li, .disease-section li, .lifestyle-section li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+            color: var(--light-text);
+        }
+        
+        .diet-section li:last-child, .disease-section li:last-child, .lifestyle-section li:last-child {
+            border-bottom: none;
+        }
+    </style>
 </head>
 <body>
     <div class="top-bar">
@@ -20,18 +92,22 @@
     <header>
         <div class="header-content">
             <div class="logo">
-                <h1>AyurAI Veda™</h1>
-                <p>20-Parameter Clinical Diagnostic Engine</p>
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="AyurAI Veda Logo" style="height: 50px; width: auto; margin-right: 15px; vertical-align: middle;">
+                <div style="display: inline-block; vertical-align: middle;">
+                    <h1 style="margin: 0; display: inline;">AyurAI Veda</h1>
+                    <p style="margin: 0; font-size: 0.9rem;">20-Parameter Clinical Diagnostic Engine</p>
+                </div>
             </div>
             <div class="badge">Clinical Grade</div>
         </div>
         <nav>
             <ul>
                 <li><a href="/">Home</a></li>
-                <li><a href="/about">About Ayurveda</a></li>
+                <li><a href="/about">About</a></li>
                 <li><a href="/clinical-assessment">Clinical Assessment</a></li>
-                <li><a href="/chatbot">AyurVaani™ Chat</a></li>
+                <li><a href="/chatbot">AyurVaani Chat</a></li>
                 <li><a href="/contact">Contact</a></li>
+                <li><a href="/feedback">Feedback</a></li>
             </ul>
         </nav>
     </header>
@@ -42,67 +118,66 @@
         </div>
 
         <div class="section" id="assessment-form">
-            <h3>🔬 20-Parameter Clinical Parikshan</h3>
+            <h3 style="color: var(--primary);">🔬 20-Parameter Clinical Parikshan - ૨૦-પેરામીટર ક્લિનિકલ પરીક્ષણ</h3>
             <form id="clinicalForm">
                 
                 <!-- FOUNDATION LAYER -->
-                <h4 style="color: var(--navy); margin-top: 2rem;">Foundation Layer</h4>
+                <h4 style="color: var(--primary); margin-top: 2rem;">Foundation Layer - મૂળભૂત સ્તર</h4>
                 
                 <div class="form-group">
-                    <label>1. Body Structure (Prakriti Indicator) *</label>
+                    <label>1. Body Structure (Prakriti Indicator) - શરીરનો બંધારણ (પ્રકૃતિ સૂચક) *</label>
                     <select name="body_structure" required>
-                        <option value="">Select...</option>
-                        <option value="lean">Lean / Thin (Vata tendency)</option>
-                        <option value="moderate">Moderate / Athletic (Pitta tendency)</option>
-                        <option value="heavy">Heavy / Stocky (Kapha tendency)</option>
+                        <option value="">Select... / પસંદ કરો...</option>
+                        <option value="lean">Lean / Thin (Vata tendency) - પાતળું / દુર્બળ (વાત વલણ)</option>
+                        <option value="moderate">Moderate / Athletic (Pitta tendency) - મધ્યમ / એથ્લેટિક (પિત્ત વલણ)</option>
+                        <option value="heavy">Heavy / Stocky (Kapha tendency) - ભારે / મજબૂત (કફ વલણ)</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label>2. Current Health State (Vikriti) *</label>
+                    <label>2. Current Health State (Vikriti) - વર્તમાન આરોગ્ય સ્થિતિ (વિકૃતિ) *</label>
                     <select name="vikriti" required>
-                        <option value="">Select...</option>
-                        <option value="balanced">Feeling balanced and healthy</option>
-                        <option value="mild">Mild discomfort or symptoms</option>
-                        <option value="moderate">Moderate health concerns</option>
-                        <option value="severe">Significant health issues</option>
+                        <option value="">Select... / પસંદ કરો...</option>
+                        <option value="balanced">Feeling balanced and healthy - સંતુલિત અને સ્વસ્થ લાગે છે</option>
+                        <option value="mild">Mild discomfort or symptoms - હળવી અસ્વસ્થતા અથવા લક્ષણો</option>
+                        <option value="moderate">Moderate health concerns - મધ્યમ આરોગ્ય ચિંતાઓ</option>
+                        <option value="severe">Significant health issues - નોંધપાત્ર આરોગ્ય સમસ્યાઓ</option>
                     </select>
                 </div>
 
-                <!-- DIGESTIVE & ELIMINATION -->
-                <h4 style="color: var(--navy); margin-top: 2rem;">Digestive & Elimination (Agni Parikshan)</h4>
+                <h4 style="color: var(--primary); margin-top: 2rem;">Digestive & Elimination (Agni Parikshan) - પાચન અને મલવિસર્જન (અગ્નિ પરીક્ષણ)</h4>
 
                 <div class="form-group">
-                    <label>3. Appetite Pattern *</label>
+                    <label>3. Appetite Pattern - ભૂખનો પેટર્ન *</label>
                     <select name="appetite" required>
-                        <option value="">Select...</option>
-                        <option value="regular">Regular and consistent</option>
-                        <option value="irregular">Irregular / Skips meals</option>
-                        <option value="excessive">Always hungry / Excessive</option>
-                        <option value="low">Poor appetite / Rarely hungry</option>
+                        <option value="">Select... / પસંદ કરો...</option>
+                        <option value="regular">Regular and consistent - નિયમિત અને સતત</option>
+                        <option value="irregular">Irregular / Skips meals - અનિયમિત / જમવાનું છોડે છે</option>
+                        <option value="excessive">Always hungry / Excessive - હમેશા ભૂખ / વધારે</option>
+                        <option value="low">Poor appetite / Rarely hungry - ઓછી ભૂખ / ક્વચિત જ ભૂખ</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label>4. Digestion Quality *</label>
+                    <label>4. Digestion Quality - પાચનની ગુણવત્તા *</label>
                     <select name="digestion" required>
-                        <option value="">Select...</option>
-                        <option value="normal">Normal / No issues</option>
-                        <option value="gas">Gas / Bloating</option>
-                        <option value="acidity">Acidity / Heartburn</option>
-                        <option value="constipation">Constipation</option>
-                        <option value="slow">Slow / Heavy feeling</option>
+                        <option value="">Select... / પસંદ કરો...</option>
+                        <option value="normal">Normal / No issues - સામાન્ય / કોઈ સમસ્યા નહીં</option>
+                        <option value="gas">Gas / Bloating - વાયુ / પેટમાં સૂજો</option>
+                        <option value="acidity">Acidity / Heartburn - એસિડિટી / છાતીમાં જળન</option>
+                        <option value="constipation">Constipation - કબજિયાત</option>
+                        <option value="slow">Slow / Heavy feeling - ધીમું / ભારેપણું લાગે</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label>5. Bowel Movement (Mala) *</label>
+                    <label>5. Bowel Movement (Mala) - મલવિસર્જન (મળ) *</label>
                     <select name="mala" required>
-                        <option value="">Select...</option>
-                        <option value="0">Regular and formed</option>
-                        <option value="3">Constipation / Dry / Hard</option>
-                        <option value="2">Loose / Frequent</option>
-                        <option value="1">Irregular pattern</option>
+                        <option value="">Select... / પસંદ કરો...</option>
+                        <option value="0">Regular and formed - નિયમિત અને આકારવાળું</option>
+                        <option value="3">Constipation / Dry / Hard - કબજિયાત / શુષ્ક / કઠોર</option>
+                        <option value="2">Loose / Frequent - ઢીલું / વારંવાર</option>
+                        <option value="1">Irregular pattern - અનિયમિત પેટર્ન</option>
                     </select>
                 </div>
 
@@ -278,16 +353,16 @@
         </div>
 
         <div class="section results" id="results" style="display: none;">
-            <h3>📊 Clinical Diagnostic Report</h3>
+            <h3>📊 Enhanced Clinical Diagnostic Report</h3>
             
-            <div style="background: #f5f5f5; padding: 2rem; border-radius: 8px; margin: 2rem 0;">
-                <h4 style="color: var(--navy);">Clinical Summary</h4>
-                <p><strong>Dominant Dosha:</strong> <span id="dominant" style="color: var(--saffron); font-size: 1.3rem;"></span></p>
-                <p><strong>Dosha State:</strong> <span id="dosha-state"></span></p>
-                <p><strong>Agni State:</strong> <span id="agni-state"></span></p>
-                <p><strong>Ama Status:</strong> <span id="ama-status"></span></p>
-                <p><strong>Risk Level:</strong> <span id="risk-level" class="risk-badge"></span></p>
-                <p id="primary-risk-container" style="display: none;"><strong>Primary Risk:</strong> <span id="primary-risk" style="color: #d32f2f;"></span></p>
+            <div style="background: #f5f5f5; padding: 2rem; border-radius: 8px; margin: 2rem 0; color: #000000;">
+                <h4 style="color: #000000;">Clinical Summary</h4>
+                <p style="color: #000000;"><strong>Dominant Dosha:</strong> <span id="dominant" style="color: var(--saffron); font-size: 1.3rem;"></span></p>
+                <p style="color: #000000;"><strong>Dosha State:</strong> <span id="dosha-state" style="color: #000000;"></span></p>
+                <p style="color: #000000;"><strong>Agni State:</strong> <span id="agni-state" style="color: #000000;"></span></p>
+                <p style="color: #000000;"><strong>Ama Status:</strong> <span id="ama-status" style="color: #000000;"></span></p>
+                <p style="color: #000000;"><strong>Risk Level:</strong> <span id="risk-level" class="risk-badge"></span></p>
+                <p id="primary-risk-container" style="display: none; color: #000000;"><strong>Primary Risk:</strong> <span id="primary-risk" style="color: #d32f2f;"></span></p>
             </div>
 
             <div class="dosha-meters">
@@ -311,71 +386,291 @@
                 </div>
             </div>
 
-            <div style="background: #e3f2fd; padding: 1.5rem; border-radius: 8px; margin: 2rem 0;">
-                <h4 style="color: var(--navy);">Clinical Justification</h4>
-                <p id="justification"></p>
+            <div style="background: #e3f2fd; padding: 1.5rem; border-radius: 8px; margin: 2rem 0; color: #000000;">
+                <h4 style="color: #000000;">Clinical Justification</h4>
+                <p id="justification" style="color: #000000;"></p>
             </div>
 
             <div class="recommendations">
-                <h4 style="color: var(--green);">🌿 Clinical Recommendations</h4>
+                <h4 style="color: var(--primary);">🌿 Clinical Recommendations</h4>
                 <ul id="recommendations-list"></ul>
+            </div>
+
+            <div class="recommendations">
+                <h4 style="color: var(--primary);">🍽️ Detailed Diet Plan</h4>
+                <div id="diet-suggestions">
+                    <div class="diet-section">
+                        <h5 style="color: #2e7d32;">✅ Foods to Favor</h5>
+                        <ul id="foods-favor"></ul>
+                    </div>
+                    <div class="diet-section">
+                        <h5 style="color: #d32f2f;">❌ Foods to Avoid</h5>
+                        <ul id="foods-avoid"></ul>
+                    </div>
+                    <div class="diet-section">
+                        <h5 style="color: #1976d2;">⏰ Meal Timing</h5>
+                        <ul id="meal-timing"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recommendations">
+                <h4 style="color: var(--primary);">⚠️ Disease Risk Predictions</h4>
+                <div id="disease-predictions">
+                    <div class="disease-section">
+                        <h5 style="color: #d32f2f;">Primary Risks</h5>
+                        <ul id="primary-risks"></ul>
+                    </div>
+                    <div class="disease-section">
+                        <h5 style="color: #f57c00;">Secondary Risks</h5>
+                        <ul id="secondary-risks"></ul>
+                    </div>
+                    <div class="disease-section" id="additional-risks-section" style="display: none;">
+                        <h5 style="color: #9c27b0;">Additional Risks</h5>
+                        <ul id="additional-risks"></ul>
+                    </div>
+                    <p id="prevention-note" style="font-style: italic; color: #666; margin-top: 1rem;"></p>
+                </div>
+            </div>
+
+            <div class="recommendations">
+                <h4 style="color: var(--primary);">🏃 Lifestyle Recommendations</h4>
+                <div id="lifestyle-tips">
+                    <div class="lifestyle-section">
+                        <h5 style="color: #1976d2;">📅 Daily Routine</h5>
+                        <ul id="daily-routine"></ul>
+                    </div>
+                    <div class="lifestyle-section">
+                        <h5 style="color: #388e3c;">🌱 Seasonal Care</h5>
+                        <ul id="seasonal-care"></ul>
+                    </div>
+                    <div class="lifestyle-section">
+                        <h5 style="color: #f57c00;">💪 Exercise Guidelines</h5>
+                        <ul id="exercise-guidelines"></ul>
+                    </div>
+                </div>
             </div>
 
             <div style="text-align: center; margin-top: 2rem;">
                 <button class="btn" onclick="location.reload()">🔄 New Assessment</button>
+                <button class="btn" onclick="downloadReport()" style="background: linear-gradient(135deg, #2e7d32, #4caf50); margin-left: 1rem;">📄 Download Report</button>
             </div>
         </div>
     </div>
 
     <footer>
-        <p><strong>AyurAI Veda™</strong> | Clinical Ayurvedic Diagnostic System</p>
+        <p style="text-align: left; margin-bottom: 1rem; font-size: 0.75rem; opacity: 0.6;">© 2026 AyurAI Veda. All rights reserved.</p>
+        <p><strong>AyurAI Veda</strong> | Clinical Ayurvedic Diagnostic System</p>
         <p style="margin-top: 0.5rem; font-size: 0.9rem;">20-Parameter Parikshan Engine</p>
+        <p style="margin-top: 0.25rem; font-size: 0.85rem; opacity: 0.8;">A Sudarshan Technologies Production</p>
     </footer>
 
     <script>
+        let currentResult = null;
+        
         document.getElementById('clinicalForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData);
             
-            const response = await fetch('/clinical-analyze', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(data)
+            // Show loading state
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '🔄 Analyzing...';
+            submitBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/clinical-analyze', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                currentResult = result;
+                
+                // Display basic results
+                document.getElementById('dominant').textContent = result.dominant;
+                document.getElementById('dosha-state').textContent = result.dosha_state;
+                document.getElementById('agni-state').textContent = result.agni_state;
+                document.getElementById('ama-status').textContent = result.ama_status;
+                document.getElementById('risk-level').textContent = result.risk;
+                document.getElementById('justification').textContent = result.justification;
+                
+                // Display dosha meters
+                document.getElementById('vata-fill').style.width = result.scores.vata + '%';
+                document.getElementById('vata-fill').textContent = result.scores.vata + '%';
+                document.getElementById('pitta-fill').style.width = result.scores.pitta + '%';
+                document.getElementById('pitta-fill').textContent = result.scores.pitta + '%';
+                document.getElementById('kapha-fill').style.width = result.scores.kapha + '%';
+                document.getElementById('kapha-fill').textContent = result.scores.kapha + '%';
+                
+                // Display recommendations
+                const recList = document.getElementById('recommendations-list');
+                recList.innerHTML = '';
+                result.recommendations.forEach(rec => {
+                    const li = document.createElement('li');
+                    li.textContent = rec;
+                    recList.appendChild(li);
+                });
+                
+                // Display diet suggestions
+                if (result.diet_suggestions) {
+                    displayDietSuggestions(result.diet_suggestions);
+                }
+                
+                // Display disease predictions
+                if (result.disease_predictions) {
+                    displayDiseasePredictions(result.disease_predictions);
+                }
+                
+                // Display lifestyle tips
+                if (result.lifestyle_tips) {
+                    displayLifestyleTips(result.lifestyle_tips);
+                }
+                
+                // Show results
+                document.getElementById('assessment-form').style.display = 'none';
+                document.getElementById('results').style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+            } catch (error) {
+                console.error('Analysis error:', error);
+                alert('Error analyzing data. Please try again.');
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+        
+        function displayDietSuggestions(dietSuggestions) {
+            // Foods to favor
+            const favorList = document.getElementById('foods-favor');
+            favorList.innerHTML = '';
+            dietSuggestions.foods_to_favor.forEach(food => {
+                const li = document.createElement('li');
+                li.textContent = food;
+                favorList.appendChild(li);
             });
             
-            const result = await response.json();
+            // Foods to avoid
+            const avoidList = document.getElementById('foods-avoid');
+            avoidList.innerHTML = '';
+            dietSuggestions.foods_to_avoid.forEach(food => {
+                const li = document.createElement('li');
+                li.textContent = food;
+                avoidList.appendChild(li);
+            });
             
-            document.getElementById('dominant').textContent = result.dominant;
-            document.getElementById('dosha-state').textContent = result.dosha_state;
-            document.getElementById('agni-state').textContent = result.agni_state;
-            document.getElementById('ama-status').textContent = result.ama_status;
-            document.getElementById('risk-level').textContent = result.risk;
-            document.getElementById('justification').textContent = result.justification;
+            // Meal timing
+            const timingList = document.getElementById('meal-timing');
+            timingList.innerHTML = '';
+            dietSuggestions.meal_timing.forEach(timing => {
+                const li = document.createElement('li');
+                li.textContent = timing;
+                timingList.appendChild(li);
+            });
+        }
+        
+        function displayDiseasePredictions(predictions) {
+            // Primary risks
+            const primaryList = document.getElementById('primary-risks');
+            primaryList.innerHTML = '';
+            predictions.primary_risks.forEach(risk => {
+                const li = document.createElement('li');
+                li.textContent = risk;
+                primaryList.appendChild(li);
+            });
             
-            if (result.primary_risk) {
-                document.getElementById('primary-risk').textContent = result.primary_risk;
-                document.getElementById('primary-risk-container').style.display = 'block';
+            // Secondary risks
+            const secondaryList = document.getElementById('secondary-risks');
+            secondaryList.innerHTML = '';
+            predictions.secondary_risks.forEach(risk => {
+                const li = document.createElement('li');
+                li.textContent = risk;
+                secondaryList.appendChild(li);
+            });
+            
+            // Additional risks
+            if (predictions.additional_risks && predictions.additional_risks.length > 0) {
+                const additionalList = document.getElementById('additional-risks');
+                additionalList.innerHTML = '';
+                predictions.additional_risks.forEach(risk => {
+                    const li = document.createElement('li');
+                    li.textContent = risk;
+                    additionalList.appendChild(li);
+                });
+                document.getElementById('additional-risks-section').style.display = 'block';
             }
             
-            document.getElementById('vata-fill').style.width = result.scores.vata + '%';
-            document.getElementById('vata-fill').textContent = result.scores.vata + '%';
-            document.getElementById('pitta-fill').style.width = result.scores.pitta + '%';
-            document.getElementById('pitta-fill').textContent = result.scores.pitta + '%';
-            document.getElementById('kapha-fill').style.width = result.scores.kapha + '%';
-            document.getElementById('kapha-fill').textContent = result.scores.kapha + '%';
-            
-            const recList = document.getElementById('recommendations-list');
-            recList.innerHTML = '';
-            result.recommendations.forEach(rec => {
+            // Prevention note
+            document.getElementById('prevention-note').textContent = predictions.prevention_note;
+        }
+        
+        function displayLifestyleTips(lifestyleTips) {
+            // Daily routine
+            const routineList = document.getElementById('daily-routine');
+            routineList.innerHTML = '';
+            lifestyleTips.daily_routine.forEach(tip => {
                 const li = document.createElement('li');
-                li.textContent = rec;
-                recList.appendChild(li);
+                li.textContent = tip;
+                routineList.appendChild(li);
             });
             
-            document.getElementById('assessment-form').style.display = 'none';
-            document.getElementById('results').style.display = 'block';
-        });
+            // Seasonal care
+            const seasonalList = document.getElementById('seasonal-care');
+            seasonalList.innerHTML = '';
+            lifestyleTips.seasonal_care.forEach(tip => {
+                const li = document.createElement('li');
+                li.textContent = tip;
+                seasonalList.appendChild(li);
+            });
+            
+            // Exercise guidelines
+            const exerciseList = document.getElementById('exercise-guidelines');
+            exerciseList.innerHTML = '';
+            lifestyleTips.exercise.forEach(tip => {
+                const li = document.createElement('li');
+                li.textContent = tip;
+                exerciseList.appendChild(li);
+            });
+        }
+        
+        function downloadReport() {
+            if (!currentResult) {
+                alert('No assessment data available for download.');
+                return;
+            }
+            
+            // Create comprehensive report data
+            const reportData = {
+                ...currentResult,
+                timestamp: new Date().toISOString(),
+                report_type: 'Enhanced Clinical Assessment'
+            };
+            
+            // Trigger download
+            fetch('/download-report', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(reportData)
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `AyurAI_Clinical_Report_${new Date().toISOString().split('T')[0]}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            })
+            .catch(error => {
+                console.error('Download error:', error);
+                alert('Error downloading report. Please try again.');
+            });
+        }
     </script>
 </body>
 </html>

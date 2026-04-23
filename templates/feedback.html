@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - AyurAI Veda</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+    
+    <style>
+        .feedback-form {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px var(--shadow);
+            border: 1px solid var(--border);
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--light-text);
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 1rem;
+            background: var(--darker);
+            color: var(--light-text);
+            box-sizing: border-box;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px var(--glow);
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+            font-family: inherit;
+        }
+        .char-counter {
+            text-align: right;
+            font-size: 0.85rem;
+            color: var(--light-text);
+            opacity: 0.7;
+            margin-top: 0.25rem;
+        }
+        .char-counter.warning {
+            color: #ff9800;
+            opacity: 1;
+        }
+        .char-counter.error {
+            color: #f44336;
+            opacity: 1;
+        }
+        .required {
+            color: #f44336;
+        }
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px var(--glow);
+        }
+        .submit-btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .success-message {
+            background: #4caf50;
+            color: white;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        .error-message {
+            background: #f44336;
+            color: white;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        .feedback-intro {
+            background: linear-gradient(135deg, #FFF8F0, #F0F8FF);
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--primary);
+        }
+        .feedback-intro h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        .feedback-intro p {
+            color: #000000;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <div class="top-bar-left">
+                <span>🕉️ Indian Knowledge Systems</span>
+                <span>|</span>
+                <span>Ayurveda + AI</span>
+            </div>
+            <div class="top-bar-right"></div>
+        </div>
+    </div>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="AyurAI Veda Logo" style="height: 50px; width: auto; margin-right: 15px; vertical-align: middle;">
+                <div style="display: inline-block; vertical-align: middle;">
+                    <h1 style="margin: 0; display: inline;">AyurAI Veda</h1>
+                    <p style="margin: 0; font-size: 0.9rem;">Powered by Tridosha Intelligence Engine</p>
+                </div>
+            </div>
+            <div class="badge">IKS + AI Powered</div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/clinical-assessment">Clinical Assessment</a></li>
+                <li><a href="/chatbot">AyurVaani Chat</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/feedback">Feedback</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="feedback-intro">
+            <h3>📝 Share Your Feedback</h3>
+            <p>Your feedback helps us improve AyurAI Veda and make it more valuable for the community. We appreciate your time and insights!</p>
+            <p><strong>What we'd love to hear about:</strong></p>
+            <ul style="color: #000000; margin-top: 0.5rem;">
+                <li>Your experience with the Tridosha Intelligence Engine</li>
+                <li>Suggestions for new features or improvements</li>
+                <li>How you're using AyurAI Veda in your work or studies</li>
+                <li>Any technical issues or bugs you've encountered</li>
+                <li>Ideas for better integration of Ayurveda and AI</li>
+            </ul>
+        </div>
+
+        <div class="feedback-form">
+            <div class="success-message" id="successMessage">
+                ✅ Thank you! Your feedback has been submitted successfully. We'll review it and get back to you if needed.
+            </div>
+            
+            <div class="error-message" id="errorMessage">
+                ❌ There was an error submitting your feedback. Please try again.
+            </div>
+
+            <form id="feedbackForm">
+                <div class="form-group">
+                    <label for="name">Full Name <span class="required">*</span></label>
+                    <input type="text" id="name" name="name" required placeholder="Enter your full name">
+                </div>
+
+                <div class="form-group">
+                    <label for="mobile">Mobile Number <span class="required">*</span></label>
+                    <input type="tel" id="mobile" name="mobile" required placeholder="Enter your mobile number" pattern="[0-9]{10}">
+                </div>
+
+                <div class="form-group">
+                    <label for="institute">Institute/Organization <span class="required">*</span></label>
+                    <input type="text" id="institute" name="institute" required placeholder="Enter your institute or organization name">
+                </div>
+
+                <div class="form-group">
+                    <label for="designation">Designation/Role <span class="required">*</span></label>
+                    <select id="designation" name="designation" required>
+                        <option value="">Select your designation...</option>
+                        <option value="Student">Student</option>
+                        <option value="Research Scholar">Research Scholar</option>
+                        <option value="Professor">Professor</option>
+                        <option value="Assistant Professor">Assistant Professor</option>
+                        <option value="Associate Professor">Associate Professor</option>
+                        <option value="Lecturer">Lecturer</option>
+                        <option value="Researcher">Researcher</option>
+                        <option value="Doctor">Doctor</option>
+                        <option value="Ayurvedic Practitioner">Ayurvedic Practitioner</option>
+                        <option value="Software Developer">Software Developer</option>
+                        <option value="Data Scientist">Data Scientist</option>
+                        <option value="Healthcare Professional">Healthcare Professional</option>
+                        <option value="Industry Professional">Industry Professional</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="feedback">Your Feedback <span class="required">*</span></label>
+                    <textarea id="feedback" name="feedback" required placeholder="Please share your detailed feedback about AyurAI Veda. Include your experience, suggestions, issues, or any other comments..." maxlength="2000"></textarea>
+                    <div class="char-counter" id="charCounter">0 / 2000 characters</div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    📤 Submit Feedback
+                </button>
+            </form>
+        </div>
+
+        <div class="section" style="margin-top: 2rem;">
+            <h3>🤝 Why Your Feedback Matters</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+                <div style="background: var(--card-bg); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--primary);">
+                    <h4 style="color: var(--primary); margin-bottom: 0.5rem;">🎯 Improve User Experience</h4>
+                    <p style="color: var(--light-text); font-size: 0.9rem;">Your insights help us make the platform more intuitive and user-friendly.</p>
+                </div>
+                <div style="background: var(--card-bg); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--secondary);">
+                    <h4 style="color: var(--secondary); margin-bottom: 0.5rem;">🔬 Enhance AI Accuracy</h4>
+                    <p style="color: var(--light-text); font-size: 0.9rem;">Feedback helps us refine the Tridosha Intelligence Engine for better results.</p>
+                </div>
+                <div style="background: var(--card-bg); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--accent);">
+                    <h4 style="color: var(--accent); margin-bottom: 0.5rem;">📚 Educational Value</h4>
+                    <p style="color: var(--light-text); font-size: 0.9rem;">Your suggestions help us create better educational content and features.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p style="text-align: left; margin-bottom: 1rem; font-size: 0.75rem; opacity: 0.6;">© 2026 AyurAI Veda. All rights reserved.</p>
+        <p><strong>AyurAI Veda</strong> | Reviving Indian Knowledge Systems through Artificial Intelligence</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Powered by Tridosha Intelligence Engine</p>
+        <p style="margin-top: 0.25rem; font-size: 0.85rem; opacity: 0.8;">A Sudarshan Technologies Production</p>
+    </footer>
+
+    <script>
+        const feedbackTextarea = document.getElementById('feedback');
+        const charCounter = document.getElementById('charCounter');
+        const feedbackForm = document.getElementById('feedbackForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Character counter
+        feedbackTextarea.addEventListener('input', function() {
+            const currentLength = this.value.length;
+            const maxLength = 2000;
+            
+            charCounter.textContent = `${currentLength} / ${maxLength} characters`;
+            
+            if (currentLength > maxLength * 0.9) {
+                charCounter.classList.add('warning');
+                charCounter.classList.remove('error');
+            } else if (currentLength >= maxLength) {
+                charCounter.classList.add('error');
+                charCounter.classList.remove('warning');
+            } else {
+                charCounter.classList.remove('warning', 'error');
+            }
+        });
+
+        // Form submission
+        feedbackForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Hide previous messages
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '📤 Submitting...';
+            
+            // Get form data
+            const formData = new FormData(feedbackForm);
+            const data = Object.fromEntries(formData);
+            
+            try {
+                const response = await fetch('/submit-feedback', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    successMessage.style.display = 'block';
+                    feedbackForm.reset();
+                    charCounter.textContent = '0 / 2000 characters';
+                    charCounter.classList.remove('warning', 'error');
+                    
+                    // Scroll to success message
+                    successMessage.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    throw new Error(result.message || 'Submission failed');
+                }
+                
+            } catch (error) {
+                console.error('Feedback submission error:', error);
+                errorMessage.style.display = 'block';
+                errorMessage.scrollIntoView({ behavior: 'smooth' });
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '📤 Submit Feedback';
+            }
+        });
+
+        // Mobile number validation
+        document.getElementById('mobile').addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            if (this.value.length > 10) {
+                this.value = this.value.slice(0, 10);
+            }
+        });
+    </script>
+</body>
+</html>

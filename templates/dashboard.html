@@ -1,0 +1,392 @@
+{% extends "_base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block breadcrumb %}
+  <span class="topbar-breadcrumb-sep">/</span>
+  <span class="topbar-breadcrumb-current">Dashboard</span>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/card-component.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<!-- ══════════════════════════════════════
+     PAGE HEADER
+══════════════════════════════════════ -->
+<div class="page-header">
+  <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-6); flex-wrap: wrap;">
+    <div style="flex: 1; min-width: 0;">
+      <div class="page-header-eyebrow">
+        <svg width="12" height="12" data-lucide="activity" aria-hidden="true"></svg>
+        Health Intelligence Dashboard
+      </div>
+      <h1 class="page-header-title">Welcome back, User</h1>
+      <p class="page-header-description">
+        Track your Ayurvedic health journey and get personalized insights powered by AI.
+      </p>
+    </div>
+    <div style="display: flex; gap: var(--space-3); flex-shrink: 0;">
+      <button class="btn btn-outline">
+        <svg width="16" height="16" data-lucide="download" aria-hidden="true"></svg>
+        Export
+      </button>
+      <a href="/clinical-assessment" class="btn btn-primary">
+        <svg width="16" height="16" data-lucide="plus" aria-hidden="true"></svg>
+        New Assessment
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     STATS OVERVIEW
+══════════════════════════════════════ -->
+<section style="margin-bottom: var(--space-12);">
+  <div class="card-grid card-grid-4">
+    
+    <div class="card card-stat">
+      <div class="card-stat-value">3</div>
+      <div class="card-stat-label">Assessments</div>
+      <div class="card-stat-change card-stat-change-positive">
+        <svg width="12" height="12" data-lucide="trending-up" aria-hidden="true"></svg>
+        +2 this month
+      </div>
+    </div>
+
+    <div class="card card-stat">
+      <div class="card-stat-value">Vata</div>
+      <div class="card-stat-label">Dominant Dosha</div>
+      <div style="margin-top: var(--space-3);">
+        <span class="badge badge-primary">Active</span>
+      </div>
+    </div>
+
+    <div class="card card-stat">
+      <div class="card-stat-value">24</div>
+      <div class="card-stat-label">Chat Sessions</div>
+      <div class="card-stat-change card-stat-change-positive">
+        <svg width="12" height="12" data-lucide="message-circle" aria-hidden="true"></svg>
+        12 this week
+      </div>
+    </div>
+
+    <div class="card card-stat">
+      <div class="card-stat-value">89%</div>
+      <div class="card-stat-label">Health Score</div>
+      <div class="card-stat-change card-stat-change-positive">
+        <svg width="12" height="12" data-lucide="trending-up" aria-hidden="true"></svg>
+        +5% improved
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     QUICK ACTIONS
+══════════════════════════════════════ -->
+<section style="margin-bottom: var(--space-12);">
+  <h2 style="font-size: var(--text-xl); font-weight: var(--weight-semibold); margin-bottom: var(--space-6); color: var(--color-text-primary);">
+    Quick Actions
+  </h2>
+  
+  <div class="card-grid card-grid-3">
+    
+    <a href="/clinical-assessment" class="card card-interactive" style="text-decoration: none;">
+      <div class="card-body card-with-icon">
+        <div class="card-icon">
+          <svg width="24" height="24" data-lucide="clipboard-check" aria-hidden="true"></svg>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">59-Point Assessment</h3>
+          <p class="card-description">
+            Complete comprehensive Prakriti analysis
+          </p>
+        </div>
+      </div>
+    </a>
+
+    <a href="/chatbot" class="card card-interactive" style="text-decoration: none;">
+      <div class="card-body card-with-icon">
+        <div class="card-icon card-icon-success">
+          <svg width="24" height="24" data-lucide="message-circle" aria-hidden="true"></svg>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">AyurVaani™ Chat</h3>
+          <p class="card-description">
+            Get instant Ayurvedic guidance from AI
+          </p>
+        </div>
+      </div>
+    </a>
+
+    <a href="/about" class="card card-interactive" style="text-decoration: none;">
+      <div class="card-body card-with-icon">
+        <div class="card-icon card-icon-warning">
+          <svg width="24" height="24" data-lucide="book-open" aria-hidden="true"></svg>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Learn Ayurveda</h3>
+          <p class="card-description">
+            Explore Tridosha theory and principles
+          </p>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     MAIN CONTENT GRID
+══════════════════════════════════════ -->
+<div class="content-grid content-grid-3" style="margin-bottom: var(--space-12);">
+  
+  <!-- LEFT COLUMN (2/3 width) -->
+  <div style="grid-column: span 2;">
+    
+    <!-- Recent Assessment -->
+    <div class="card card-elevated" style="margin-bottom: var(--space-6);">
+      <div class="card-header">
+        <div>
+          <h3 class="card-header-title">Latest Assessment</h3>
+          <p class="card-header-subtitle">Completed 2 days ago</p>
+        </div>
+        <div class="card-header-actions">
+          <button class="btn btn-ghost btn-sm">
+            <svg width="16" height="16" data-lucide="external-link" aria-hidden="true"></svg>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        
+        <!-- Dosha Breakdown -->
+        <div style="margin-bottom: var(--space-6);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+            <span style="font-size: var(--text-sm); font-weight: var(--weight-medium); color: var(--color-text-primary);">
+              🌬️ Vata
+            </span>
+            <span style="font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--dosha-vata);">
+              45%
+            </span>
+          </div>
+          <div style="height: 8px; background: var(--color-bg); border-radius: var(--radius-full); overflow: hidden;">
+            <div style="width: 45%; height: 100%; background: linear-gradient(90deg, var(--dosha-vata), var(--dosha-vata-light)); transition: width 1s ease;"></div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: var(--space-6);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+            <span style="font-size: var(--text-sm); font-weight: var(--weight-medium); color: var(--color-text-primary);">
+              🔥 Pitta
+            </span>
+            <span style="font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--dosha-pitta);">
+              30%
+            </span>
+          </div>
+          <div style="height: 8px; background: var(--color-bg); border-radius: var(--radius-full); overflow: hidden;">
+            <div style="width: 30%; height: 100%; background: linear-gradient(90deg, var(--dosha-pitta), var(--dosha-pitta-light)); transition: width 1s ease;"></div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: var(--space-6);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2);">
+            <span style="font-size: var(--text-sm); font-weight: var(--weight-medium); color: var(--color-text-primary);">
+              🌊 Kapha
+            </span>
+            <span style="font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--dosha-kapha);">
+              25%
+            </span>
+          </div>
+          <div style="height: 8px; background: var(--color-bg); border-radius: var(--radius-full); overflow: hidden;">
+            <div style="width: 25%; height: 100%; background: linear-gradient(90deg, var(--dosha-kapha), var(--dosha-kapha-light)); transition: width 1s ease;"></div>
+          </div>
+        </div>
+
+        <!-- Risk Level -->
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: var(--space-4); background: var(--color-bg); border-radius: var(--radius-lg);">
+          <div>
+            <div style="font-size: var(--text-xs); color: var(--color-text-tertiary); margin-bottom: var(--space-1);">
+              Risk Level
+            </div>
+            <div style="font-size: var(--text-base); font-weight: var(--weight-semibold); color: var(--color-text-primary);">
+              Moderate
+            </div>
+          </div>
+          <span class="badge badge-warning">Attention Needed</span>
+        </div>
+
+      </div>
+      <div class="card-footer">
+        <span style="font-size: var(--text-sm); color: var(--color-text-secondary);">
+          Assessment ID: AV-000123
+        </span>
+        <div class="card-footer-actions">
+          <button class="btn btn-outline btn-sm">
+            <svg width="16" height="16" data-lucide="download" aria-hidden="true"></svg>
+            Download Report
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recommendations -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-header-title">Personalized Recommendations</h3>
+      </div>
+      <div class="card-body">
+        
+        <div style="display: flex; gap: var(--space-3); padding: var(--space-4); background: var(--dosha-vata-light); border-radius: var(--radius-lg); margin-bottom: var(--space-3);">
+          <div style="flex-shrink: 0; width: 32px; height: 32px; background: var(--dosha-vata); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; color: white; font-weight: var(--weight-bold); font-size: var(--text-sm);">
+            1
+          </div>
+          <div style="flex: 1;">
+            <h4 style="font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--color-text-primary); margin-bottom: var(--space-1);">
+              Establish Regular Routine
+            </h4>
+            <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin: 0; line-height: var(--leading-relaxed);">
+              Wake up and sleep at consistent times. Vata imbalance responds well to structure.
+            </p>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: var(--space-3); padding: var(--space-4); background: var(--dosha-vata-light); border-radius: var(--radius-lg); margin-bottom: var(--space-3);">
+          <div style="flex-shrink: 0; width: 32px; height: 32px; background: var(--dosha-vata); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; color: white; font-weight: var(--weight-bold); font-size: var(--text-sm);">
+            2
+          </div>
+          <div style="flex: 1;">
+            <h4 style="font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--color-text-primary); margin-bottom: var(--space-1);">
+              Warm, Cooked Foods
+            </h4>
+            <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin: 0; line-height: var(--leading-relaxed);">
+              Favor warm, moist, grounding foods. Avoid cold, dry, raw foods.
+            </p>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: var(--space-3); padding: var(--space-4); background: var(--dosha-vata-light); border-radius: var(--radius-lg);">
+          <div style="flex-shrink: 0; width: 32px; height: 32px; background: var(--dosha-vata); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; color: white; font-weight: var(--weight-bold); font-size: var(--text-sm);">
+            3
+          </div>
+          <div style="flex: 1;">
+            <h4 style="font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--color-text-primary); margin-bottom: var(--space-1);">
+              Daily Oil Massage (Abhyanga)
+            </h4>
+            <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin: 0; line-height: var(--leading-relaxed);">
+              Self-massage with warm sesame oil before bathing to calm Vata.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT COLUMN (1/3 width) -->
+  <div>
+    
+    <!-- Dosha Profile -->
+    <div class="card card-accent-top" style="margin-bottom: var(--space-6);">
+      <div class="card-body" style="text-align: center;">
+        <div style="font-size: 4rem; margin-bottom: var(--space-4);">🌬️</div>
+        <h3 style="font-size: var(--text-xl); font-weight: var(--weight-bold); color: var(--dosha-vata); margin-bottom: var(--space-2);">
+          Vata Dominant
+        </h3>
+        <p style="font-size: var(--text-sm); color: var(--color-text-tertiary); margin-bottom: var(--space-4);">
+          Air + Space
+        </p>
+        <p style="font-size: var(--text-sm); color: var(--color-text-secondary); line-height: var(--leading-relaxed); margin-bottom: var(--space-4);">
+          You have a creative, energetic nature. Focus on grounding practices.
+        </p>
+        <a href="/about" class="btn btn-outline btn-sm" style="width: 100%;">
+          Learn About Vata
+        </a>
+      </div>
+    </div>
+
+    <!-- Health Tips -->
+    <div class="card card-accent-left card-accent-left-success" style="margin-bottom: var(--space-6);">
+      <div class="card-body">
+        <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3);">
+          <svg width="20" height="20" data-lucide="lightbulb" style="color: var(--color-success);" aria-hidden="true"></svg>
+          <h3 style="font-size: var(--text-base); font-weight: var(--weight-semibold); color: var(--color-text-primary); margin: 0;">
+            Today's Tip
+          </h3>
+        </div>
+        <p style="font-size: var(--text-sm); color: var(--color-text-secondary); line-height: var(--leading-relaxed); margin: 0;">
+          Start your day with warm water and ginger to kindle your digestive fire (Agni).
+        </p>
+      </div>
+    </div>
+
+    <!-- Activity -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-header-title">Recent Activity</h3>
+      </div>
+      <div class="card-body">
+        
+        <div style="display: flex; gap: var(--space-3); margin-bottom: var(--space-4);">
+          <div style="flex-shrink: 0; width: 8px; height: 8px; background: var(--color-primary); border-radius: 50%; margin-top: 6px;"></div>
+          <div style="flex: 1;">
+            <p style="font-size: var(--text-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); margin-bottom: var(--space-1);">
+              Completed Assessment
+            </p>
+            <p style="font-size: var(--text-xs); color: var(--color-text-tertiary); margin: 0;">
+              2 days ago
+            </p>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: var(--space-3); margin-bottom: var(--space-4);">
+          <div style="flex-shrink: 0; width: 8px; height: 8px; background: var(--color-success); border-radius: 50%; margin-top: 6px;"></div>
+          <div style="flex: 1;">
+            <p style="font-size: var(--text-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); margin-bottom: var(--space-1);">
+              Chat Session
+            </p>
+            <p style="font-size: var(--text-xs); color: var(--color-text-tertiary); margin: 0;">
+              5 days ago
+            </p>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: var(--space-3);">
+          <div style="flex-shrink: 0; width: 8px; height: 8px; background: var(--color-secondary); border-radius: 50%; margin-top: 6px;"></div>
+          <div style="flex: 1;">
+            <p style="font-size: var(--text-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); margin-bottom: var(--space-1);">
+              Downloaded Report
+            </p>
+            <p style="font-size: var(--text-xs); color: var(--color-text-tertiary); margin: 0;">
+              1 week ago
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════
+     BOTTOM SECTION
+══════════════════════════════════════ -->
+<section>
+  <div class="alert alert-info">
+    <svg width="20" height="20" data-lucide="info" aria-hidden="true" style="flex-shrink: 0;"></svg>
+    <div>
+      <strong style="display: block; margin-bottom: var(--space-1);">Educational Purpose Only</strong>
+      <span style="font-size: var(--text-sm);">
+        This dashboard provides educational and preventive health insights. Always consult qualified healthcare professionals for medical advice.
+      </span>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

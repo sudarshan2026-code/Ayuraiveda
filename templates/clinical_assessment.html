@@ -3,8 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>59-Point Assessment - AyurAI Veda™</title>
+    <title>59-Point Assessment - AyurAI Veda</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+    
     <style>
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
@@ -21,16 +27,23 @@
     </div>
     <header>
         <div class="header-content">
-            <div class="logo"><h1>AyurAI Veda™</h1><p>59-Point Comprehensive Prakriti Assessment</p></div>
+            <div class="logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="AyurAI Veda Logo" style="height: 50px; width: auto; margin-right: 15px; vertical-align: middle;">
+                <div style="display: inline-block; vertical-align: middle;">
+                    <h1 style="margin: 0; display: inline;">AyurAI Veda</h1>
+                    <p style="margin: 0; font-size: 0.9rem;">59-Point Comprehensive Prakriti Assessment</p>
+                </div>
+            </div>
             <div class="badge">Clinical Grade</div>
         </div>
         <nav>
             <ul>
                 <li><a href="/">Home</a></li>
                 <li><a href="/about">About</a></li>
-                <li><a href="/clinical-assessment">Assessment</a></li>
-                <li><a href="/chatbot">Chat</a></li>
+                <li><a href="/clinical-assessment">Clinical Assessment</a></li>
+                <li><a href="/chatbot">AyurVaani Chat</a></li>
                 <li><a href="/contact">Contact</a></li>
+                <li><a href="/feedback">Feedback</a></li>
             </ul>
         </nav>
     </header>
@@ -177,7 +190,10 @@
     </div>
 
     <footer>
-        <p><strong>AyurAI Veda™</strong> | 59-Point Comprehensive Prakriti Assessment</p>
+        <p style="text-align: left; margin-bottom: 1rem; font-size: 0.75rem; opacity: 0.6;">© 2026 AyurAI Veda. All rights reserved.</p>
+        <p><strong>AyurAI Veda</strong> | 59-Point Comprehensive Prakriti Assessment</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Powered by Tridosha Intelligence Engine</p>
+        <p style="margin-top: 0.25rem; font-size: 0.85rem; opacity: 0.8;">A Sudarshan Technologies Production</p>
     </footer>
 
     <script>

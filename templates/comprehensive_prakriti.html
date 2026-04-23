@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>59-Point Prakriti Parikshan - AyurAI Veda</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+    
+    <style>
+        .question-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary);
+        }
+        .question-number {
+            color: var(--light-text);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        .question-text {
+            color: var(--light-text);
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+        }
+        .question-gujarati {
+            color: var(--light-text);
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            background: var(--darker);
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .option-label:hover {
+            border-color: var(--primary);
+            background: var(--card-bg);
+        }
+        .option-label input[type="radio"] {
+            margin-right: 0.75rem;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .option-label input[type="radio"]:checked + .option-content {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        .option-content {
+            color: var(--light-text) !important;
+            flex: 1;
+        }
+        .option-content div {
+            color: var(--light-text) !important;
+            font-size: 1rem;
+        }
+        .option-gujarati {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            margin-top: 0.25rem;
+        }
+        .progress-bar {
+            position: sticky;
+            top: 0;
+            background: var(--card-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            z-index: 10;
+            box-shadow: 0 2px 10px var(--shadow);
+        }
+        .progress-fill {
+            height: 8px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+        .progress-text {
+            color: var(--light-text);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            text-align: center;
+        }
+        
+        /* Enhanced results styling */
+        .diet-section, .disease-section, .lifestyle-section {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--darker);
+            border-radius: 6px;
+            border-left: 3px solid var(--primary);
+        }
+        
+        .diet-section h5, .disease-section h5, .lifestyle-section h5 {
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .diet-section ul, .disease-section ul, .lifestyle-section ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .diet-section li, .disease-section li, .lifestyle-section li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+            color: var(--light-text);
+        }
+        
+        .diet-section li:last-child, .disease-section li:last-child, .lifestyle-section li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <div class="top-bar-left">
+                <span>🕉️ Indian Knowledge Systems</span>
+                <span>|</span>
+                <span>Ayurveda + AI</span>
+            </div>
+        </div>
+    </div>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="AyurAI Veda Logo" style="height: 50px; width: auto; margin-right: 15px; vertical-align: middle;">
+                <div style="display: inline-block; vertical-align: middle;">
+                    <h1 style="margin: 0; display: inline;">AyurAI Veda</h1>
+                    <p style="margin: 0; font-size: 0.9rem;">Powered by Tridosha Intelligence Engine</p>
+                </div>
+            </div>
+            <div class="badge">59-Point Clinical Assessment</div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/clinical-assessment">Clinical Assessment</a></li>
+                <li><a href="/chatbot">AyurVaani Chat</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/feedback">Feedback</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="section">
+            <h3>🔬 59-Point Prakriti Parikshan (પ્રકૃતિ પરીક્ષણ)</h3>
+            <p>Complete comprehensive Ayurvedic constitutional assessment with bilingual questions.</p>
+        </div>
+
+        <div class="progress-bar" id="progressBar">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            <div class="progress-text" id="progressText">0 of 59 questions answered</div>
+        </div>
+
+        <form id="prakritiForm">
+            <!-- Questions 1-10: Physical Structure -->
+            <div class="question-card">
+                <div class="question-number">1. Body Frame (શરીરનો બંધારણ)</div>
+                <div class="options">
+                    <label class="option-label">
+                        <input type="radio" name="q1" value="A" required>
+                        <div class="option-content">
+                            <div>A. Thin, lean (પાતળું, દુર્બળ)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q1" value="B">
+                        <div class="option-content">
+                            <div>B. Medium, proportional (મધ્યમ, સંતુલિત)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q1" value="C">
+                        <div class="option-content">
+                            <div>C. Heavy, broad (ભારે, પહોળું)</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-number">2. Body Weight (વજન)</div>
+                <div class="options">
+                    <label class="option-label">
+                        <input type="radio" name="q2" value="A" required>
+                        <div class="option-content">
+                            <div>A. Underweight (ઓછું વજન)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q2" value="B">
+                        <div class="option-content">
+                            <div>B. Moderate (મધ્યમ)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q2" value="C">
+                        <div class="option-content">
+                            <div>C. Overweight (વધારે વજન)</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-number">3. Skin Texture (ચામડીનો સ્વભાવ)</div>
+                <div class="options">
+                    <label class="option-label">
+                        <input type="radio" name="q3" value="A" required>
+                        <div class="option-content">
+                            <div>A. Dry, rough (શુષ્ક, ખડખડિયું)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q3" value="B">
+                        <div class="option-content">
+                            <div>B. Soft, warm (મુલાયમ, ગરમ)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q3" value="C">
+                        <div class="option-content">
+                            <div>C. Smooth, oily (ચીકણું, મસૃણ)</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-number">4. Skin Temperature (ચામડીનું તાપમાન)</div>
+                <div class="options">
+                    <label class="option-label">
+                        <input type="radio" name="q4" value="A" required>
+                        <div class="option-content">
+                            <div>A. Cold (ઠંડું)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q4" value="B">
+                        <div class="option-content">
+                            <div>B. Warm (ગરમ)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q4" value="C">
+                        <div class="option-content">
+                            <div>C. Cool (ઠંડકવાળું)</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-number">5. Skin Color (ચામડીનો રંગ)</div>
+                <div class="options">
+                    <label class="option-label">
+                        <input type="radio" name="q5" value="A" required>
+                        <div class="option-content">
+                            <div>A. Dark/dull (ઘાટો, નિર્જીવ)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q5" value="B">
+                        <div class="option-content">
+                            <div>B. Reddish/fair (લાલાશ, ગોરું)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q5" value="C">
+                        <div class="option-content">
+                            <div>C. Pale (ફિક્કું)</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-number">6. Hair Type (વાળનો પ્રકાર)</div>
+                <div class="options">
+                    <label class="option-label">
+                        <input type="radio" name="q6" value="A" required>
+                        <div class="option-content">
+                            <div>A. Dry, frizzy (શુષ્ક, વાંકડિયા)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q6" value="B">
+                        <div class="option-content">
+                            <div>B. Soft, thin (મુલાયમ, પાતળા)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q6" value="C">
+                        <div class="option-content">
+                            <div>C. Thick, oily (ઘણા, ચીકણા)</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-number">7. Hair Growth (વાળનો વિકાસ)</div>
+                <div class="options">
+                    <label class="option-label">
+                        <input type="radio" name="q7" value="A" required>
+                        <div class="option-content">
+                            <div>A. Sparse (ઓછા)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q7" value="B">
+                        <div class="option-content">
+                            <div>B. Moderate (મધ્યમ)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q7" value="C">
+                        <div class="option-content">
+                            <div>C. Dense (ઘણા)</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-number">8. Hair Color (વાળનો રંગ)</div>
+                <div class="options">
+                    <label class="option-label">
+                        <input type="radio" name="q8" value="A" required>
+                        <div class="option-content">
+                            <div>A. Dull (ફિક્કા)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q8" value="B">
+                        <div class="option-content">
+                            <div>B. Early greying (વેળા પહેલાં સફેદ)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q8" value="C">
+                        <div class="option-content">
+                            <div>C. Black (કાળા)</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-number">9. Eyes Size (આંખનો કદ)</div>
+                <div class="options">
+                    <label class="option-label">
+                        <input type="radio" name="q9" value="A" required>
+                        <div class="option-content">
+                            <div>A. Small (નાની)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q9" value="B">
+                        <div class="option-content">
+                            <div>B. Medium (મધ્યમ)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q9" value="C">
+                        <div class="option-content">
+                            <div>C. Large (મોટી)</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-number">10. Eyes Appearance (આંખનો દેખાવ)</div>
+                <div class="options">
+                    <label class="option-label">
+                        <input type="radio" name="q10" value="A" required>
+                        <div class="option-content">
+                            <div>A. Dry, dull (શુષ્ક, નિર્જીવ)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q10" value="B">
+                        <div class="option-content">
+                            <div>B. Sharp, reddish (તીક્ષ્ણ, લાલાશ)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q10" value="C">
+                        <div class="option-content">
+                            <div>C. Calm, attractive (શાંત, આકર્ષક)</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-number">11. Lips (હોઠ)</div>
+                <div class="options">
+                    <label class="option-label">
+                        <input type="radio" name="q11" value="A" required>
+                        <div class="option-content">
+                            <div>A. Dry (શુષ્ક)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q11" value="B">
+                        <div class="option-content">
+                            <div>B. Soft (મુલાયમ)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q11" value="C">
+                        <div class="option-content">
+                            <div>C. Thick (જાડા)</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-number">12. Teeth (દાંત)</div>
+                <div class="options">
+                    <label class="option-label">
+                        <input type="radio" name="q12" value="A" required>
+                        <div class="option-content">
+                            <div>A. Irregular (અનિયમિત)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q12" value="B">
+                        <div class="option-content">
+                            <div>B. Medium (મધ્યમ)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q12" value="C">
+                        <div class="option-content">
+                            <div>C. Strong (મજબૂત)</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-number">13. Nails (નખ)</div>
+                <div class="options">
+                    <label class="option-label">
+                        <input type="radio" name="q13" value="A" required>
+                        <div class="option-content">
+                            <div>A. Brittle (નાજુક)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q13" value="B">
+                        <div class="option-content">
+                            <div>B. Soft (મુલાયમ)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q13" value="C">
+                        <div class="option-content">
+                            <div>C. Thick (જાડા)</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-number">14. Appetite (ભૂખ)</div>
+                <div class="options">
+                    <label class="option-label">
+                        <input type="radio" name="q14" value="A" required>
+                        <div class="option-content">
+                            <div>A. Irregular (અનિયમિત)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q14" value="B">
+                        <div class="option-content">
+                            <div>B. Strong (જોરદાર)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q14" value="C">
+                        <div class="option-content">
+                            <div>C. Slow (ધીમી)</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-number">15. Thirst (તરસ)</div>
+                <div class="options">
+                    <label class="option-label">
+                        <input type="radio" name="q15" value="A" required>
+                        <div class="option-content">
+                            <div>A. Variable (બદલાય)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q15" value="B">
+                        <div class="option-content">
+                            <div>B. High (વધારે)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q15" value="C">
+                        <div class="option-content">
+                            <div>C. Low (ઓછી)</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-number">16. Digestion (પાચન)</div>
+                <div class="options">
+                    <label class="option-label">
+                        <input type="radio" name="q16" value="A" required>
+                        <div class="option-content">
+                            <div>A. Irregular (અનિયમિત)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q16" value="B">
+                        <div class="option-content">
+                            <div>B. Fast (ઝડપી)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q16" value="C">
+                        <div class="option-content">
+                            <div>C. Slow (ધીમી)</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-number">17. Bowel Movement (મલવિસર્જન)</div>
+                <div class="options">
+                    <label class="option-label">
+                        <input type="radio" name="q17" value="A" required>
+                        <div class="option-content">
+                            <div>A. Constipated (કબજિયાત)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q17" value="B">
+                        <div class="option-content">
+                            <div>B. Loose (ઢીલું)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q17" value="C">
+                        <div class="option-content">
+                            <div>C. Regular (નિયમિત)</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-number">18. Sweating (પસિનો)</div>
+                <div class="options">
+                    <label class="option-label">
+                        <input type="radio" name="q18" value="A" required>
+                        <div class="option-content">
+                            <div>A. Less (ઓછો)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q18" value="B">
+                        <div class="option-content">
+                            <div>B. Excess (વધારે)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q18" value="C">
+                        <div class="option-content">
+                            <div>C. Moderate (મધ્યમ)</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-number">19. Body Odor (શરીરની ગંધ)</div>
+                <div class="options">
+                    <label class="option-label">
+                        <input type="radio" name="q19" value="A" required>
+                        <div class="option-content">
+                            <div>A. Minimal (ઓછી)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q19" value="B">
+                        <div class="option-content">
+                            <div>B. Strong (તીવ્ર)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q19" value="C">
+                        <div class="option-content">
+                            <div>C. Mild (મંદ)</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-number">20. Voice (આવાજ)</div>
+                <div class="options">
+                    <label class="option-label">
+                        <input type="radio" name="q20" value="A" required>
+                        <div class="option-content">
+                            <div>A. Weak (નબળો)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q20" value="B">
+                        <div class="option-content">
+                            <div>B. Sharp (તીક્ષ્ણ)</div>
+                        </div>
+                    </label>
+                    <label class="option-label">
+                        <input type="radio" name="q20" value="C">
+                        <div class="option-content">
+                            <div>C. Deep (ઘેરો)</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn" style="margin-top: 2rem; width: 100%;">🔬 Analyze Prakriti (First 20 Questions)</button>
+        </form>
+
+        <div class="section results" id="results" style="display: none;">
+            <h3>📊 Enhanced Prakriti Analysis Report</h3>
+            
+            <div style="background: var(--darker); padding: 2rem; border-radius: 8px; margin: 2rem 0;">
+                <h4 style="color: var(--primary);">Your Prakriti (Constitution)</h4>
+                <p style="font-size: 1.5rem; color: var(--primary); font-weight: 700;" id="prakritiResult"></p>
+                <p style="color: var(--light-text); margin-top: 1rem;" id="assessmentInfo"></p>
+            </div>
+
+            <div class="dosha-meters">
+                <div class="meter">
+                    <h4>🌬️ Vata</h4>
+                    <div class="meter-bar">
+                        <div class="meter-fill vata-fill" id="vataFill"></div>
+                    </div>
+                </div>
+                <div class="meter">
+                    <h4>🔥 Pitta</h4>
+                    <div class="meter-bar">
+                        <div class="meter-fill pitta-fill" id="pittaFill"></div>
+                    </div>
+                </div>
+                <div class="meter">
+                    <h4>🌊 Kapha</h4>
+                    <div class="meter-bar">
+                        <div class="meter-fill kapha-fill" id="kaphaFill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recommendations">
+                <h4 style="color: var(--primary);">🌿 Clinical Interpretation</h4>
+                <div id="interpretation"></div>
+            </div>
+
+            <div class="recommendations">
+                <h4 style="color: var(--primary);">🌱 Lifestyle Recommendations</h4>
+                <ul id="recommendations"></ul>
+            </div>
+
+            <div class="recommendations">
+                <h4 style="color: var(--primary);">🍽️ Detailed Diet Plan</h4>
+                <div id="diet-suggestions">
+                    <div class="diet-section">
+                        <h5 style="color: #2e7d32;">✅ Foods to Favor</h5>
+                        <ul id="foods-favor"></ul>
+                    </div>
+                    <div class="diet-section">
+                        <h5 style="color: #d32f2f;">❌ Foods to Avoid</h5>
+                        <ul id="foods-avoid"></ul>
+                    </div>
+                    <div class="diet-section">
+                        <h5 style="color: #1976d2;">⏰ Meal Timing</h5>
+                        <ul id="meal-timing"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recommendations">
+                <h4 style="color: var(--primary);">⚠️ Health Risk Predictions</h4>
+                <div id="disease-predictions">
+                    <div class="disease-section">
+                        <h5 style="color: #d32f2f;">Primary Risks</h5>
+                        <ul id="primary-risks"></ul>
+                    </div>
+                    <div class="disease-section">
+                        <h5 style="color: #f57c00;">Secondary Risks</h5>
+                        <ul id="secondary-risks"></ul>
+                    </div>
+                    <p id="prevention-note" style="font-style: italic; color: var(--light-text); margin-top: 1rem; opacity: 0.8;"></p>
+                </div>
+            </div>
+
+            <div class="recommendations">
+                <h4 style="color: var(--primary);">🏃 Lifestyle Guidelines</h4>
+                <div id="lifestyle-tips">
+                    <div class="lifestyle-section">
+                        <h5 style="color: #1976d2;">📅 Daily Routine</h5>
+                        <ul id="daily-routine"></ul>
+                    </div>
+                    <div class="lifestyle-section">
+                        <h5 style="color: #388e3c;">🌱 Seasonal Care</h5>
+                        <ul id="seasonal-care"></ul>
+                    </div>
+                    <div class="lifestyle-section">
+                        <h5 style="color: #f57c00;">💪 Exercise Guidelines</h5>
+                        <ul id="exercise-guidelines"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn" onclick="location.reload()">🔄 New Assessment</button>
+                <button class="btn" onclick="downloadComprehensiveReport()" style="background: linear-gradient(135deg, #2e7d32, #4caf50); margin-left: 1rem;">📄 Download Report</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p style="text-align: left; margin-bottom: 1rem; font-size: 0.75rem; opacity: 0.6;">© 2026 AyurAI Veda. All rights reserved.</p>
+        <p><strong>AyurAI Veda</strong> | Reviving Indian Knowledge Systems through Artificial Intelligence</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Powered by Tridosha Intelligence Engine</p>
+        <p style="margin-top: 0.25rem; font-size: 0.85rem; opacity: 0.8;">A Sudarshan Technologies Production</p>
+    </footer>
+
+    <script>
+        // Progress tracking
+        const form = document.getElementById('prakritiForm');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const totalQuestions = 20; // Currently showing first 20 questions
+
+        form.addEventListener('change', () => {
+            const answered = form.querySelectorAll('input[type="radio"]:checked').length;
+            const percentage = (answered / totalQuestions) * 100;
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `${answered} of ${totalQuestions} questions answered`;
+        });
+
+        // Form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            let vataCount = 0, pittaCount = 0, kaphaCount = 0;
+            const formData = {};
+            
+            for (let i = 1; i <= totalQuestions; i++) {
+                const answer = form.querySelector(`input[name="q${i}"]:checked`)?.value;
+                if (answer) {
+                    formData[`q${i}`] = answer;
+                    if (answer === 'A') vataCount++;
+                    else if (answer === 'B') pittaCount++;
+                    else if (answer === 'C') kaphaCount++;
+                }
+            }
+            
+            // Show loading state
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '🔄 Analyzing with AI...';
+            submitBtn.disabled = true;
+            
+            try {
+                // Use enhanced analysis
+                const response = await fetch('/comprehensive-analyze', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.error) {
+                    alert(result.error);
+                    return;
+                }
+                
+                // Display enhanced results
+                displayEnhancedResults(result);
+                
+            } catch (error) {
+                console.error('Analysis error:', error);
+                // Fallback to basic analysis
+                displayBasicResults(vataCount, pittaCount, kaphaCount);
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+        
+        function displayEnhancedResults(result) {
+            // Display basic results
+            document.getElementById('prakritiResult').textContent = result.dominant + ' Prakriti';
+            
+            const assessmentInfo = `Assessment Type: ${result.assessment_type || 'Comprehensive'} | Questions Analyzed: ${result.total_questions || totalQuestions}`;
+            document.getElementById('assessmentInfo').textContent = assessmentInfo;
+            
+            document.getElementById('vataFill').style.width = result.scores.vata + '%';
+            document.getElementById('vataFill').textContent = result.scores.vata + '%';
+            document.getElementById('pittaFill').style.width = result.scores.pitta + '%';
+            document.getElementById('pittaFill').textContent = result.scores.pitta + '%';
+            document.getElementById('kaphaFill').style.width = result.scores.kapha + '%';
+            document.getElementById('kaphaFill').textContent = result.scores.kapha + '%';
+            
+            // Add interpretation
+            document.getElementById('interpretation').innerHTML = `
+                <p><strong>Dosha State:</strong> ${result.dosha_state}</p>
+                <p><strong>Risk Level:</strong> ${result.risk}</p>
+                <p><strong>Analysis:</strong> ${result.justification}</p>
+            `;
+            
+            // Add basic recommendations
+            const recList = document.getElementById('recommendations');
+            recList.innerHTML = '';
+            result.recommendations.forEach(rec => {
+                const li = document.createElement('li');
+                li.textContent = rec;
+                recList.appendChild(li);
+            });
+            
+            // Display diet suggestions
+            if (result.diet_suggestions) {
+                displayDietSuggestions(result.diet_suggestions);
+            }
+            
+            // Display disease predictions
+            if (result.disease_predictions) {
+                displayDiseasePredictions(result.disease_predictions);
+            }
+            
+            // Display lifestyle tips
+            if (result.lifestyle_tips) {
+                displayLifestyleTips(result.lifestyle_tips);
+            }
+            
+            // Store result for download
+            window.currentResult = result;
+            
+            // Hide form, show results
+            form.style.display = 'none';
+            document.getElementById('progressBar').style.display = 'none';
+            document.getElementById('results').style.display = 'block';
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        function displayBasicResults(vataCount, pittaCount, kaphaCount) {
+            const vataPercent = Math.round((vataCount / totalQuestions) * 100);
+            const pittaPercent = Math.round((pittaCount / totalQuestions) * 100);
+            const kaphaPercent = Math.round((kaphaCount / totalQuestions) * 100);
+            
+            let prakriti = '';
+            if (vataCount > pittaCount && vataCount > kaphaCount) {
+                prakriti = 'Vata Prakriti';
+            } else if (pittaCount > vataCount && pittaCount > kaphaCount) {
+                prakriti = 'Pitta Prakriti';
+            } else if (kaphaCount > vataCount && kaphaCount > pittaCount) {
+                prakriti = 'Kapha Prakriti';
+            } else {
+                prakriti = 'Dual/Tridoshic Prakriti';
+            }
+            
+            // Display results
+            document.getElementById('prakritiResult').textContent = prakriti;
+            document.getElementById('assessmentInfo').textContent = `Basic Analysis | Questions: ${totalQuestions}`;
+            document.getElementById('vataFill').style.width = vataPercent + '%';
+            document.getElementById('vataFill').textContent = vataPercent + '%';
+            document.getElementById('pittaFill').style.width = pittaPercent + '%';
+            document.getElementById('pittaFill').textContent = pittaPercent + '%';
+            document.getElementById('kaphaFill').style.width = kaphaPercent + '%';
+            document.getElementById('kaphaFill').textContent = kaphaPercent + '%';
+            
+            // Add basic interpretation
+            document.getElementById('interpretation').innerHTML = `
+                <p>Based on ${totalQuestions} comprehensive questions, your constitutional tendency shows <strong>${prakriti}</strong>.</p>
+                <p><em>Note: This is a basic assessment. For enhanced analysis with ML model, ensure the model file is available.</em></p>
+            `;
+            
+            // Add basic recommendations
+            const recList = document.getElementById('recommendations');
+            recList.innerHTML = '';
+            const basicRecs = getBasicRecommendations(prakriti);
+            basicRecs.forEach(rec => {
+                const li = document.createElement('li');
+                li.textContent = rec;
+                recList.appendChild(li);
+            });
+            
+            // Hide form, show results
+            form.style.display = 'none';
+            document.getElementById('progressBar').style.display = 'none';
+            document.getElementById('results').style.display = 'block';
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        function displayDietSuggestions(dietSuggestions) {
+            // Foods to favor
+            const favorList = document.getElementById('foods-favor');
+            favorList.innerHTML = '';
+            dietSuggestions.foods_to_favor.forEach(food => {
+                const li = document.createElement('li');
+                li.textContent = food;
+                favorList.appendChild(li);
+            });
+            
+            // Foods to avoid
+            const avoidList = document.getElementById('foods-avoid');
+            avoidList.innerHTML = '';
+            dietSuggestions.foods_to_avoid.forEach(food => {
+                const li = document.createElement('li');
+                li.textContent = food;
+                avoidList.appendChild(li);
+            });
+            
+            // Meal timing
+            const timingList = document.getElementById('meal-timing');
+            timingList.innerHTML = '';
+            dietSuggestions.meal_timing.forEach(timing => {
+                const li = document.createElement('li');
+                li.textContent = timing;
+                timingList.appendChild(li);
+            });
+        }
+        
+        function displayDiseasePredictions(predictions) {
+            // Primary risks
+            const primaryList = document.getElementById('primary-risks');
+            primaryList.innerHTML = '';
+            predictions.primary_risks.forEach(risk => {
+                const li = document.createElement('li');
+                li.textContent = risk;
+                primaryList.appendChild(li);
+            });
+            
+            // Secondary risks
+            const secondaryList = document.getElementById('secondary-risks');
+            secondaryList.innerHTML = '';
+            predictions.secondary_risks.forEach(risk => {
+                const li = document.createElement('li');
+                li.textContent = risk;
+                secondaryList.appendChild(li);
+            });
+            
+            // Prevention note
+            document.getElementById('prevention-note').textContent = predictions.prevention_note;
+        }
+        
+        function displayLifestyleTips(lifestyleTips) {
+            // Daily routine
+            const routineList = document.getElementById('daily-routine');
+            routineList.innerHTML = '';
+            lifestyleTips.daily_routine.forEach(tip => {
+                const li = document.createElement('li');
+                li.textContent = tip;
+                routineList.appendChild(li);
+            });
+            
+            // Seasonal care
+            const seasonalList = document.getElementById('seasonal-care');
+            seasonalList.innerHTML = '';
+            lifestyleTips.seasonal_care.forEach(tip => {
+                const li = document.createElement('li');
+                li.textContent = tip;
+                seasonalList.appendChild(li);
+            });
+            
+            // Exercise guidelines
+            const exerciseList = document.getElementById('exercise-guidelines');
+            exerciseList.innerHTML = '';
+            lifestyleTips.exercise.forEach(tip => {
+                const li = document.createElement('li');
+                li.textContent = tip;
+                exerciseList.appendChild(li);
+            });
+        }
+        
+        function getBasicRecommendations(prakriti) {
+            const recommendations = {
+                'Vata Prakriti': [
+                    'Follow regular daily routine',
+                    'Eat warm, cooked foods',
+                    'Practice oil massage (Abhyanga)',
+                    'Avoid cold, dry foods',
+                    'Practice calming yoga and meditation'
+                ],
+                'Pitta Prakriti': [
+                    'Eat cooling foods',
+                    'Avoid spicy, hot foods',
+                    'Practice moderate exercise',
+                    'Stay cool in hot weather',
+                    'Practice calming breathing exercises'
+                ],
+                'Kapha Prakriti': [
+                    'Eat light, warm foods',
+                    'Regular vigorous exercise',
+                    'Avoid heavy, oily foods',
+                    'Wake up early',
+                    'Practice energizing yoga'
+                ]
+            };
+            
+            return recommendations[prakriti] || [
+                'Maintain balanced lifestyle',
+                'Eat according to season',
+                'Regular moderate exercise',
+                'Practice stress management',
+                'Follow natural daily rhythms'
+            ];
+        }
+        
+        function downloadComprehensiveReport() {
+            if (!window.currentResult) {
+                alert('No assessment data available for download.');
+                return;
+            }
+            
+            // Create comprehensive report data
+            const reportData = {
+                ...window.currentResult,
+                timestamp: new Date().toISOString(),
+                report_type: 'Comprehensive Prakriti Assessment'
+            };
+            
+            // Trigger download
+            fetch('/download-report', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(reportData)
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `AyurAI_Comprehensive_Report_${new Date().toISOString().split('T')[0]}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            })
+            .catch(error => {
+                console.error('Download error:', error);
+                alert('Error downloading report. Please try again.');
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Chat with AyurVaani™ - Your AI-powered Ayurvedic wellness assistant">
+    <title>AyurVaani™ AI Chat - AyurAI Veda™</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/design-system.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="navbar-brand">
+                <span class="navbar-brand-icon">🕉️</span>
+                <div class="navbar-brand-text">
+                    <span class="navbar-brand-title">AyurAI Veda</span>
+                    <span class="navbar-brand-subtitle">Tridosha Intelligence Engine</span>
+                </div>
+            </a>
+            
+            <button class="navbar-toggle" id="navToggle" aria-label="Toggle navigation">
+                ☰
+            </button>
+            
+            <ul class="navbar-menu" id="navMenu">
+                <li><a href="/" class="navbar-link">Home</a></li>
+                <li><a href="/about" class="navbar-link">About</a></li>
+                <li><a href="/clinical-assessment" class="navbar-link">Assessment</a></li>
+                <li><a href="/chatbot" class="navbar-link active">AI Chat</a></li>
+                <li><a href="/contact" class="navbar-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="section">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="section-header">
+                <h1 class="section-title">AyurVaani™ AI Assistant</h1>
+                <p class="section-description">
+                    Your 24/7 Ayurvedic wellness companion powered by advanced AI
+                </p>
+            </div>
+
+            <!-- Disclaimer -->
+            <div class="alert alert-info" style="max-width: 900px; margin: 0 auto var(--space-8);">
+                <strong>ℹ️ Educational Purpose:</strong> 
+                This AI assistant provides Ayurvedic knowledge for learning and wellness guidance. 
+                Not a substitute for professional medical advice.
+            </div>
+
+            <!-- Chat Container -->
+            <div class="chat-container">
+                <!-- Chat Header -->
+                <div class="chat-header">
+                    <h2 class="chat-header-title">🕉️ AyurVaani™</h2>
+                    <p class="chat-header-subtitle">
+                        Ancient Ayurvedic Wisdom, Explained with Modern Intelligence
+                    </p>
+                </div>
+
+                <!-- Chat Messages -->
+                <div class="chat-messages" id="chatMessages">
+                    <div class="chat-message chat-message-bot">
+                        <div class="chat-avatar chat-avatar-bot">🕉️</div>
+                        <div class="chat-bubble chat-bubble-bot">
+                            <strong style="display: block; margin-bottom: var(--space-2);">
+                                Namaste! 🙏
+                            </strong>
+                            <p style="margin-bottom: var(--space-3);">
+                                I'm AyurVaani™, your Ayurvedic wellness assistant powered by 
+                                the Tridosha Intelligence Engine™.
+                            </p>
+                            <p style="margin-bottom: var(--space-3);">
+                                <strong>I can help you understand:</strong>
+                            </p>
+                            <ul style="margin: 0; padding-left: var(--space-5); line-height: 1.8;">
+                                <li>Tridosha (Vata, Pitta, Kapha)</li>
+                                <li>Personalized diet & lifestyle</li>
+                                <li>Herbal remedies & treatments</li>
+                                <li>Yoga, pranayama & meditation</li>
+                                <li>Daily & seasonal routines</li>
+                            </ul>
+                            <p style="margin-top: var(--space-3); margin-bottom: 0;">
+                                Ask me anything about Ayurveda! 🌿
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Thinking Indicator -->
+                    <div class="chat-message chat-message-bot" id="thinkingIndicator" style="display: none;">
+                        <div class="chat-avatar chat-avatar-bot">🕉️</div>
+                        <div class="chat-bubble chat-bubble-bot">
+                            <div style="display: flex; align-items: center; gap: var(--space-2);">
+                                <div class="loading-spinner"></div>
+                                <span style="color: var(--color-text-secondary); font-size: var(--font-size-sm);">
+                                    Analyzing with Tridosha Intelligence...
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Questions -->
+                <div class="chat-quick-questions">
+                    <p class="chat-quick-title">Quick Questions:</p>
+                    <div class="chat-quick-buttons">
+                        <button class="chat-quick-btn" onclick="sendQuickQuestion('What is Vata dosha?')">
+                            🌬️ Vata Dosha
+                        </button>
+                        <button class="chat-quick-btn" onclick="sendQuickQuestion('How to improve digestion?')">
+                            🔥 Improve Agni
+                        </button>
+                        <button class="chat-quick-btn" onclick="sendQuickQuestion('Tell me about stress management')">
+                            😌 Stress Relief
+                        </button>
+                        <button class="chat-quick-btn" onclick="sendQuickQuestion('What is Ayurvedic daily routine?')">
+                            ⏰ Daily Routine
+                        </button>
+                        <button class="chat-quick-btn" onclick="sendQuickQuestion('Summer diet recommendations')">
+                            ☀️ Summer Diet
+                        </button>
+                        <button class="chat-quick-btn" onclick="sendQuickQuestion('Who invented Ayurveda?')">
+                            📚 History
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chat Input -->
+                <div class="chat-input-container">
+                    <form class="chat-input-form" id="chatForm">
+                        <input 
+                            type="text" 
+                            class="form-input chat-input" 
+                            id="userInput" 
+                            placeholder="Ask about Ayurveda..." 
+                            autocomplete="off" 
+                            required
+                        >
+                        <button type="submit" class="btn btn-primary">
+                            Send
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="clearChat()">
+                            New Chat
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">AyurAI Veda™</div>
+                <p class="footer-tagline">
+                    Reviving Indian Knowledge Systems through Artificial Intelligence
+                </p>
+                
+                <div class="footer-links">
+                    <a href="/" class="footer-link">Home</a>
+                    <a href="/about" class="footer-link">About Ayurveda</a>
+                    <a href="/clinical-assessment" class="footer-link">Assessment</a>
+                    <a href="/chatbot" class="footer-link">AI Chat</a>
+                    <a href="/contact" class="footer-link">Contact</a>
+                </div>
+                
+                <p class="footer-copyright">
+                    © 2024 AyurAI Veda™. Powered by Tridosha Intelligence Engine™. 
+                    For educational purposes only.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Navigation
+        const navToggle = document.getElementById('navToggle');
+        const navMenu = document.getElementById('navMenu');
+        
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
+                navMenu.classList.remove('active');
+            }
+        });
+
+        // Chat Functionality
+        const chatMessages = document.getElementById('chatMessages');
+        const chatForm = document.getElementById('chatForm');
+        const userInput = document.getElementById('userInput');
+        const thinkingIndicator = document.getElementById('thinkingIndicator');
+
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            // Add user message
+            addMessage(message, 'user');
+            userInput.value = '';
+            
+            // Show thinking indicator
+            thinkingIndicator.style.display = 'flex';
+            scrollToBottom();
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message })
+                });
+                const data = await response.json();
+                
+                // Hide thinking indicator
+                thinkingIndicator.style.display = 'none';
+                
+                // Add bot response
+                addMessage(data.response, 'bot');
+            } catch (error) {
+                thinkingIndicator.style.display = 'none';
+                addMessage('Sorry, I encountered an error. Please try again.', 'bot');
+                console.error('Chat error:', error);
+            }
+        });
+
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message chat-message-${sender}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = `chat-avatar chat-avatar-${sender}`;
+            avatar.textContent = sender === 'bot' ? '🕉️' : '👤';
+            
+            const bubble = document.createElement('div');
+            bubble.className = `chat-bubble chat-bubble-${sender}`;
+            bubble.innerHTML = text.replace(/\n/g, '<br>');
+            
+            if (sender === 'user') {
+                messageDiv.appendChild(bubble);
+                messageDiv.appendChild(avatar);
+            } else {
+                messageDiv.appendChild(avatar);
+                messageDiv.appendChild(bubble);
+            }
+            
+            // Insert before thinking indicator
+            chatMessages.insertBefore(messageDiv, thinkingIndicator);
+            scrollToBottom();
+        }
+
+        function sendQuickQuestion(question) {
+            userInput.value = question;
+            chatForm.dispatchEvent(new Event('submit'));
+        }
+
+        function clearChat() {
+            if (confirm('Start a new conversation? This will clear the current chat.')) {
+                location.reload();
+            }
+        }
+
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Auto-scroll on load
+        scrollToBottom();
+    </script>
+</body>
+</html>

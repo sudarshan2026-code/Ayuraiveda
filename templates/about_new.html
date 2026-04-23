@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn about Ayurveda, Tridosha theory, and how AI enhances ancient wisdom">
+    <title>About Ayurveda & Tridosha - AyurAI Veda™</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/design-system.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="navbar-brand">
+                <span class="navbar-brand-icon">🕉️</span>
+                <div class="navbar-brand-text">
+                    <span class="navbar-brand-title">AyurAI Veda</span>
+                    <span class="navbar-brand-subtitle">Tridosha Intelligence Engine</span>
+                </div>
+            </a>
+            
+            <button class="navbar-toggle" id="navToggle" aria-label="Toggle navigation">
+                ☰
+            </button>
+            
+            <ul class="navbar-menu" id="navMenu">
+                <li><a href="/" class="navbar-link">Home</a></li>
+                <li><a href="/about" class="navbar-link active">About</a></li>
+                <li><a href="/clinical-assessment" class="navbar-link">Assessment</a></li>
+                <li><a href="/chatbot" class="navbar-link">AI Chat</a></li>
+                <li><a href="/contact" class="navbar-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="section">
+        <div class="container container-md">
+            <!-- Page Header -->
+            <div class="section-header">
+                <h1 class="section-title">About Ayurveda</h1>
+                <p class="section-description">
+                    5000 years of holistic healing wisdom meets modern artificial intelligence
+                </p>
+            </div>
+
+            <!-- What is Ayurveda -->
+            <div class="card mb-8">
+                <div class="card-body">
+                    <h2 style="font-size: var(--font-size-2xl); margin-bottom: var(--space-4); color: var(--brand-primary);">
+                        🕉️ What is Ayurveda?
+                    </h2>
+                    <p style="margin-bottom: var(--space-4); color: var(--color-text-secondary); line-height: var(--line-height-relaxed);">
+                        Ayurveda, meaning "Science of Life," is a 5000-year-old holistic healing system 
+                        originating from ancient India. It emphasizes prevention, balance, and harmony 
+                        between body, mind, and spirit.
+                    </p>
+                    <p style="color: var(--color-text-secondary); line-height: var(--line-height-relaxed);">
+                        Unlike modern medicine that treats symptoms, Ayurveda identifies root causes 
+                        of imbalance and provides personalized lifestyle guidance based on your unique 
+                        constitution (Prakriti).
+                    </p>
+                </div>
+            </div>
+
+            <!-- Tridosha Theory -->
+            <div class="card mb-8">
+                <div class="card-body">
+                    <h2 style="font-size: var(--font-size-2xl); margin-bottom: var(--space-6); color: var(--brand-primary);">
+                        ⚖️ The Tridosha Theory
+                    </h2>
+                    <p style="margin-bottom: var(--space-6); color: var(--color-text-secondary); line-height: var(--line-height-relaxed);">
+                        According to Ayurveda, every individual is governed by three fundamental 
+                        energies called <strong>Doshas</strong>:
+                    </p>
+
+                    <!-- Vata -->
+                    <div style="background: linear-gradient(135deg, rgba(123, 44, 191, 0.05), rgba(157, 78, 221, 0.05)); padding: var(--space-6); border-radius: var(--radius-lg); margin-bottom: var(--space-6); border-left: 4px solid var(--dosha-vata);">
+                        <h3 style="font-size: var(--font-size-xl); margin-bottom: var(--space-3); color: var(--dosha-vata);">
+                            🌬️ Vata (Air + Space)
+                        </h3>
+                        <div style="display: grid; gap: var(--space-3); color: var(--color-text-secondary);">
+                            <p><strong>Governs:</strong> Movement, creativity, nervous system, circulation</p>
+                            <p><strong>Qualities:</strong> Dry, light, cold, mobile, irregular</p>
+                            <p><strong>Imbalance Signs:</strong> Anxiety, insomnia, dry skin, constipation, restlessness</p>
+                            <p><strong>Balance Tips:</strong> Warm foods, routine, oil massage, grounding practices</p>
+                        </div>
+                    </div>
+
+                    <!-- Pitta -->
+                    <div style="background: linear-gradient(135deg, rgba(244, 81, 30, 0.05), rgba(255, 110, 64, 0.05)); padding: var(--space-6); border-radius: var(--radius-lg); margin-bottom: var(--space-6); border-left: 4px solid var(--dosha-pitta);">
+                        <h3 style="font-size: var(--font-size-xl); margin-bottom: var(--space-3); color: var(--dosha-pitta);">
+                            🔥 Pitta (Fire + Water)
+                        </h3>
+                        <div style="display: grid; gap: var(--space-3); color: var(--color-text-secondary);">
+                            <p><strong>Governs:</strong> Metabolism, digestion, transformation, intelligence</p>
+                            <p><strong>Qualities:</strong> Hot, sharp, intense, oily, penetrating</p>
+                            <p><strong>Imbalance Signs:</strong> Acidity, inflammation, anger, skin rashes, excessive heat</p>
+                            <p><strong>Balance Tips:</strong> Cooling foods, avoid spicy items, meditation, moderate exercise</p>
+                        </div>
+                    </div>
+
+                    <!-- Kapha -->
+                    <div style="background: linear-gradient(135deg, rgba(0, 137, 123, 0.05), rgba(38, 166, 154, 0.05)); padding: var(--space-6); border-radius: var(--radius-lg); border-left: 4px solid var(--dosha-kapha);">
+                        <h3 style="font-size: var(--font-size-xl); margin-bottom: var(--space-3); color: var(--dosha-kapha);">
+                            🌊 Kapha (Water + Earth)
+                        </h3>
+                        <div style="display: grid; gap: var(--space-3); color: var(--color-text-secondary);">
+                            <p><strong>Governs:</strong> Structure, stability, lubrication, immunity</p>
+                            <p><strong>Qualities:</strong> Heavy, slow, cool, oily, stable</p>
+                            <p><strong>Imbalance Signs:</strong> Weight gain, lethargy, congestion, depression, excess mucus</p>
+                            <p><strong>Balance Tips:</strong> Light foods, regular exercise, avoid dairy, wake early</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scientific Basis -->
+            <div class="card mb-8">
+                <div class="card-body">
+                    <h2 style="font-size: var(--font-size-2xl); margin-bottom: var(--space-4); color: var(--brand-primary);">
+                        🧬 Scientific Validation
+                    </h2>
+                    <p style="margin-bottom: var(--space-4); color: var(--color-text-secondary); line-height: var(--line-height-relaxed);">
+                        Modern research validates many Ayurvedic principles:
+                    </p>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: var(--space-3); background: var(--neutral-50); border-radius: var(--radius-md); margin-bottom: var(--space-2); border-left: 3px solid var(--brand-success);">
+                            <strong>Turmeric (Curcumin)</strong> - Anti-inflammatory properties validated by 10,000+ studies
+                        </li>
+                        <li style="padding: var(--space-3); background: var(--neutral-50); border-radius: var(--radius-md); margin-bottom: var(--space-2); border-left: 3px solid var(--brand-success);">
+                            <strong>Ashwagandha</strong> - Proven adaptogen for stress reduction (cortisol regulation)
+                        </li>
+                        <li style="padding: var(--space-3); background: var(--neutral-50); border-radius: var(--radius-md); margin-bottom: var(--space-2); border-left: 3px solid var(--brand-success);">
+                            <strong>Pranayama</strong> - Improves HRV (Heart Rate Variability) and autonomic balance
+                        </li>
+                        <li style="padding: var(--space-3); background: var(--neutral-50); border-radius: var(--radius-md); margin-bottom: var(--space-2); border-left: 3px solid var(--brand-success);">
+                            <strong>Circadian Rhythm</strong> - Matches Ayurvedic daily routine (Dinacharya)
+                        </li>
+                        <li style="padding: var(--space-3); background: var(--neutral-50); border-radius: var(--radius-md); border-left: 3px solid var(--brand-success);">
+                            <strong>Gut-Brain Axis</strong> - Validates Ayurveda's emphasis on digestive health
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- AI Enhancement -->
+            <div class="card mb-8">
+                <div class="card-body">
+                    <h2 style="font-size: var(--font-size-2xl); margin-bottom: var(--space-4); color: var(--brand-primary);">
+                        🤖 How AI Enhances Ayurveda
+                    </h2>
+                    <p style="margin-bottom: var(--space-4); color: var(--color-text-secondary); line-height: var(--line-height-relaxed);">
+                        The Tridosha Intelligence Engine™ combines traditional wisdom with modern AI:
+                    </p>
+                    <div class="grid grid-cols-2">
+                        <div class="feature-card">
+                            <div class="feature-card-icon">🎯</div>
+                            <h3 class="feature-card-title">Pattern Recognition</h3>
+                            <p class="feature-card-description">
+                                Analyzes multiple symptoms simultaneously for accurate dosha assessment
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-card-icon">⚖️</div>
+                            <h3 class="feature-card-title">Weighted Scoring</h3>
+                            <p class="feature-card-description">
+                                Prioritizes critical indicators based on Ayurvedic principles
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-card-icon">👤</div>
+                            <h3 class="feature-card-title">Personalization</h3>
+                            <p class="feature-card-description">
+                                Considers age, lifestyle, and environmental factors
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-card-icon">📈</div>
+                            <h3 class="feature-card-title">Scalability</h3>
+                            <p class="feature-card-description">
+                                Provides instant assessments to unlimited users
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="card" style="background: linear-gradient(135deg, rgba(255, 107, 53, 0.05), rgba(0, 78, 137, 0.05)); text-align: center;">
+                <div class="card-body" style="padding: var(--space-8);">
+                    <h2 style="font-size: var(--font-size-2xl); margin-bottom: var(--space-4);">
+                        Experience AI-Powered Ayurveda
+                    </h2>
+                    <p style="color: var(--color-text-secondary); margin-bottom: var(--space-6);">
+                        Discover your unique dosha constitution and receive personalized health insights
+                    </p>
+                    <a href="/clinical-assessment" class="btn btn-primary btn-lg">
+                        Start Assessment
+                        <span>→</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">AyurAI Veda™</div>
+                <p class="footer-tagline">
+                    Reviving Indian Knowledge Systems through Artificial Intelligence
+                </p>
+                
+                <div class="footer-links">
+                    <a href="/" class="footer-link">Home</a>
+                    <a href="/about" class="footer-link">About Ayurveda</a>
+                    <a href="/clinical-assessment" class="footer-link">Assessment</a>
+                    <a href="/chatbot" class="footer-link">AI Chat</a>
+                    <a href="/contact" class="footer-link">Contact</a>
+                </div>
+                
+                <p class="footer-copyright">
+                    © 2024 AyurAI Veda™. Powered by Tridosha Intelligence Engine™. 
+                    For educational purposes only.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const navToggle = document.getElementById('navToggle');
+        const navMenu = document.getElementById('navMenu');
+        
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
+                navMenu.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="{% block meta_description %}AyurAI Veda — AI-powered Ayurvedic health intelligence{% endblock %}">
+  <title>{% block title %}AyurAI Veda{% endblock %} — AyurAI Veda</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+  <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+
+  <!-- Design System -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/tokens.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+  {% block extra_css %}{% endblock %}
+
+  <!-- Lucide Icons (SVG) -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+</head>
+<body>
+
+<!-- ── Sidebar Overlay (mobile) ── -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- ── App Shell ── -->
+<div class="app-shell">
+
+  <!-- ════════════════════════════
+       SIDEBAR
+  ════════════════════════════ -->
+  <aside class="sidebar" id="sidebar" role="navigation" aria-label="Main navigation">
+
+    <!-- Logo -->
+    <a href="/" class="sidebar-logo" aria-label="AyurAI Veda Home">
+      <div class="sidebar-logo-icon" aria-hidden="true">
+        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="AyurAI Veda Logo" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+      </div>
+      <div class="sidebar-logo-text">
+        <span class="sidebar-logo-title">AyurAI Veda</span>
+        <span class="sidebar-logo-subtitle">Tridosha Intelligence</span>
+      </div>
+    </a>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav" aria-label="Primary">
+
+      <!-- Main -->
+      <div class="sidebar-nav-section">
+        <p class="sidebar-nav-label">Main</p>
+
+        <a href="/"
+           class="sidebar-nav-item {% if request.path == '/' %}active{% endif %}"
+           aria-current="{% if request.path == '/' %}page{% endif %}">
+          <svg class="sidebar-nav-icon" data-lucide="home" aria-hidden="true"></svg>
+          Home
+        </a>
+
+        <a href="/about"
+           class="sidebar-nav-item {% if request.path == '/about' %}active{% endif %}"
+           aria-current="{% if request.path == '/about' %}page{% endif %}">
+          <svg class="sidebar-nav-icon" data-lucide="book-open" aria-hidden="true"></svg>
+          About Ayurveda
+        </a>
+      </div>
+
+      <!-- Tools -->
+      <div class="sidebar-nav-section">
+        <p class="sidebar-nav-label">Tools</p>
+
+        <a href="/clinical-assessment"
+           class="sidebar-nav-item {% if '/assessment' in request.path %}active{% endif %}"
+           aria-current="{% if '/assessment' in request.path %}page{% endif %}">
+          <svg class="sidebar-nav-icon" data-lucide="clipboard-list" aria-hidden="true"></svg>
+          Assessment
+          <span class="sidebar-nav-badge">59-pt</span>
+        </a>
+
+        <a href="/chatbot"
+           class="sidebar-nav-item {% if request.path == '/chatbot' %}active{% endif %}"
+           aria-current="{% if request.path == '/chatbot' %}page{% endif %}">
+          <svg class="sidebar-nav-icon" data-lucide="message-circle" aria-hidden="true"></svg>
+          AyurVaani Chat
+        </a>
+      </div>
+
+      <!-- Support -->
+      <div class="sidebar-nav-section">
+        <p class="sidebar-nav-label">Support</p>
+
+        <a href="/contact"
+           class="sidebar-nav-item {% if request.path == '/contact' %}active{% endif %}"
+           aria-current="{% if request.path == '/contact' %}page{% endif %}">
+          <svg class="sidebar-nav-icon" data-lucide="mail" aria-hidden="true"></svg>
+          Contact
+        </a>
+      </div>
+
+    </nav>
+
+    <!-- Footer -->
+    <div class="sidebar-footer">
+      <p class="sidebar-disclaimer">
+        <strong>⚠ Educational Only</strong>
+        Not a medical diagnosis platform. Consult a qualified healthcare professional.
+      </p>
+      <p style="text-align: left; margin-top: 1rem; font-size: 0.7rem; opacity: 0.6;">© 2026 AyurAI Veda. All rights reserved.</p>
+      <p style="text-align: center; margin-top: 1rem; font-size: 0.85rem;">
+        <strong>AyurAI Veda</strong> | Reviving Indian Knowledge Systems through Artificial Intelligence<br>
+        <span style="font-size: 0.8rem; opacity: 0.8;">Powered by Tridosha Intelligence Engine</span><br>
+        <span style="font-size: 0.75rem; opacity: 0.7; margin-top: 0.25rem; display: block;">A Sudarshan Technologies Production</span>
+      </p>
+    </div>
+
+  </aside>
+  <!-- /SIDEBAR -->
+
+  <!-- ════════════════════════════
+       MAIN WRAPPER
+  ════════════════════════════ -->
+  <div class="main-wrapper">
+
+    <!-- ── Top Bar ── -->
+    <header class="topbar" role="banner">
+      <div class="topbar-left">
+
+        <!-- Mobile hamburger -->
+        <button
+          class="topbar-mobile-toggle"
+          id="sidebarToggle"
+          aria-label="Open navigation"
+          aria-expanded="false"
+          aria-controls="sidebar">
+          <svg width="20" height="20" data-lucide="menu" aria-hidden="true"></svg>
+        </button>
+
+        <!-- Breadcrumb -->
+        <nav class="topbar-breadcrumb" aria-label="Breadcrumb">
+          <a href="/">AyurAI Veda</a>
+          {% block breadcrumb %}{% endblock %}
+        </nav>
+
+      </div>
+
+      <div class="topbar-right">
+        <span class="topbar-badge">
+          <span class="topbar-badge-dot" aria-hidden="true"></span>
+          IKS + AI Powered
+        </span>
+      </div>
+    </header>
+    <!-- /Top Bar -->
+
+    <!-- ── Main Content ── -->
+    <main class="main-content" id="main-content" role="main">
+      {% block content %}{% endblock %}
+    </main>
+    <!-- /Main Content -->
+
+  </div>
+  <!-- /MAIN WRAPPER -->
+
+</div>
+<!-- /APP SHELL -->
+
+<!-- ── Scripts ── -->
+<script>
+  // Init Lucide icons
+  document.addEventListener('DOMContentLoaded', () => {
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+  });
+
+  // Sidebar toggle (mobile)
+  const sidebarToggle  = document.getElementById('sidebarToggle');
+  const sidebar        = document.getElementById('sidebar');
+  const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+  function openSidebar() {
+    sidebar.classList.add('open');
+    sidebarOverlay.classList.add('visible');
+    sidebarToggle.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeSidebar() {
+    sidebar.classList.remove('open');
+    sidebarOverlay.classList.remove('visible');
+    sidebarToggle.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+
+  sidebarToggle.addEventListener('click', () => {
+    sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+  });
+
+  sidebarOverlay.addEventListener('click', closeSidebar);
+
+  // Close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && sidebar.classList.contains('open')) closeSidebar();
+  });
+
+  // Close sidebar on nav link click (mobile)
+  sidebar.querySelectorAll('.sidebar-nav-item').forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 768) closeSidebar();
+    });
+  });
+</script>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>

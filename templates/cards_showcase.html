@@ -1,0 +1,435 @@
+{% extends "_base.html" %}
+
+{% block title %}Card Components{% endblock %}
+
+{% block breadcrumb %}
+  <span class="topbar-breadcrumb-sep">/</span>
+  <span class="topbar-breadcrumb-current">Card Components</span>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/card-component.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<div class="page-header">
+  <div class="page-header-eyebrow">
+    <svg width="12" height="12" data-lucide="layout" aria-hidden="true"></svg>
+    Component Library
+  </div>
+  <h1 class="page-header-title">Card Components</h1>
+  <p class="page-header-description">
+    Production-ready card components with multiple variants, states, and use cases.
+  </p>
+</div>
+
+<!-- ══════════════════════════════════════
+     BASIC CARDS
+══════════════════════════════════════ -->
+<section style="margin-bottom: var(--space-12);">
+  <h2 style="font-size: var(--text-2xl); margin-bottom: var(--space-6);">Basic Cards</h2>
+  
+  <div class="card-grid card-grid-3">
+    
+    <!-- Simple Card -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-header-title">Simple Card</h3>
+      </div>
+      <div class="card-body">
+        <p class="card-description">
+          Basic card with header and body. Perfect for displaying content in a structured way.
+        </p>
+      </div>
+    </div>
+
+    <!-- Card with Footer -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-header-title">With Footer</h3>
+      </div>
+      <div class="card-body">
+        <p class="card-description">
+          Card with header, body, and footer section for actions.
+        </p>
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-primary btn-sm">Action</button>
+      </div>
+    </div>
+
+    <!-- Card with Actions -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h3 class="card-header-title">With Actions</h3>
+          <p class="card-header-subtitle">Subtitle text</p>
+        </div>
+        <div class="card-header-actions">
+          <button class="btn btn-ghost btn-sm">
+            <svg width="16" height="16" data-lucide="more-horizontal" aria-hidden="true"></svg>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-description">
+          Card with header actions and subtitle.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     CARD VARIANTS
+══════════════════════════════════════ -->
+<section style="margin-bottom: var(--space-12);">
+  <h2 style="font-size: var(--text-2xl); margin-bottom: var(--space-6);">Card Variants</h2>
+  
+  <div class="card-grid card-grid-3">
+    
+    <!-- Elevated Card -->
+    <div class="card card-elevated">
+      <div class="card-body">
+        <h3 class="card-title">Elevated Card</h3>
+        <p class="card-description">
+          Card with elevated shadow. Hovers higher.
+        </p>
+      </div>
+    </div>
+
+    <!-- Bordered Card -->
+    <div class="card card-bordered">
+      <div class="card-body">
+        <h3 class="card-title">Bordered Card</h3>
+        <p class="card-description">
+          Card with 2px border. No shadow.
+        </p>
+      </div>
+    </div>
+
+    <!-- Interactive Card -->
+    <div class="card card-interactive">
+      <div class="card-body">
+        <h3 class="card-title">Interactive Card</h3>
+        <p class="card-description">
+          Clickable card with hover effects.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     ACCENT CARDS
+══════════════════════════════════════ -->
+<section style="margin-bottom: var(--space-12);">
+  <h2 style="font-size: var(--text-2xl); margin-bottom: var(--space-6);">Accent Cards</h2>
+  
+  <div class="card-grid card-grid-2">
+    
+    <!-- Top Accent -->
+    <div class="card card-accent-top">
+      <div class="card-body">
+        <h3 class="card-title">Primary Accent</h3>
+        <p class="card-description">
+          Card with top border accent in primary color.
+        </p>
+      </div>
+    </div>
+
+    <div class="card card-accent-top card-accent-top-success">
+      <div class="card-body">
+        <h3 class="card-title">Success Accent</h3>
+        <p class="card-description">
+          Card with top border accent in success color.
+        </p>
+      </div>
+    </div>
+
+    <!-- Left Accent -->
+    <div class="card card-accent-left card-accent-left-warning">
+      <div class="card-body">
+        <h3 class="card-title">Warning Accent</h3>
+        <p class="card-description">
+          Card with left border accent in warning color.
+        </p>
+      </div>
+    </div>
+
+    <div class="card card-accent-left card-accent-left-error">
+      <div class="card-body">
+        <h3 class="card-title">Error Accent</h3>
+        <p class="card-description">
+          Card with left border accent in error color.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     ICON CARDS
+══════════════════════════════════════ -->
+<section style="margin-bottom: var(--space-12);">
+  <h2 style="font-size: var(--text-2xl); margin-bottom: var(--space-6);">Icon Cards</h2>
+  
+  <div class="card-grid card-grid-3">
+    
+    <div class="card">
+      <div class="card-body card-with-icon">
+        <div class="card-icon">
+          <svg width="24" height="24" data-lucide="brain" aria-hidden="true"></svg>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">AI Analysis</h3>
+          <p class="card-description">
+            Advanced Tridosha Intelligence Engine for accurate health assessment.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body card-with-icon">
+        <div class="card-icon card-icon-success">
+          <svg width="24" height="24" data-lucide="shield-check" aria-hidden="true"></svg>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Privacy First</h3>
+          <p class="card-description">
+            No data storage. Completely secure and confidential.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body card-with-icon">
+        <div class="card-icon card-icon-warning">
+          <svg width="24" height="24" data-lucide="alert-circle" aria-hidden="true"></svg>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Educational Only</h3>
+          <p class="card-description">
+            For educational and preventive insights only.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     STAT CARDS
+══════════════════════════════════════ -->
+<section style="margin-bottom: var(--space-12);">
+  <h2 style="font-size: var(--text-2xl); margin-bottom: var(--space-6);">Stat Cards</h2>
+  
+  <div class="card-grid card-grid-4">
+    
+    <div class="card card-stat">
+      <div class="card-stat-value">1,234</div>
+      <div class="card-stat-label">Total Assessments</div>
+      <div class="card-stat-change card-stat-change-positive">
+        <svg width="12" height="12" data-lucide="trending-up" aria-hidden="true"></svg>
+        +12.5%
+      </div>
+    </div>
+
+    <div class="card card-stat">
+      <div class="card-stat-value">89%</div>
+      <div class="card-stat-label">Accuracy Rate</div>
+      <div class="card-stat-change card-stat-change-positive">
+        <svg width="12" height="12" data-lucide="trending-up" aria-hidden="true"></svg>
+        +2.3%
+      </div>
+    </div>
+
+    <div class="card card-stat">
+      <div class="card-stat-value">567</div>
+      <div class="card-stat-label">Active Users</div>
+      <div class="card-stat-change card-stat-change-negative">
+        <svg width="12" height="12" data-lucide="trending-down" aria-hidden="true"></svg>
+        -3.1%
+      </div>
+    </div>
+
+    <div class="card card-stat">
+      <div class="card-stat-value">24/7</div>
+      <div class="card-stat-label">AI Availability</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     COMPLEX CARDS
+══════════════════════════════════════ -->
+<section style="margin-bottom: var(--space-12);">
+  <h2 style="font-size: var(--text-2xl); margin-bottom: var(--space-6);">Complex Cards</h2>
+  
+  <div class="card-grid card-grid-2">
+    
+    <!-- Dosha Card -->
+    <div class="card card-elevated">
+      <div class="card-header">
+        <div>
+          <h3 class="card-header-title">Vata Dosha</h3>
+          <p class="card-header-subtitle">Air + Space</p>
+        </div>
+        <div class="card-header-actions">
+          <span class="badge badge-primary">Active</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-description" style="margin-bottom: var(--space-4);">
+          Governs movement, creativity, and nervous system. Imbalance causes anxiety, dry skin, and irregular digestion.
+        </p>
+        <div class="card-meta">
+          <div class="card-meta-item">
+            <svg width="12" height="12" data-lucide="users" aria-hidden="true"></svg>
+            <span>35% of users</span>
+          </div>
+          <div class="card-meta-item">
+            <svg width="12" height="12" data-lucide="activity" aria-hidden="true"></svg>
+            <span>High activity</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span style="font-size: var(--text-sm); color: var(--color-text-secondary);">
+          Last updated: 2 hours ago
+        </span>
+        <div class="card-footer-actions">
+          <button class="btn btn-outline btn-sm">Learn More</button>
+          <button class="btn btn-primary btn-sm">Assess Now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Assessment Card -->
+    <div class="card card-interactive">
+      <div class="card-header">
+        <div>
+          <h3 class="card-header-title">59-Point Assessment</h3>
+          <p class="card-header-subtitle">Comprehensive Prakriti Analysis</p>
+        </div>
+        <div class="card-header-actions">
+          <span class="badge badge-success">Recommended</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-description" style="margin-bottom: var(--space-4);">
+          Complete 59-point Ayurvedic assessment covering body structure, digestion, mental state, and more.
+        </p>
+        <div style="display: flex; gap: var(--space-4); margin-bottom: var(--space-4);">
+          <div style="flex: 1;">
+            <div style="font-size: var(--text-2xl); font-weight: var(--weight-bold); color: var(--color-primary);">
+              59
+            </div>
+            <div style="font-size: var(--text-xs); color: var(--color-text-tertiary);">
+              Parameters
+            </div>
+          </div>
+          <div style="flex: 1;">
+            <div style="font-size: var(--text-2xl); font-weight: var(--weight-bold); color: var(--color-primary);">
+              15
+            </div>
+            <div style="font-size: var(--text-xs); color: var(--color-text-tertiary);">
+              Minutes
+            </div>
+          </div>
+          <div style="flex: 1;">
+            <div style="font-size: var(--text-2xl); font-weight: var(--weight-bold); color: var(--color-primary);">
+              AI
+            </div>
+            <div style="font-size: var(--text-xs); color: var(--color-text-tertiary);">
+              Powered
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="card-footer-actions" style="width: 100%;">
+          <button class="btn btn-primary" style="flex: 1;">
+            <svg width="16" height="16" data-lucide="clipboard-check" aria-hidden="true"></svg>
+            Start Assessment
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     CARD STATES
+══════════════════════════════════════ -->
+<section style="margin-bottom: var(--space-12);">
+  <h2 style="font-size: var(--text-2xl); margin-bottom: var(--space-6);">Card States</h2>
+  
+  <div class="card-grid card-grid-3">
+    
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title">Default State</h3>
+        <p class="card-description">
+          Normal card state with standard styling.
+        </p>
+      </div>
+    </div>
+
+    <div class="card card-selected">
+      <div class="card-body">
+        <h3 class="card-title">Selected State</h3>
+        <p class="card-description">
+          Card with selected state and primary border.
+        </p>
+      </div>
+    </div>
+
+    <div class="card card-disabled">
+      <div class="card-body">
+        <h3 class="card-title">Disabled State</h3>
+        <p class="card-description">
+          Card in disabled state with reduced opacity.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Code Example -->
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-header-title">Usage Example</h3>
+  </div>
+  <div class="card-body">
+    <pre style="background: var(--color-bg); padding: var(--space-4); border-radius: var(--radius-md); overflow-x: auto; font-size: var(--text-sm); line-height: 1.6;"><code>&lt;div class="card"&gt;
+  &lt;div class="card-header"&gt;
+    &lt;h3 class="card-header-title"&gt;Card Title&lt;/h3&gt;
+    &lt;div class="card-header-actions"&gt;
+      &lt;button class="btn btn-ghost btn-sm"&gt;Action&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="card-body"&gt;
+    &lt;p class="card-description"&gt;Card content goes here&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="card-footer"&gt;
+    &lt;div class="card-footer-actions"&gt;
+      &lt;button class="btn btn-primary"&gt;Primary Action&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+  </div>
+</div>
+
+{% endblock %}

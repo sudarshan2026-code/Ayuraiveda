@@ -5,22 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AyurVaani™ - Ayurveda AI Assistant</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+    
     <style>
         .chat-container {
             max-width: 900px;
             margin: 0 auto;
-            background: white;
+            background: var(--card-bg);
             border-radius: 8px;
             box-shadow: 0 2px 8px var(--shadow);
             border: 1px solid var(--border);
             overflow: hidden;
         }
         .chat-header {
-            background: linear-gradient(135deg, var(--navy), var(--green));
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             padding: 1.5rem;
             text-align: center;
-            border-bottom: 3px solid var(--saffron);
+            border-bottom: 3px solid var(--primary);
         }
         .chat-header h2 {
             margin: 0;
@@ -32,18 +38,18 @@
             font-size: 0.9rem;
         }
         .chat-disclaimer {
-            background: #FFF3CD;
-            border-bottom: 2px solid #FFC107;
+            background: var(--card-bg);
+            border-bottom: 2px solid var(--accent);
             padding: 0.75rem;
             text-align: center;
             font-size: 0.85rem;
-            color: #856404;
+            color: var(--light-text);
         }
         .chat-messages {
             height: 500px;
             overflow-y: auto;
             padding: 1.5rem;
-            background: #F8F9FA;
+            background: var(--darker);
         }
         .message {
             margin-bottom: 1rem;
@@ -67,11 +73,11 @@
             flex-shrink: 0;
         }
         .message.bot .message-avatar {
-            background: linear-gradient(135deg, var(--saffron), var(--green));
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
         }
         .message.user .message-avatar {
-            background: var(--navy);
+            background: var(--accent);
             color: white;
         }
         .message-content {
@@ -81,17 +87,18 @@
             line-height: 1.6;
         }
         .message.bot .message-content {
-            background: white;
+            background: var(--card-bg);
             border: 1px solid var(--border);
-            border-left: 3px solid var(--saffron);
+            border-left: 3px solid var(--primary);
+            color: var(--light-text);
         }
         .message.user .message-content {
-            background: var(--navy);
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
             color: white;
         }
         .chat-input-area {
             padding: 1rem;
-            background: white;
+            background: var(--card-bg);
             border-top: 2px solid var(--border);
         }
         .chat-input-form {
@@ -104,14 +111,16 @@
             border: 1px solid var(--border);
             border-radius: 4px;
             font-size: 1rem;
+            background: var(--darker);
+            color: var(--light-text);
         }
         .chat-input:focus {
             outline: none;
-            border-color: var(--navy);
-            box-shadow: 0 0 0 3px rgba(0, 0, 128, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px var(--shadow);
         }
         .chat-send-btn {
-            background: linear-gradient(135deg, var(--navy), var(--green));
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             padding: 0.75rem 1.5rem;
             border: none;
@@ -122,17 +131,17 @@
         }
         .chat-send-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px var(--shadow);
+            box-shadow: 0 0 20px var(--glow);
         }
         .quick-questions {
             padding: 1rem;
-            background: white;
+            background: var(--card-bg);
             border-top: 1px solid var(--border);
         }
         .quick-questions h4 {
             margin: 0 0 0.75rem 0;
             font-size: 0.9rem;
-            color: var(--navy);
+            color: var(--primary);
         }
         .quick-btns {
             display: flex;
@@ -140,24 +149,25 @@
             flex-wrap: wrap;
         }
         .quick-btn {
-            background: #F8F9FA;
+            background: var(--darker);
             border: 1px solid var(--border);
             padding: 0.5rem 1rem;
             border-radius: 20px;
             font-size: 0.85rem;
             cursor: pointer;
             transition: all 0.3s;
+            color: var(--light-text);
         }
         .quick-btn:hover {
-            background: var(--saffron);
+            background: var(--primary);
             color: white;
-            border-color: var(--saffron);
+            border-color: var(--primary);
         }
         .thinking-indicator {
             display: none;
             padding: 1rem;
             text-align: center;
-            color: var(--navy);
+            color: var(--primary);
             font-style: italic;
         }
         .thinking-indicator.active {
@@ -193,18 +203,22 @@
     <header>
         <div class="header-content">
             <div class="logo">
-                <h1>AyurAI Veda™</h1>
-                <p>Powered by Tridosha Intelligence Engine™</p>
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="AyurAI Veda Logo" style="height: 50px; width: auto; margin-right: 15px; vertical-align: middle;">
+                <div style="display: inline-block; vertical-align: middle;">
+                    <h1 style="margin: 0; display: inline;">AyurAI Veda</h1>
+                    <p style="margin: 0; font-size: 0.9rem;">Powered by Tridosha Intelligence Engine</p>
+                </div>
             </div>
             <div class="badge">IKS + AI Powered</div>
         </div>
         <nav>
             <ul>
                 <li><a href="/">Home</a></li>
-                <li><a href="/about">About Ayurveda</a></li>
-                <li><a href="/assessment">AI Health Assessment</a></li>
-                <li><a href="/chatbot">AyurVaani™ Chat</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/clinical-assessment">Clinical Assessment</a></li>
+                <li><a href="/chatbot">AyurVaani Chat</a></li>
                 <li><a href="/contact">Contact</a></li>
+                <li><a href="/feedback">Feedback</a></li>
             </ul>
         </nav>
     </header>
@@ -212,9 +226,10 @@
     <div class="container">
         <div class="chat-container">
             <div class="chat-header">
-                <h2>🕉️ AyurVaani™</h2>
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="AyurAI Veda Logo" style="height: 40px; width: auto; margin-bottom: 10px;">
+                <h2>🕉️ AyurVaani</h2>
                 <p>The Ayurveda Knowledge Assistant</p>
-                <p style="font-size: 0.8rem; margin-top: 0.25rem;">Powered by Tridosha Intelligence Engine™ + Groq LLM</p>
+                <p style="font-size: 0.8rem; margin-top: 0.25rem;">Powered by Tridosha Intelligence Engine + Groq LLM</p>
                 <p style="font-size: 0.75rem; margin-top: 0.25rem; opacity: 0.9;">Ancient Ayurveda, Explained with Modern Intelligence</p>
             </div>
             
@@ -227,7 +242,7 @@
                     <div class="message-avatar">🕉️</div>
                     <div class="message-content">
                         <strong>Namaste! 🙏</strong><br><br>
-                        I'm AyurVaani™, your Ayurvedic wellness assistant powered by ancient wisdom and modern AI.<br><br>
+                        I'm AyurVaani, your Ayurvedic wellness assistant powered by ancient wisdom and modern AI.<br><br>
                         I can help you understand:<br>
                         🌬️ Tridosha (Vata, Pitta, Kapha)<br>
                         🍽️ Personalized diet & lifestyle<br>
@@ -265,8 +280,10 @@
     </div>
 
     <footer>
-        <p><strong>AyurVaani™</strong> | Reviving Indian Knowledge Systems through Ethical Artificial Intelligence</p>
-        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Powered by Tridosha Intelligence Engine™</p>
+        <p style="text-align: left; margin-bottom: 1rem; font-size: 0.75rem; opacity: 0.6;">© 2026 AyurAI Veda. All rights reserved.</p>
+        <p><strong>AyurVaani</strong> | Reviving Indian Knowledge Systems through Ethical Artificial Intelligence</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Powered by Tridosha Intelligence Engine</p>
+        <p style="margin-top: 0.25rem; font-size: 0.85rem; opacity: 0.8;">A Sudarshan Technologies Production</p>
     </footer>
 
     <script>

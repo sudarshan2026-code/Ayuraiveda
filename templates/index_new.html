@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-powered Ayurvedic health assessment platform combining 5000-year-old wisdom with modern artificial intelligence">
+    <title>AyurAI Veda™ - AI-Powered Ayurvedic Health Intelligence</title>
+    
+    <!-- Design System -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/design-system.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/" class="navbar-brand">
+                <span class="navbar-brand-icon">🕉️</span>
+                <div class="navbar-brand-text">
+                    <span class="navbar-brand-title">AyurAI Veda</span>
+                    <span class="navbar-brand-subtitle">Tridosha Intelligence Engine</span>
+                </div>
+            </a>
+            
+            <button class="navbar-toggle" id="navToggle" aria-label="Toggle navigation">
+                ☰
+            </button>
+            
+            <ul class="navbar-menu" id="navMenu">
+                <li><a href="/" class="navbar-link active">Home</a></li>
+                <li><a href="/about" class="navbar-link">About</a></li>
+                <li><a href="/clinical-assessment" class="navbar-link">Assessment</a></li>
+                <li><a href="/chatbot" class="navbar-link">AI Chat</a></li>
+                <li><a href="/contact" class="navbar-link">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span>🇮🇳</span>
+                    <span>Indian Knowledge Systems + AI</span>
+                </div>
+                
+                <h1 class="hero-title">
+                    Ancient Wisdom.<br>Intelligent Health.
+                </h1>
+                
+                <p class="hero-description">
+                    Experience the fusion of 5000-year-old Ayurvedic wisdom with cutting-edge AI. 
+                    Get personalized health insights based on your unique Tridosha constitution.
+                </p>
+                
+                <div class="hero-actions">
+                    <a href="/clinical-assessment" class="btn btn-primary btn-lg">
+                        Start Assessment
+                        <span>→</span>
+                    </a>
+                    <a href="/chatbot" class="btn btn-outline btn-lg">
+                        Chat with AI
+                        <span>💬</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tridosha Cards -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Understanding Tridosha</h2>
+                <p class="section-description">
+                    Three fundamental energies that govern all physical and mental processes
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-3">
+                <div class="dosha-card dosha-card-vata">
+                    <div class="dosha-card-icon">🌬️</div>
+                    <h3 class="dosha-card-title">Vata</h3>
+                    <p class="dosha-card-subtitle">Air + Space</p>
+                    <p class="dosha-card-description">
+                        Governs movement, creativity, and nervous system. 
+                        Imbalance causes anxiety, dry skin, and irregular digestion.
+                    </p>
+                </div>
+                
+                <div class="dosha-card dosha-card-pitta">
+                    <div class="dosha-card-icon">🔥</div>
+                    <h3 class="dosha-card-title">Pitta</h3>
+                    <p class="dosha-card-subtitle">Fire + Water</p>
+                    <p class="dosha-card-description">
+                        Governs metabolism, digestion, and transformation. 
+                        Imbalance causes acidity, inflammation, and irritability.
+                    </p>
+                </div>
+                
+                <div class="dosha-card dosha-card-kapha">
+                    <div class="dosha-card-icon">🌊</div>
+                    <h3 class="dosha-card-title">Kapha</h3>
+                    <p class="dosha-card-subtitle">Water + Earth</p>
+                    <p class="dosha-card-description">
+                        Governs structure, stability, and immunity. 
+                        Imbalance causes weight gain, lethargy, and congestion.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section" style="background: var(--neutral-50);">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Powered by AI Intelligence</h2>
+                <p class="section-description">
+                    Advanced technology meets ancient wisdom for personalized health insights
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-3">
+                <div class="feature-card">
+                    <div class="feature-card-icon">🧠</div>
+                    <h3 class="feature-card-title">AI-Powered Analysis</h3>
+                    <p class="feature-card-description">
+                        Advanced Tridosha Intelligence Engine analyzes 20+ health parameters 
+                        using classical Ayurvedic principles.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-card-icon">💬</div>
+                    <h3 class="feature-card-title">24/7 AI Assistant</h3>
+                    <p class="feature-card-description">
+                        Chat with AyurVaani™ for instant answers about doshas, diet, 
+                        yoga, and lifestyle recommendations.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-card-icon">📊</div>
+                    <h3 class="feature-card-title">Detailed Reports</h3>
+                    <p class="feature-card-description">
+                        Receive comprehensive PDF reports with personalized recommendations 
+                        for diet, exercise, and wellness.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-card-icon">🔒</div>
+                    <h3 class="feature-card-title">Privacy First</h3>
+                    <p class="feature-card-description">
+                        No data storage. All assessments are processed in real-time 
+                        and never saved to our servers.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-card-icon">🌿</div>
+                    <h3 class="feature-card-title">Holistic Guidance</h3>
+                    <p class="feature-card-description">
+                        Get recommendations for diet, yoga, pranayama, herbs, 
+                        and daily routines tailored to your dosha.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-card-icon">🎓</div>
+                    <h3 class="feature-card-title">Educational Focus</h3>
+                    <p class="feature-card-description">
+                        Learn authentic Ayurvedic principles with NEP 2020 aligned 
+                        Indian Knowledge Systems integration.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">How It Works</h2>
+                <p class="section-description">
+                    Three simple steps to discover your unique health profile
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <div style="font-size: 3rem; margin-bottom: var(--space-4);">1️⃣</div>
+                        <h3 style="font-size: var(--font-size-xl); margin-bottom: var(--space-3);">Answer Questions</h3>
+                        <p style="color: var(--color-text-secondary);">
+                            Complete a comprehensive assessment about your lifestyle, 
+                            diet, sleep patterns, and health symptoms.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="card text-center">
+                    <div class="card-body">
+                        <div style="font-size: 3rem; margin-bottom: var(--space-4);">2️⃣</div>
+                        <h3 style="font-size: var(--font-size-xl); margin-bottom: var(--space-3);">AI Analysis</h3>
+                        <p style="color: var(--color-text-secondary);">
+                            Our Tridosha Intelligence Engine processes your data 
+                            using validated Ayurvedic diagnostic principles.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="card text-center">
+                    <div class="card-body">
+                        <div style="font-size: 3rem; margin-bottom: var(--space-4);">3️⃣</div>
+                        <h3 style="font-size: var(--font-size-xl); margin-bottom: var(--space-3);">Get Insights</h3>
+                        <p style="color: var(--color-text-secondary);">
+                            Receive personalized recommendations for diet, yoga, 
+                            lifestyle, and preventive health measures.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section" style="background: linear-gradient(135deg, rgba(255, 107, 53, 0.05), rgba(0, 78, 137, 0.05));">
+        <div class="container">
+            <div class="card" style="max-width: 800px; margin: 0 auto; text-align: center;">
+                <div class="card-body" style="padding: var(--space-12);">
+                    <h2 style="font-size: var(--font-size-3xl); margin-bottom: var(--space-4);">
+                        Ready to Discover Your Dosha?
+                    </h2>
+                    <p style="font-size: var(--font-size-lg); color: var(--color-text-secondary); margin-bottom: var(--space-8);">
+                        Take our AI-powered assessment and receive personalized health insights 
+                        based on your unique Ayurvedic constitution.
+                    </p>
+                    <div style="display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap;">
+                        <a href="/clinical-assessment" class="btn btn-primary btn-lg">
+                            Start Free Assessment
+                            <span>→</span>
+                        </a>
+                        <a href="/about" class="btn btn-outline btn-lg">
+                            Learn More
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Disclaimer -->
+    <section class="section">
+        <div class="container">
+            <div class="alert alert-warning" style="max-width: 900px; margin: 0 auto;">
+                <strong>⚠️ Important Disclaimer:</strong> 
+                This system provides educational and preventive health insights only. 
+                It is NOT a medical diagnosis platform. Always consult qualified healthcare 
+                professionals for medical advice, diagnosis, or treatment.
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">AyurAI Veda™</div>
+                <p class="footer-tagline">
+                    Reviving Indian Knowledge Systems through Artificial Intelligence
+                </p>
+                
+                <div class="footer-links">
+                    <a href="/" class="footer-link">Home</a>
+                    <a href="/about" class="footer-link">About Ayurveda</a>
+                    <a href="/clinical-assessment" class="footer-link">Assessment</a>
+                    <a href="/chatbot" class="footer-link">AI Chat</a>
+                    <a href="/contact" class="footer-link">Contact</a>
+                </div>
+                
+                <p class="footer-copyright">
+                    © 2024 AyurAI Veda™. Powered by Tridosha Intelligence Engine™. 
+                    For educational purposes only.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Navigation Script -->
+    <script>
+        const navToggle = document.getElementById('navToggle');
+        const navMenu = document.getElementById('navMenu');
+        
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
+                navMenu.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

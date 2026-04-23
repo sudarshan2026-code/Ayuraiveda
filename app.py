@@ -4,6 +4,11 @@ from translations import get_translation
 from chat_db import ChatDatabase
 import io
 import re
+import os
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from datetime import datetime
 from reportlab.lib.pagesizes import letter, A4
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
@@ -55,18 +60,27 @@ disease_predictor = DiseasePredictor()
 def home():
     return render_template('index.html')
 
+@app.route('/demo')
+def demo():
+    return render_template('home_demo.html')
+
+@app.route('/cards')
+def cards_showcase():
+    return render_template('cards_showcase.html')
+
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
+
 @app.route('/about')
 def about():
     return render_template('about.html')
 
 @app.route('/assessment')
-@login_required
 def assessment():
-    user = auth_db.get_user(session['user_id'])
-    return render_template('assessment.html', user=user)
+    return render_template('assessment.html')
 
 @app.route('/chatbot')
-@login_required
 def chatbot():
     return render_template('chatbot.html')
 
@@ -314,6 +328,145 @@ def download_assessment_report(assessment_id):
 def contact():
     return render_template('contact.html')
 
+@app.route('/feedback')
+def feedback():
+    return render_template('feedback.html')
+
+@app.route('/submit-feedback', methods=['POST'])
+def submit_feedback():
+    try:
+        data = request.json
+        
+        # Validate required fields
+        required_fields = ['name', 'mobile', 'institute', 'designation', 'feedback']
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({'success': False, 'message': f'{field.title()} is required'})
+        
+        # Validate mobile number
+        mobile = data['mobile']
+        if not mobile.isdigit() or len(mobile) != 10:
+            return jsonify({'success': False, 'message': 'Please enter a valid 10-digit mobile number'})
+        
+        # Validate feedback length
+        feedback_text = data['feedback']
+        if len(feedback_text) > 2000:
+            return jsonify({'success': False, 'message': 'Feedback must be less than 2000 characters'})
+        
+        # Send email
+        success = send_feedback_email(data)
+        
+        if success:
+            return jsonify({'success': True, 'message': 'Feedback submitted successfully'})
+        else:
+            return jsonify({'success': False, 'message': 'Failed to send feedback. Please try again.'})
+            
+    except Exception as e:
+        print(f"Feedback submission error: {e}")
+        return jsonify({'success': False, 'message': 'An error occurred. Please try again.'})
+
+def send_feedback_email(data):
+    """Send feedback email to zjay5398@gmail.com"""
+    try:
+        # Email configuration - You need to set up Gmail App Password
+        smtp_server = "smtp.gmail.com"
+        smtp_port = 587
+        sender_email = "zjay5398@gmail.com"  # Using your email as sender
+        sender_password = os.getenv('GMAIL_APP_PASSWORD', 'dexy zbgn qyte uhzl')  # Your Gmail App Password
+        recipient_email = "zjay5398@gmail.com"
+        
+        # Create message
+        msg = MIMEMultipart()
+        msg['From'] = sender_email
+        msg['To'] = recipient_email
+        msg['Subject'] = f"🌿 AyurAI Veda Feedback from {data['name']} - {data['designation']}"
+        
+        # Create HTML email body
+        html_body = f"""
+        <html>
+        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+            <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+                <div style="background: linear-gradient(135deg, #FF9933, #138808); padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                    <h2 style="color: white; margin: 0; text-align: center;">🕉️ AyurAI Veda Feedback</h2>
+                    <p style="color: white; margin: 5px 0 0 0; text-align: center; opacity: 0.9;">New feedback received from user</p>
+                </div>
+                
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+                    <h3 style="color: #1a237e; margin-top: 0;">📋 Contact Information</h3>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <td style="padding: 8px 0; font-weight: bold; width: 30%;">👤 Name:</td>
+                            <td style="padding: 8px 0;">{data['name']}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0; font-weight: bold;">📱 Mobile:</td>
+                            <td style="padding: 8px 0;">{data['mobile']}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0; font-weight: bold;">🏢 Institute:</td>
+                            <td style="padding: 8px 0;">{data['institute']}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0; font-weight: bold;">💼 Designation:</td>
+                            <td style="padding: 8px 0;">{data['designation']}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0; font-weight: bold;">📅 Submitted:</td>
+                            <td style="padding: 8px 0;">{datetime.now().strftime('%d %B %Y at %I:%M %p')}</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div style="background: #fff; padding: 20px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 20px;">
+                    <h3 style="color: #1a237e; margin-top: 0;">💬 Feedback Message</h3>
+                    <div style="background: #f1f3f4; padding: 15px; border-radius: 4px; border-left: 4px solid #FF9933;">
+                        <p style="margin: 0; white-space: pre-wrap;">{data['feedback']}</p>
+                    </div>
+                    <p style="font-size: 12px; color: #666; margin-top: 10px;">Character count: {len(data['feedback'])}/2000</p>
+                </div>
+                
+                <div style="background: #e8f5e8; padding: 15px; border-radius: 6px; border-left: 4px solid #138808;">
+                    <h4 style="color: #2e7d32; margin-top: 0;">📊 Quick Stats</h4>
+                    <p style="margin: 5px 0;">• Feedback length: {len(data['feedback'])} characters</p>
+                    <p style="margin: 5px 0;">• User type: {data['designation']}</p>
+                    <p style="margin: 5px 0;">• Organization: {data['institute']}</p>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px; padding: 20px; background: #1a237e; border-radius: 6px;">
+                    <p style="color: white; margin: 0; font-size: 14px;">🌿 <strong>AyurAI Veda</strong> | Reviving Indian Knowledge Systems through AI</p>
+                    <p style="color: #ccc; margin: 5px 0 0 0; font-size: 12px;">Powered by Tridosha Intelligence Engine | A Sudarshan Technologies Production</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        # Attach HTML body
+        msg.attach(MIMEText(html_body, 'html'))
+        
+        # Send email
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()
+        server.login(sender_email, sender_password)
+        text = msg.as_string()
+        server.sendmail(sender_email, recipient_email, text)
+        server.quit()
+        
+        print(f"✅ Feedback email sent successfully to {recipient_email}")
+        return True
+        
+    except Exception as e:
+        print(f"❌ Email sending error: {e}")
+        # Log the feedback even if email fails
+        print("=== FEEDBACK RECEIVED (Email Failed) ===")
+        print(f"Name: {data['name']}")
+        print(f"Mobile: {data['mobile']}")
+        print(f"Institute: {data['institute']}")
+        print(f"Designation: {data['designation']}")
+        print(f"Feedback: {data['feedback']}")
+        print("========================================")
+        return False
+
 @app.route('/clinical-assessment')
 def clinical_assessment():
     return render_template('clinical_assessment.html')
@@ -324,27 +477,276 @@ def comprehensive_assessment():
 
 @app.route('/clinical-analyze', methods=['POST'])
 def clinical_analyze():
-    from clinical_engine import ClinicalTridoshaEngine
-    engine = ClinicalTridoshaEngine()
-    data = request.json
-    result = engine.analyze(data)
-    return jsonify(result)
+    try:
+        from enhanced_clinical_engine import EnhancedClinicalEngine
+        engine = EnhancedClinicalEngine()
+        data = request.json
+        result = engine.analyze(data)
+        return jsonify(result)
+    except Exception as e:
+        print(f"Clinical analysis error: {e}")
+        # Fallback to basic engine
+        from clinical_engine import ClinicalTridoshaEngine
+        engine = ClinicalTridoshaEngine()
+        data = request.json
+        result = engine.analyze(data)
+        return jsonify(result)
 
 @app.route('/comprehensive-analyze', methods=['POST'])
 def comprehensive_analyze():
-    from clinical_engine import ClinicalTridoshaEngine
-    engine = ClinicalTridoshaEngine()
-    data = request.json
-    result = engine.analyze(data)
-    return jsonify(result)
+    try:
+        from enhanced_clinical_engine import EnhancedClinicalEngine
+        engine = EnhancedClinicalEngine()
+        data = request.json
+        
+        # Convert comprehensive assessment data to clinical format
+        clinical_data = convert_comprehensive_to_clinical(data)
+        result = engine.analyze(clinical_data)
+        
+        # Add comprehensive-specific enhancements
+        result['assessment_type'] = 'Comprehensive Prakriti Assessment'
+        result['total_questions'] = len([k for k in data.keys() if k.startswith('q')])
+        
+        return jsonify(result)
+    except Exception as e:
+        print(f"Comprehensive analysis error: {e}")
+        # Fallback to basic analysis
+        return basic_comprehensive_analyze(data)
+
+def convert_comprehensive_to_clinical(data):
+    """Convert 59-question comprehensive data to clinical format"""
+    # Map comprehensive questions to clinical parameters
+    clinical_mapping = {
+        'body_structure': map_body_frame(data.get('q1')),
+        'vikriti': 'balanced',  # Default, can be enhanced
+        'appetite': map_appetite(data.get('q14')),
+        'digestion': map_digestion(data.get('q16')),
+        'mala': map_bowel_movement(data.get('q17')),
+        'skin': map_skin_texture(data.get('q3')),
+        'temperature': map_skin_temperature(data.get('q4')),
+        'sweat': map_sweating(data.get('q18')),
+        'energy': map_energy_level(data.get('q21')),
+        'stress': 'moderate',  # Default
+        'anxiety': 'moderate',  # Default
+        'sleep': map_sleep(data.get('q22')),
+        'mental_clarity': map_memory(data.get('q23')),
+        'exercise_tolerance': 'moderate',  # Default
+        'climate': map_climate_tolerance(data),
+        'food_tolerance': 'good',  # Default
+        'immunity': map_immunity(data.get('q24'))
+    }
+    
+    return clinical_mapping
+
+def map_body_frame(answer):
+    if answer == 'A': return 'lean'
+    elif answer == 'B': return 'moderate'
+    elif answer == 'C': return 'heavy'
+    return 'moderate'
+
+def map_appetite(answer):
+    if answer == 'A': return 'irregular'
+    elif answer == 'B': return 'excessive'
+    elif answer == 'C': return 'low'
+    return 'regular'
+
+def map_digestion(answer):
+    if answer == 'A': return 'gas'
+    elif answer == 'B': return 'normal'
+    elif answer == 'C': return 'slow'
+    return 'normal'
+
+def map_bowel_movement(answer):
+    if answer == 'A': return '3'  # Constipated
+    elif answer == 'B': return '2'  # Loose
+    elif answer == 'C': return '0'  # Regular
+    return '0'
+
+def map_skin_texture(answer):
+    if answer == 'A': return 'dry'
+    elif answer == 'B': return 'normal'
+    elif answer == 'C': return 'oily'
+    return 'normal'
+
+def map_skin_temperature(answer):
+    if answer == 'A': return 'cold'
+    elif answer == 'B': return 'hot'
+    elif answer == 'C': return 'normal'
+    return 'normal'
+
+def map_sweating(answer):
+    if answer == 'A': return 'minimal'
+    elif answer == 'B': return 'excessive'
+    elif answer == 'C': return 'normal'
+    return 'normal'
+
+def map_energy_level(answer):
+    if answer == 'A': return 'fluctuating'
+    elif answer == 'B': return 'hyperactive'
+    elif answer == 'C': return 'stable'
+    return 'stable'
+
+def map_sleep(answer):
+    if answer == 'A': return 'poor'
+    elif answer == 'B': return 'good'
+    elif answer == 'C': return 'excellent'
+    return 'good'
+
+def map_memory(answer):
+    if answer == 'A': return 'foggy'
+    elif answer == 'B': return 'sharp'
+    elif answer == 'C': return 'clear'
+    return 'clear'
+
+def map_climate_tolerance(data):
+    # Analyze multiple climate-related questions
+    cold_tolerance = data.get('q25', 'B')
+    heat_tolerance = data.get('q26', 'B')
+    
+    if cold_tolerance == 'A': return 'cold_sensitive'
+    elif heat_tolerance == 'B': return 'heat_sensitive'
+    return 'good'
+
+def map_immunity(answer):
+    if answer == 'A': return 'weak'
+    elif answer == 'B': return 'moderate'
+    elif answer == 'C': return 'strong'
+    return 'moderate'
+
+def basic_comprehensive_analyze(data):
+    """Basic analysis for comprehensive assessment"""
+    vata_count = pitta_count = kapha_count = 0
+    total_questions = 0
+    
+    for key, value in data.items():
+        if key.startswith('q') and value:
+            total_questions += 1
+            if value == 'A':
+                vata_count += 1
+            elif value == 'B':
+                pitta_count += 1
+            elif value == 'C':
+                kapha_count += 1
+    
+    if total_questions == 0:
+        return jsonify({'error': 'No valid responses found'})
+    
+    # Calculate percentages
+    vata_percent = int((vata_count / total_questions) * 100)
+    pitta_percent = int((pitta_count / total_questions) * 100)
+    kapha_percent = int((kapha_count / total_questions) * 100)
+    
+    scores = {'vata': vata_percent, 'pitta': pitta_percent, 'kapha': kapha_percent}
+    dominant = max(scores, key=scores.get)
+    
+    return {
+        'dominant': dominant.capitalize(),
+        'scores': scores,
+        'risk': 'Moderate' if max(scores.values()) >= 40 else 'Low',
+        'dosha_state': 'Assessment Complete',
+        'agni_state': 'Balanced',
+        'ama_status': 'Normal',
+        'justification': f'Based on {total_questions} comprehensive questions, your constitution shows {dominant} predominance.',
+        'recommendations': get_basic_recommendations(dominant),
+        'diet_suggestions': get_basic_diet_suggestions(dominant),
+        'disease_predictions': get_basic_disease_predictions(dominant),
+        'lifestyle_tips': get_basic_lifestyle_tips(dominant)
+    }
+
+def get_basic_recommendations(dominant):
+    recommendations = {
+        'vata': [
+            "Follow regular daily routine",
+            "Eat warm, cooked foods",
+            "Practice oil massage",
+            "Avoid cold, dry environments",
+            "Practice calming activities"
+        ],
+        'pitta': [
+            "Stay cool and avoid excessive heat",
+            "Eat cooling, sweet foods",
+            "Practice moderation in all activities",
+            "Avoid spicy, sour foods",
+            "Practice patience and tolerance"
+        ],
+        'kapha': [
+            "Wake up early and stay active",
+            "Eat light, warm, spicy foods",
+            "Practice vigorous exercise",
+            "Avoid heavy, oily foods",
+            "Stay mentally stimulated"
+        ]
+    }
+    return recommendations.get(dominant, recommendations['vata'])
+
+def get_basic_diet_suggestions(dominant):
+    diet_plans = {
+        'vata': {
+            'foods_to_favor': ["Warm cooked grains", "Sweet fruits", "Healthy fats", "Warm spices"],
+            'foods_to_avoid': ["Cold foods", "Raw vegetables", "Dry foods", "Stimulants"],
+            'meal_timing': ["Regular meal times", "Largest meal at lunch", "Warm environment"]
+        },
+        'pitta': {
+            'foods_to_favor': ["Cooling foods", "Sweet fruits", "Leafy greens", "Cooling spices"],
+            'foods_to_avoid': ["Spicy foods", "Sour foods", "Salty foods", "Alcohol"],
+            'meal_timing': ["Never skip meals", "Cool environment", "Avoid eating when stressed"]
+        },
+        'kapha': {
+            'foods_to_favor': ["Light foods", "Warming spices", "Astringent fruits", "Light proteins"],
+            'foods_to_avoid': ["Heavy foods", "Sweet foods", "Dairy products", "Cold foods"],
+            'meal_timing': ["Light breakfast", "Main meal at lunch", "Early light dinner"]
+        }
+    }
+    return diet_plans.get(dominant, diet_plans['vata'])
+
+def get_basic_disease_predictions(dominant):
+    predictions = {
+        'vata': {
+            'primary_risks': ["Anxiety disorders", "Digestive issues", "Joint problems", "Sleep disorders"],
+            'secondary_risks': ["Chronic fatigue", "Skin dryness", "Irregular cycles"],
+            'additional_risks': [],
+            'prevention_note': "Regular routine and warm, nourishing foods can prevent most Vata disorders."
+        },
+        'pitta': {
+            'primary_risks': ["Acid reflux", "Skin inflammation", "Liver issues", "Hypertension"],
+            'secondary_risks': ["Migraines", "Anger issues", "Eye problems"],
+            'additional_risks': [],
+            'prevention_note': "Cooling foods and stress management can prevent most Pitta disorders."
+        },
+        'kapha': {
+            'primary_risks': ["Weight gain", "Respiratory congestion", "Diabetes", "Depression"],
+            'secondary_risks': ["High cholesterol", "Sluggish metabolism", "Sinus issues"],
+            'additional_risks': [],
+            'prevention_note': "Regular exercise and light foods can prevent most Kapha disorders."
+        }
+    }
+    return predictions.get(dominant, predictions['vata'])
+
+def get_basic_lifestyle_tips(dominant):
+    tips = {
+        'vata': {
+            'daily_routine': ["Wake at 6 AM", "Oil massage", "Regular meals", "Sleep by 10 PM"],
+            'seasonal_care': ["Extra care in autumn", "Stay warm", "Avoid cold winds"],
+            'exercise': ["Gentle yoga", "Walking", "Swimming", "Avoid excessive cardio"]
+        },
+        'pitta': {
+            'daily_routine': ["Wake at 5:30 AM", "Cool shower", "Moderate exercise", "Sleep by 10:30 PM"],
+            'seasonal_care': ["Extra care in summer", "Stay cool", "Avoid midday sun"],
+            'exercise': ["Swimming", "Yoga in cool place", "Moderate cardio", "Avoid competition"]
+        },
+        'kapha': {
+            'daily_routine': ["Wake at 5 AM", "Vigorous exercise", "Light meals", "Stay active"],
+            'seasonal_care': ["Extra care in spring", "Increase activity", "Reduce heavy foods"],
+            'exercise': ["High-intensity cardio", "Weight training", "Running", "Dynamic yoga"]
+        }
+    }
+    return tips.get(dominant, tips['vata'])
 
 @app.route('/analyze', methods=['POST'])
-@login_required
 def analyze():
     data = request.json
     result = tie.analyze(data)
     
-    # Add disease predictions
     user_data = {
         **data,
         'vata_score': result['scores']['vata'],
@@ -353,12 +755,6 @@ def analyze():
     }
     disease_prediction = disease_predictor.predict(user_data)
     result['disease_prediction'] = disease_prediction
-    
-    # Save assessment to database
-    auth_db.save_assessment(
-        session['user_id'], data, result,
-        data.get('patient_name'), data.get('patient_phone')
-    )
     
     return jsonify(result)
 
