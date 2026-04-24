@@ -238,40 +238,309 @@ def analyze_tridosha(data):
     }
 
 def analyze_clinical(data):
-    """Clinical assessment analysis"""
+    """Advanced Clinical Assessment with ML-Ready Logic Framework"""
     vata_score = pitta_score = kapha_score = 0
+    reasoning = []
+    ama_indicators = []
     
-    # Body structure
-    if data.get('body_structure') == 'lean': vata_score += 20
-    elif data.get('body_structure') == 'moderate': pitta_score += 20
-    elif data.get('body_structure') == 'heavy': kapha_score += 20
+    # STEP 1: FEATURE CLASSIFICATION WITH WEIGHTED SCORING
     
-    # Skin
-    if data.get('skin') == 'dry': vata_score += 15
-    elif data.get('skin') == 'normal': pitta_score += 15
-    elif data.get('skin') == 'oily': kapha_score += 15
+    # Body Frame (Strong match = +3)
+    if data.get('body_frame') == 'thin': 
+        vata_score += 3
+        reasoning.append("Thin body frame indicates Vata dominance (light, mobile qualities)")
+    elif data.get('body_frame') == 'medium': 
+        pitta_score += 3
+        reasoning.append("Medium body frame indicates Pitta constitution (balanced structure)")
+    elif data.get('body_frame') == 'heavy': 
+        kapha_score += 3
+        reasoning.append("Heavy body frame indicates Kapha dominance (stable, heavy qualities)")
+    
+    # Body Build
+    if data.get('body_build') == 'lean': vata_score += 3
+    elif data.get('body_build') == 'muscular': pitta_score += 3
+    elif data.get('body_build') == 'stocky': kapha_score += 3
+    
+    # Muscle Tone
+    if data.get('muscle_tone') == 'low': vata_score += 2
+    elif data.get('muscle_tone') == 'medium': pitta_score += 2
+    elif data.get('muscle_tone') == 'high': kapha_score += 2
+    
+    # Weight Tendency
+    if data.get('weight_tendency') == 'hard_to_gain': 
+        vata_score += 3
+        reasoning.append("Difficulty gaining weight suggests high Vata metabolism")
+    elif data.get('weight_tendency') == 'stable': pitta_score += 2
+    elif data.get('weight_tendency') == 'easy_to_gain': 
+        kapha_score += 3
+        reasoning.append("Easy weight gain indicates Kapha tendency")
+    
+    # Joints
+    if data.get('joints') == 'prominent': vata_score += 2
+    elif data.get('joints') == 'normal': pitta_score += 2
+    elif data.get('joints') == 'well_covered': kapha_score += 2
+    
+    # Veins
+    if data.get('veins') == 'prominent': vata_score += 2
+    elif data.get('veins') == 'visible': pitta_score += 2
+    elif data.get('veins') == 'hidden': kapha_score += 2
+    
+    # Bone Structure
+    if data.get('bone_structure') == 'light': vata_score += 3
+    elif data.get('bone_structure') == 'medium': pitta_score += 3
+    elif data.get('bone_structure') == 'heavy': kapha_score += 3
+    
+    # Skin Type (Critical indicator)
+    if data.get('skin_type') == 'dry': 
+        vata_score += 3
+        reasoning.append("Dry skin is a primary Vata characteristic (dry, rough qualities)")
+    elif data.get('skin_type') == 'sensitive': 
+        pitta_score += 3
+        reasoning.append("Sensitive skin indicates Pitta imbalance (hot, sharp qualities)")
+    elif data.get('skin_type') == 'oily': 
+        kapha_score += 3
+        reasoning.append("Oily skin indicates Kapha dominance (oily, smooth qualities)")
+    
+    # Skin Texture
+    if data.get('skin_texture') == 'rough': vata_score += 2
+    elif data.get('skin_texture') == 'soft': pitta_score += 2
+    elif data.get('skin_texture') == 'smooth': kapha_score += 2
+    
+    # Skin Temperature
+    if data.get('skin_temperature') == 'cold': vata_score += 2
+    elif data.get('skin_temperature') == 'warm': pitta_score += 2
+    
+    # Complexion
+    if data.get('complexion') == 'dark': pitta_score += 1
+    elif data.get('complexion') == 'fair': pitta_score += 1
+    elif data.get('complexion') == 'pale': vata_score += 1
+    
+    # Skin Luster
+    if data.get('skin_luster') == 'dull': vata_score += 2
+    elif data.get('skin_luster') == 'radiant': pitta_score += 2
+    elif data.get('skin_luster') == 'glowing': kapha_score += 2
+    
+    # Hair Type
+    if data.get('hair_type') == 'dry': vata_score += 2
+    elif data.get('hair_type') == 'thin': vata_score += 2
+    elif data.get('hair_type') == 'thick': kapha_score += 2
+    
+    # Hair Texture
+    if data.get('hair_texture') == 'rough': vata_score += 2
+    elif data.get('hair_texture') == 'fine': pitta_score += 2
+    elif data.get('hair_texture') == 'smooth': kapha_score += 2
+    
+    # Nails
+    if data.get('nails') == 'brittle': vata_score += 2
+    elif data.get('nails') == 'soft': pitta_score += 2
+    elif data.get('nails') == 'strong': kapha_score += 2
+    
+    # STEP 4: AGNI ANALYSIS (Critical for diagnosis)
+    agni_type = 'Sama Agni'
     
     # Appetite
-    if data.get('appetite') == 'irregular': vata_score += 15
-    elif data.get('appetite') == 'excessive': pitta_score += 15
-    elif data.get('appetite') == 'low': kapha_score += 15
+    if data.get('appetite') == 'irregular': 
+        vata_score += 3
+        agni_type = 'Vishama Agni (Irregular)'
+        ama_indicators.append('irregular appetite')
+        reasoning.append("Irregular appetite indicates Vishama Agni - Vata imbalance in digestion")
+    elif data.get('appetite') == 'strong': 
+        pitta_score += 3
+        agni_type = 'Tikshna Agni (Sharp)'
+        reasoning.append("Strong appetite indicates Tikshna Agni - Pitta-dominant digestion")
+    elif data.get('appetite') == 'low': 
+        kapha_score += 3
+        agni_type = 'Manda Agni (Slow)'
+        ama_indicators.append('low appetite')
+        reasoning.append("Low appetite indicates Manda Agni - Kapha-type sluggish digestion")
+    
+    # Hunger
+    if data.get('hunger') == 'variable': vata_score += 2
+    elif data.get('hunger') == 'intense': pitta_score += 2
+    elif data.get('hunger') == 'mild': kapha_score += 2
+    
+    # Thirst
+    if data.get('thirst') == 'variable': vata_score += 2
+    elif data.get('thirst') == 'high': pitta_score += 2
+    elif data.get('thirst') == 'low': kapha_score += 2
     
     # Digestion
-    if data.get('digestion') == 'gas': vata_score += 15
-    elif data.get('digestion') == 'normal': pitta_score += 15
-    elif data.get('digestion') == 'slow': kapha_score += 15
+    if data.get('digestion') == 'irregular': 
+        vata_score += 3
+        ama_indicators.append('irregular digestion')
+    elif data.get('digestion') == 'fast': pitta_score += 3
+    elif data.get('digestion') == 'slow': 
+        kapha_score += 3
+        ama_indicators.append('slow digestion')
     
-    # Sleep
-    if data.get('sleep') == 'poor': vata_score += 10
-    elif data.get('sleep') == 'good': pitta_score += 10
-    elif data.get('sleep') == 'excellent': kapha_score += 10
+    # Bowel
+    if data.get('bowel') == 'constipation': 
+        vata_score += 3
+        ama_indicators.append('constipation')
+    elif data.get('bowel') == 'loose': pitta_score += 3
+    elif data.get('bowel') in ['regular', 'heavy']: kapha_score += 2
     
-    # Energy
-    if data.get('energy') == 'fluctuating': vata_score += 10
-    elif data.get('energy') == 'hyperactive': pitta_score += 10
-    elif data.get('energy') == 'stable': kapha_score += 10
+    # Gas (AMA indicator)
+    if data.get('gas') == 'frequent': 
+        vata_score += 2
+        ama_indicators.append('frequent gas/bloating')
+    elif data.get('gas') == 'occasional': vata_score += 1
     
-    # Calculate percentages
+    # Food Preference
+    if data.get('food_preference') == 'warm': vata_score += 2
+    elif data.get('food_preference') == 'cold': pitta_score += 2
+    elif data.get('food_preference') == 'spicy': kapha_score += 2
+    
+    # Metabolism
+    if data.get('metabolism') == 'fast': vata_score += 2
+    elif data.get('metabolism') == 'moderate': pitta_score += 2
+    elif data.get('metabolism') == 'slow': kapha_score += 2
+    
+    # Sleep Pattern
+    if data.get('sleep_pattern') == 'light': vata_score += 3
+    elif data.get('sleep_pattern') == 'moderate': pitta_score += 3
+    elif data.get('sleep_pattern') == 'deep': kapha_score += 3
+    
+    # Sleep Duration
+    if data.get('sleep_duration') == 'less_6': vata_score += 2
+    elif data.get('sleep_duration') == '6_8': pitta_score += 2
+    elif data.get('sleep_duration') == 'more_8': kapha_score += 2
+    
+    # Dreams
+    if data.get('dreams') == 'active': vata_score += 2
+    elif data.get('dreams') == 'colorful': pitta_score += 2
+    elif data.get('dreams') == 'few': kapha_score += 2
+    
+    # Energy Level
+    if data.get('energy_level') == 'variable': vata_score += 3
+    elif data.get('energy_level') == 'moderate': pitta_score += 3
+    elif data.get('energy_level') == 'steady': kapha_score += 3
+    
+    # Stamina
+    if data.get('stamina') == 'low': vata_score += 2
+    elif data.get('stamina') == 'medium': pitta_score += 2
+    elif data.get('stamina') == 'high': kapha_score += 2
+    
+    # Physical Activity
+    if data.get('physical_activity') == 'restless': vata_score += 2
+    elif data.get('physical_activity') == 'moderate': pitta_score += 2
+    elif data.get('physical_activity') == 'slow': kapha_score += 2
+    
+    # Exercise Tolerance
+    if data.get('exercise_tolerance') == 'low': vata_score += 2
+    elif data.get('exercise_tolerance') == 'high': pitta_score += 2
+    elif data.get('exercise_tolerance') == 'moderate': kapha_score += 2
+    
+    # Sweat
+    if data.get('sweat') == 'minimal': vata_score += 2
+    elif data.get('sweat') == 'profuse': pitta_score += 2
+    elif data.get('sweat') == 'moderate': kapha_score += 2
+    
+    # Body Odor
+    if data.get('body_odor') == 'minimal': vata_score += 1
+    elif data.get('body_odor') == 'strong': pitta_score += 2
+    elif data.get('body_odor') == 'mild': kapha_score += 1
+    
+    # Weather Preference
+    if data.get('weather_preference') == 'warm': vata_score += 2
+    elif data.get('weather_preference') == 'cool': pitta_score += 2
+    
+    # Season Discomfort
+    if data.get('season_discomfort') == 'winter': vata_score += 2
+    elif data.get('season_discomfort') == 'summer': pitta_score += 2
+    elif data.get('season_discomfort') == 'spring': kapha_score += 2
+    
+    # Immunity
+    if data.get('immunity') == 'weak': vata_score += 2
+    elif data.get('immunity') == 'moderate': pitta_score += 2
+    elif data.get('immunity') == 'strong': kapha_score += 2
+    
+    # Disease Tendency
+    if data.get('disease_tendency') == 'nervous': vata_score += 3
+    elif data.get('disease_tendency') == 'inflammatory': pitta_score += 3
+    elif data.get('disease_tendency') == 'congestion': kapha_score += 3
+    
+    # Speech Pace
+    if data.get('speech_pace') == 'fast': vata_score += 2
+    elif data.get('speech_pace') == 'moderate': pitta_score += 2
+    elif data.get('speech_pace') == 'slow': kapha_score += 2
+    
+    # Voice Quality
+    if data.get('voice_quality') == 'weak': vata_score += 2
+    elif data.get('voice_quality') == 'sharp': pitta_score += 2
+    elif data.get('voice_quality') == 'deep': kapha_score += 2
+    
+    # Communication
+    if data.get('communication') == 'talkative': vata_score += 2
+    elif data.get('communication') == 'precise': pitta_score += 2
+    elif data.get('communication') == 'reserved': kapha_score += 2
+    
+    # Movements
+    if data.get('movements') == 'quick': vata_score += 2
+    elif data.get('movements') == 'purposeful': pitta_score += 2
+    elif data.get('movements') == 'slow': kapha_score += 2
+    
+    # Mental State
+    if data.get('mental_state') == 'anxious': vata_score += 3
+    elif data.get('mental_state') == 'focused': pitta_score += 3
+    elif data.get('mental_state') == 'calm': kapha_score += 3
+    
+    # Memory
+    if data.get('memory') == 'quick_forget': vata_score += 2
+    elif data.get('memory') == 'sharp': pitta_score += 2
+    elif data.get('memory') == 'slow_retain': kapha_score += 2
+    
+    # Learning
+    if data.get('learning') == 'quick': vata_score += 2
+    elif data.get('learning') == 'moderate': pitta_score += 2
+    elif data.get('learning') == 'slow': kapha_score += 2
+    
+    # Concentration
+    if data.get('concentration') == 'poor': vata_score += 2
+    elif data.get('concentration') == 'good': pitta_score += 2
+    elif data.get('concentration') == 'excellent': kapha_score += 2
+    
+    # Decision Making
+    if data.get('decision_making') == 'quick': vata_score += 2
+    elif data.get('decision_making') == 'analytical': pitta_score += 2
+    elif data.get('decision_making') == 'slow': kapha_score += 2
+    
+    # Emotional Response
+    if data.get('emotional_response') == 'fearful': vata_score += 3
+    elif data.get('emotional_response') == 'angry': pitta_score += 3
+    elif data.get('emotional_response') == 'attached': kapha_score += 3
+    
+    # Stress Response
+    if data.get('stress_response') == 'anxious': vata_score += 3
+    elif data.get('stress_response') == 'irritable': pitta_score += 3
+    elif data.get('stress_response') == 'withdrawn': kapha_score += 3
+    
+    # Additional characteristics
+    if data.get('teeth_gums') == 'weak': vata_score += 2
+    elif data.get('teeth_gums') == 'normal': pitta_score += 2
+    elif data.get('teeth_gums') == 'strong': kapha_score += 2
+    
+    if data.get('eyes_appearance') == 'small': vata_score += 2
+    elif data.get('eyes_appearance') == 'medium': pitta_score += 2
+    elif data.get('eyes_appearance') == 'large': kapha_score += 2
+    
+    if data.get('lips_condition') == 'dry': vata_score += 2
+    elif data.get('lips_condition') == 'normal': pitta_score += 2
+    elif data.get('lips_condition') == 'moist': kapha_score += 2
+    
+    if data.get('temp_regulation') == 'poor': vata_score += 2
+    elif data.get('temp_regulation') == 'moderate': pitta_score += 2
+    elif data.get('temp_regulation') == 'good': kapha_score += 2
+    
+    if data.get('pain_tolerance') == 'low': vata_score += 2
+    elif data.get('pain_tolerance') == 'medium': pitta_score += 2
+    elif data.get('pain_tolerance') == 'high': kapha_score += 2
+    
+    if data.get('healing_speed') == 'slow': vata_score += 2
+    elif data.get('healing_speed') == 'moderate': pitta_score += 2
+    elif data.get('healing_speed') == 'fast': kapha_score += 2
+    
+    # STEP 2: DOSHA SCORING & NORMALIZATION
     total = vata_score + pitta_score + kapha_score
     if total > 0:
         vata_percent = round((vata_score / total) * 100)
@@ -281,22 +550,63 @@ def analyze_clinical(data):
         vata_percent = pitta_percent = kapha_percent = 33
     
     scores = {'vata': vata_percent, 'pitta': pitta_percent, 'kapha': kapha_percent}
-    dominant = max(scores, key=scores.get)
     
-    max_score = max(vata_percent, pitta_percent, kapha_percent)
-    if max_score >= 50: risk = 'High'
-    elif max_score >= 40: risk = 'Moderate'
-    else: risk = 'Low'
+    # STEP 3: DOSHA CLASSIFICATION
+    sorted_doshas = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+    dominant_dosha = sorted_doshas[0][0]
+    second_dosha = sorted_doshas[1][0]
+    
+    if sorted_doshas[0][1] > 50:
+        prakriti = dominant_dosha.capitalize()
+    elif sorted_doshas[1][1] >= 25:
+        prakriti = f"{dominant_dosha.capitalize()}-{second_dosha.capitalize()}"
+    else:
+        prakriti = dominant_dosha.capitalize()
+    
+    # STEP 5: AMA DETECTION
+    if len(ama_indicators) == 0:
+        ama_status = 'None'
+    elif len(ama_indicators) <= 2:
+        ama_status = 'Mild'
+    elif len(ama_indicators) <= 4:
+        ama_status = 'Moderate'
+    else:
+        ama_status = 'High'
+    
+    if ama_status != 'None':
+        reasoning.append(f"Ama (toxins) detected: {', '.join(ama_indicators)}")
+    
+    # STEP 6: VIKRITI (IMBALANCE)
+    vikriti = dominant_dosha.capitalize()
+    max_score = sorted_doshas[0][1]
+    
+    if max_score >= 50:
+        reasoning.append(f"{vikriti} is significantly aggravated (>{max_score}%)")
+    
+    # STEP 7: RISK LEVEL (Conservative approach)
+    if max_score >= 55 and len(ama_indicators) >= 3:
+        risk = 'High'
+    elif max_score >= 45 or len(ama_indicators) >= 2:
+        risk = 'Moderate'
+    else:
+        risk = 'Low'
+    
+    # Generate clinical justification
+    justification = f"Based on 59-point clinical assessment: {prakriti} constitution identified. " + " ".join(reasoning[:3])
     
     return {
-        'dominant': dominant.capitalize(),
+        'dominant': prakriti,
         'scores': scores,
         'risk': risk,
         'dosha_state': 'Balanced' if max_score < 45 else 'Imbalanced',
-        'agni_state': 'Strong' if data.get('digestion') == 'normal' else 'Weak',
-        'recommendations': get_recommendations(dominant),
-        'diet_suggestions': get_diet_suggestions(dominant),
-        'lifestyle_tips': get_lifestyle_tips(dominant),
+        'agni_state': agni_type,
+        'ama_status': ama_status,
+        'vikriti': vikriti,
+        'justification': justification,
+        'reasoning': reasoning[:5],
+        'recommendations': get_clinical_recommendations(dominant_dosha, ama_status),
+        'diet_suggestions': get_diet_suggestions(dominant_dosha),
+        'lifestyle_tips': get_lifestyle_tips(dominant_dosha),
         'timestamp': datetime.now().isoformat()
     }
 
@@ -341,6 +651,49 @@ def analyze_comprehensive(data):
     }
 
 # ============= RECOMMENDATION FUNCTIONS =============
+
+def get_clinical_recommendations(dominant, ama_status):
+    """Clinical recommendations based on dosha and ama status"""
+    base_recommendations = {
+        'vata': [
+            'Establish regular daily routine (Dinacharya) - wake, eat, sleep at fixed times',
+            'Consume warm, cooked, moist foods with healthy fats (ghee, sesame oil)',
+            'Practice daily oil massage (Abhyanga) with warm sesame oil',
+            'Ensure 7-8 hours of quality sleep in warm, quiet environment',
+            'Avoid cold, dry, raw foods and excessive stimulants',
+            'Practice gentle, grounding yoga and meditation (avoid excessive cardio)'
+        ],
+        'pitta': [
+            'Avoid spicy, hot, acidic, and fermented foods',
+            'Stay cool - avoid excessive heat, sun exposure, and hot environments',
+            'Practice moderation in all activities - avoid overwork and competition',
+            'Consume cooling foods: cucumber, coconut, sweet fruits, leafy greens',
+            'Practice cooling pranayama (Sheetali, Sheetkari) and calming meditation',
+            'Maintain work-life balance and avoid perfectionism'
+        ],
+        'kapha': [
+            'Engage in regular vigorous exercise (minimum 45 min daily)',
+            'Eat light, warm, spicy foods with pungent and bitter tastes',
+            'Avoid heavy, oily, sweet, and dairy-rich foods',
+            'Wake up early before 6 AM and avoid daytime sleeping',
+            'Stay mentally and physically active - avoid sedentary lifestyle',
+            'Practice energizing pranayama (Bhastrika, Kapalabhati)'
+        ]
+    }
+    
+    recommendations = base_recommendations.get(dominant, base_recommendations['vata']).copy()
+    
+    # Add ama-specific recommendations
+    if ama_status == 'High':
+        recommendations.insert(0, 'URGENT: Undergo Panchakarma detoxification under Ayurvedic supervision')
+        recommendations.insert(1, 'Fast or eat very light meals (kitchari) until digestion improves')
+    elif ama_status == 'Moderate':
+        recommendations.insert(0, 'Focus on improving Agni - use digestive spices (ginger, cumin, fennel)')
+        recommendations.insert(1, 'Avoid heavy meals and eat only when truly hungry')
+    elif ama_status == 'Mild':
+        recommendations.insert(0, 'Drink warm water with ginger throughout the day')
+    
+    return recommendations
 
 def get_recommendations(dominant):
     recommendations = {
