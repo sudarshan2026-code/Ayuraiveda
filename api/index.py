@@ -178,10 +178,10 @@ def send_report_email():
 @app.route('/download-report', methods=['POST'])
 def download_report():
     try:
-        from reportlab.lib.pagesizes import letter, A4
+        from reportlab.lib.pagesizes import letter
         from reportlab.lib import colors
         from reportlab.lib.units import inch
-        from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, PageBreak
+        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
         from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
         from reportlab.lib.enums import TA_CENTER, TA_LEFT
         
@@ -189,7 +189,14 @@ def download_report():
         
         # Create PDF in memory
         buffer = io.BytesIO()
-        doc = SimpleDocTemplate(buffer, pagesize=letter, topMargin=0.5*inch, bottomMargin=0.5*inch)
+        doc = SimpleDocTemplate(
+            buffer,
+            pagesize=letter,
+            rightMargin=72,
+            leftMargin=72,
+            topMargin=72,
+            bottomMargin=18
+        )
         
         # Container for PDF elements
         elements = []
@@ -199,125 +206,159 @@ def download_report():
         title_style = ParagraphStyle(
             'CustomTitle',
             parent=styles['Heading1'],
-            fontSize=24,
+            fontSize=20,
             textColor=colors.HexColor('#FF9933'),
-            spaceAfter=12,
-            alignment=TA_CENTER
+            spaceAfter=6,
+            alignment=TA_CENTER,
+            fontName='Helvetica-Bold'
+        )
+        
+        subtitle_style = ParagraphStyle(
+            'Subtitle',
+            parent=styles['Normal'],
+            fontSize=14,
+            textColor=colors.HexColor('#1a237e'),
+            spaceAfter=20,
+            alignment=TA_CENTER,
+            fontName='Helvetica'
         )
         
         heading_style = ParagraphStyle(
             'CustomHeading',
             parent=styles['Heading2'],
-            fontSize=16,
+            fontSize=14,
             textColor=colors.HexColor('#1a237e'),
             spaceAfter=10,
-            spaceBefore=10
+            spaceBefore=15,
+            fontName='Helvetica-Bold'
+        )
+        
+        body_style = ParagraphStyle(
+            'CustomBody',
+            parent=styles['Normal'],
+            fontSize=10,
+            spaceAfter=6,
+            fontName='Helvetica'
         )
         
         # Title
-        elements.append(Paragraph("🕉️ AyurAI Veda™", title_style))
-        elements.append(Paragraph("Clinical Assessment Report", styles['Heading2']))
-        elements.append(Spacer(1, 0.3*inch))
+        elements.append(Paragraph("AyurAI Veda", title_style))
+        elements.append(Paragraph("Clinical Assessment Report", subtitle_style))
+        elements.append(Spacer(1, 0.2*inch))
         
         # Results Summary
-        elements.append(Paragraph("📊 Assessment Results", heading_style))
+        elements.append(Paragraph("Assessment Results", heading_style))
         
         summary_data = [
-            ['Dominant Dosha:', data.get('dominant', 'N/A')],
-            ['Dosha State:', data.get('dosha_state', 'N/A')],
-            ['Agni State:', data.get('agni_state', 'N/A')],
-            ['Ama Status:', data.get('ama_status', 'N/A')],
-            ['Risk Level:', data.get('risk', 'N/A')]
+            ['Dominant Dosha:', str(data.get('dominant', 'N/A'))],
+            ['Dosha State:', str(data.get('dosha_state', 'N/A'))],
+            ['Agni State:', str(data.get('agni_state', 'N/A'))],
+            ['Ama Status:', str(data.get('ama_status', 'N/A'))],
+            ['Risk Level:', str(data.get('risk', 'N/A'))]
         ]
         
-        summary_table = Table(summary_data, colWidths=[2.5*inch, 4*inch])
+        summary_table = Table(summary_data, colWidths=[2*inch, 4*inch])
         summary_table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f5f5f5')),
             ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
             ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
             ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
-            ('FONTSIZE', (0, 0), (-1, -1), 11),
-            ('BOTTOMPADDING', (0, 0), (-1, -1), 12),
-            ('TOPPADDING', (0, 0), (-1, -1), 12),
-            ('GRID', (0, 0), (-1, -1), 1, colors.grey)
+            ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+            ('TOPPADDING', (0, 0), (-1, -1), 8),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.grey)
         ]))
         elements.append(summary_table)
-        elements.append(Spacer(1, 0.3*inch))
+        elements.append(Spacer(1, 0.2*inch))
         
         # Dosha Distribution
-        elements.append(Paragraph("⚖️ Dosha Distribution", heading_style))
+        elements.append(Paragraph("Dosha Distribution", heading_style))
         scores = data.get('scores', {})
         dosha_data = [
             ['Dosha', 'Percentage'],
-            ['🌬️ Vata', f"{scores.get('vata', 0)}%"],
-            ['🔥 Pitta', f"{scores.get('pitta', 0)}%"],
-            ['🌊 Kapha', f"{scores.get('kapha', 0)}%"]
+            ['Vata', str(scores.get('vata', 0)) + '%'],
+            ['Pitta', str(scores.get('pitta', 0)) + '%'],
+            ['Kapha', str(scores.get('kapha', 0)) + '%']
         ]
         
-        dosha_table = Table(dosha_data, colWidths=[3*inch, 3.5*inch])
+        dosha_table = Table(dosha_data, colWidths=[3*inch, 3*inch])
         dosha_table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#1a237e')),
             ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
             ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
             ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('FONTSIZE', (0, 0), (-1, -1), 11),
-            ('BOTTOMPADDING', (0, 0), (-1, -1), 12),
-            ('TOPPADDING', (0, 0), (-1, -1), 12),
-            ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+            ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+            ('TOPPADDING', (0, 0), (-1, -1), 8),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
             ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#f9f9f9')])
         ]))
         elements.append(dosha_table)
-        elements.append(Spacer(1, 0.3*inch))
+        elements.append(Spacer(1, 0.2*inch))
         
         # Clinical Justification
         if data.get('justification'):
-            elements.append(Paragraph("🔬 Clinical Justification", heading_style))
-            elements.append(Paragraph(data['justification'], styles['BodyText']))
-            elements.append(Spacer(1, 0.2*inch))
+            elements.append(Paragraph("Clinical Justification", heading_style))
+            justification_text = str(data['justification']).replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+            elements.append(Paragraph(justification_text, body_style))
+            elements.append(Spacer(1, 0.15*inch))
         
         # Recommendations
-        elements.append(Paragraph("🌿 Personalized Recommendations", heading_style))
+        elements.append(Paragraph("Personalized Recommendations", heading_style))
         recommendations = data.get('recommendations', [])
-        for i, rec in enumerate(recommendations, 1):
-            elements.append(Paragraph(f"{i}. {rec}", styles['BodyText']))
-            elements.append(Spacer(1, 0.1*inch))
+        for i, rec in enumerate(recommendations[:8], 1):  # Limit to 8 recommendations
+            rec_text = str(rec).replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+            elements.append(Paragraph(f"{i}. {rec_text}", body_style))
+            elements.append(Spacer(1, 0.05*inch))
         
-        elements.append(Spacer(1, 0.3*inch))
+        elements.append(Spacer(1, 0.2*inch))
         
         # Disclaimer
         disclaimer_style = ParagraphStyle(
             'Disclaimer',
-            parent=styles['BodyText'],
-            fontSize=9,
+            parent=styles['Normal'],
+            fontSize=8,
             textColor=colors.HexColor('#d32f2f'),
-            leftIndent=20,
-            rightIndent=20
+            leftIndent=10,
+            rightIndent=10,
+            fontName='Helvetica'
         )
         elements.append(Paragraph(
-            "<b>⚠️ Important Disclaimer:</b> This report provides educational and preventive health insights only. "
+            "<b>Important Disclaimer:</b> This report provides educational and preventive health insights only. "
             "It is NOT a medical diagnosis. Always consult qualified healthcare professionals for medical advice.",
             disclaimer_style
         ))
         
-        elements.append(Spacer(1, 0.3*inch))
+        elements.append(Spacer(1, 0.2*inch))
         
         # Footer
         footer_style = ParagraphStyle(
             'Footer',
-            parent=styles['BodyText'],
-            fontSize=10,
+            parent=styles['Normal'],
+            fontSize=9,
             alignment=TA_CENTER,
-            textColor=colors.HexColor('#666666')
+            textColor=colors.HexColor('#666666'),
+            fontName='Helvetica'
         )
-        elements.append(Paragraph("🌿 AyurAI Veda™ | Ancient Wisdom. Intelligent Health.", footer_style))
-        elements.append(Paragraph(f"Report generated on {datetime.now().strftime('%d %B %Y at %I:%M %p')}", footer_style))
+        elements.append(Paragraph("AyurAI Veda | Ancient Wisdom. Intelligent Health.", footer_style))
+        timestamp = datetime.now().strftime('%d %B %Y at %I:%M %p')
+        elements.append(Paragraph(f"Report generated on {timestamp}", footer_style))
         
         # Build PDF
         doc.build(elements)
-        buffer.seek(0)
+        
+        # Get PDF data
+        pdf_data = buffer.getvalue()
+        buffer.close()
+        
+        # Create new buffer with PDF data
+        output = io.BytesIO(pdf_data)
+        output.seek(0)
         
         return send_file(
-            buffer,
+            output,
             mimetype='application/pdf',
             as_attachment=True,
             download_name=f'AyurAI_Report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.pdf'
@@ -325,7 +366,9 @@ def download_report():
         
     except Exception as e:
         print(f"PDF generation error: {str(e)}")
-        return jsonify({'error': 'Failed to generate PDF'}), 500
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': f'Failed to generate PDF: {str(e)}'}), 500
 
 # ============= ANALYSIS FUNCTIONS =============
 

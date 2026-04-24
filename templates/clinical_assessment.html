@@ -258,23 +258,52 @@
                 return;
             }
             
+            // Show loading message
+            const btn = document.getElementById('downloadBtn');
+            const originalText = btn.textContent;
+            btn.textContent = '⏳ Generating PDF...';
+            btn.disabled = true;
+            
             fetch('/download-report', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(window.clinicalResult)
             })
-            .then(response => response.blob())
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        throw new Error(err.error || 'Failed to generate PDF');
+                    });
+                }
+                return response.blob();
+            })
             .then(blob => {
+                if (blob.size === 0) {
+                    throw new Error('Generated PDF is empty');
+                }
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
                 a.download = 'AyurAI_Report_' + new Date().getTime() + '.pdf';
                 document.body.appendChild(a);
                 a.click();
-                a.remove();
-                window.URL.revokeObjectURL(url);
+                setTimeout(() => {
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                }, 100);
+                
+                // Reset button
+                btn.textContent = originalText;
+                btn.disabled = false;
             })
-            .catch(error => alert('Error downloading report: ' + error));
+            .catch(error => {
+                console.error('PDF Download Error:', error);
+                alert('Error downloading report: ' + error.message);
+                
+                // Reset button
+                btn.textContent = originalText;
+                btn.disabled = false;
+            });
         }
         
         window.clinicalResult = null;
