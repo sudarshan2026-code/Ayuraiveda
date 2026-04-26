@@ -41,6 +41,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 1rem;
 }
 
 .top-bar-left {
@@ -51,6 +52,11 @@ body {
 
 .top-bar-right {
     font-weight: 500;
+    text-align: right;
+}
+
+.top-bar-right span {
+    color: var(--primary);
 }
 
 /* Header */
@@ -416,6 +422,10 @@ footer strong {
 
 /* Responsive */
 @media (max-width: 768px) {
+    .top-bar {
+        font-size: 0.7rem;
+    }
+    
     .top-bar-content {
         flex-direction: column;
         gap: 0.5rem;
@@ -429,6 +439,12 @@ footer strong {
     
     .top-bar-left span:nth-child(2) {
         display: none;
+    }
+    
+    .top-bar-right {
+        text-align: center;
+        font-size: 0.65rem;
+        line-height: 1.4;
     }
     
     .header-content {
