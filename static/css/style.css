@@ -142,11 +142,15 @@ nav a {
     font-weight: 500;
     transition: opacity 0.3s;
     white-space: nowrap;
-    display: block;
+    display: inline;
+    padding: 0;
+    background: none;
+    border: none;
 }
 
 nav a:hover {
     opacity: 0.8;
+    background: none;
 }
 
 /* Main Content */
@@ -508,7 +512,9 @@ footer strong {
     
     nav a {
         font-size: 0.75rem;
-        padding: 0.35rem 0.5rem;
+        padding: 0;
+        background: none;
+        border: none;
     }
     
     .hero h2 {
@@ -601,7 +607,9 @@ footer strong {
     
     nav a {
         font-size: 0.65rem;
-        padding: 0.3rem 0.4rem;
+        padding: 0;
+        background: none;
+        border: none;
     }
     
     /* Hero section */
@@ -755,10 +763,11 @@ footer strong {
     }
     
     nav a {
-        padding: 0.5rem;
-        min-height: 44px;
-        display: inline-flex;
-        align-items: center;
+        padding: 0;
+        min-height: auto;
+        display: inline;
+        background: none;
+        border: none;
     }
     
     .form-group input,
@@ -822,7 +831,9 @@ img {
     
     nav a {
         font-size: 0.6rem;
-        padding: 0.25rem 0.35rem;
+        padding: 0;
+        background: none;
+        border: none;
     }
     
     .hero h2 {
