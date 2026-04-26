@@ -1,0 +1,94 @@
+{% extends "base_dynamic.html" %}
+
+{% block title %}About Ayurveda & Tridosha - AyurAI Veda{% endblock %}
+
+{% block content %}
+<div class="glass-card" style="animation: fadeInDown 1s ease;">
+    <h2>🕉️ What is Ayurveda?</h2>
+    <p>Ayurveda, meaning "Science of Life," is a 5000-year-old holistic healing system originating from ancient India. It emphasizes prevention, balance, and harmony between body, mind, and spirit.</p>
+    <p>Unlike modern medicine that treats symptoms, Ayurveda identifies root causes of imbalance and provides personalized lifestyle guidance.</p>
+</div>
+
+<div class="glass-card" style="animation: fadeInUp 1s ease 0.3s both;">
+    <h2>⚖️ The Tridosha Theory</h2>
+    <p style="margin-bottom: 2rem;">According to Ayurveda, every individual is governed by three fundamental energies called <strong>Doshas</strong>:</p>
+    
+    <div style="display: grid; gap: 1.5rem;">
+        <div style="background: linear-gradient(135deg, rgba(156, 39, 176, 0.2), rgba(233, 30, 99, 0.2)); padding: 2rem; border-radius: 15px; border-left: 4px solid #9C27B0;">
+            <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: #9C27B0;">🌬️ Vata (Air + Space)</h3>
+            <p><strong>Governs:</strong> Movement, creativity, nervous system, circulation</p>
+            <p><strong>Qualities:</strong> Dry, light, cold, mobile, irregular</p>
+            <p><strong>Imbalance Signs:</strong> Anxiety, insomnia, dry skin, constipation, restlessness</p>
+            <p style="margin: 0;"><strong>Balance Tips:</strong> Warm foods, routine, oil massage, grounding practices</p>
+        </div>
+
+        <div style="background: linear-gradient(135deg, rgba(255, 87, 34, 0.2), rgba(255, 152, 0, 0.2)); padding: 2rem; border-radius: 15px; border-left: 4px solid #FF5722;">
+            <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: #FF5722;">🔥 Pitta (Fire + Water)</h3>
+            <p><strong>Governs:</strong> Metabolism, digestion, transformation, intelligence</p>
+            <p><strong>Qualities:</strong> Hot, sharp, intense, oily, penetrating</p>
+            <p><strong>Imbalance Signs:</strong> Acidity, inflammation, anger, skin rashes, excessive heat</p>
+            <p style="margin: 0;"><strong>Balance Tips:</strong> Cooling foods, avoid spicy items, meditation, moderate exercise</p>
+        </div>
+
+        <div style="background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(139, 195, 74, 0.2)); padding: 2rem; border-radius: 15px; border-left: 4px solid #4CAF50;">
+            <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: #4CAF50;">🌊 Kapha (Water + Earth)</h3>
+            <p><strong>Governs:</strong> Structure, stability, lubrication, immunity</p>
+            <p><strong>Qualities:</strong> Heavy, slow, cool, oily, stable</p>
+            <p><strong>Imbalance Signs:</strong> Weight gain, lethargy, congestion, depression, excess mucus</p>
+            <p style="margin: 0;"><strong>Balance Tips:</strong> Light foods, regular exercise, avoid dairy, wake early</p>
+        </div>
+    </div>
+</div>
+
+<div class="glass-card" style="animation: fadeInUp 1s ease 0.6s both;">
+    <h2>🧬 Scientific Basis</h2>
+    <p>Modern research validates many Ayurvedic principles:</p>
+    <ul style="margin-top: 1rem; padding-left: 2rem; line-height: 2;">
+        <li><strong>Turmeric (Curcumin)</strong> - Anti-inflammatory properties validated by 10,000+ studies</li>
+        <li><strong>Ashwagandha</strong> - Proven adaptogen for stress reduction (cortisol regulation)</li>
+        <li><strong>Pranayama</strong> - Improves HRV (Heart Rate Variability) and autonomic balance</li>
+        <li><strong>Circadian rhythm alignment</strong> - Matches Ayurvedic daily routine (Dinacharya)</li>
+        <li><strong>Gut-brain axis</strong> - Validates Ayurveda's emphasis on digestive health</li>
+    </ul>
+</div>
+
+<div class="glass-card" style="animation: fadeInUp 1s ease 0.9s both;">
+    <h2>🤖 How AI Enhances Ayurveda</h2>
+    <p>The Tridosha Intelligence Engine™ combines traditional wisdom with modern AI:</p>
+    <ul style="margin-top: 1rem; padding-left: 2rem; line-height: 2;">
+        <li><strong>Pattern Recognition:</strong> Analyzes multiple symptoms simultaneously</li>
+        <li><strong>Weighted Scoring:</strong> Prioritizes critical indicators</li>
+        <li><strong>Personalization:</strong> Considers age, lifestyle, and environmental factors</li>
+        <li><strong>Scalability:</strong> Provides instant assessments to unlimited users</li>
+        <li><strong>Future-Ready:</strong> Expandable to ML models with training data</li>
+    </ul>
+</div>
+
+<div style="text-align: center; margin-top: 3rem; animation: fadeInUp 1s ease 1.2s both;">
+    <a href="/clinical-assessment" class="btn btn-primary">Start Your Assessment</a>
+</div>
+
+<style>
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+{% endblock %}

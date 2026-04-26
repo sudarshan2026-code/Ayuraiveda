@@ -14,11 +14,19 @@ app.secret_key = os.getenv('SECRET_KEY', 'ayurveda_secret_key_2024')
 
 @app.route('/')
 def home():
+    return render_template('home_dynamic.html')
+
+@app.route('/old')
+def old_home():
     return render_template('index.html')
+
+@app.route('/dynamic')
+def dynamic_home():
+    return render_template('index_dynamic.html')
 
 @app.route('/about')
 def about():
-    return render_template('about.html')
+    return render_template('about_dynamic.html')
 
 @app.route('/assessment')
 def assessment():
@@ -26,15 +34,15 @@ def assessment():
 
 @app.route('/chatbot')
 def chatbot():
-    return render_template('chatbot.html')
+    return render_template('chatbot_dynamic.html')
 
 @app.route('/contact')
 def contact():
-    return render_template('contact.html')
+    return render_template('contact_dynamic.html')
 
 @app.route('/clinical-assessment')
 def clinical_assessment():
-    return render_template('clinical_assessment.html')
+    return render_template('clinical_assessment_dynamic.html')
 
 @app.route('/comprehensive-assessment')
 def comprehensive_assessment():
@@ -42,7 +50,7 @@ def comprehensive_assessment():
 
 @app.route('/feedback')
 def feedback():
-    return render_template('feedback.html')
+    return render_template('feedback_dynamic.html')
 
 @app.route('/dashboard')
 def dashboard():
@@ -1015,7 +1023,7 @@ Everyone has a unique combination of these three doshas, called their <strong>Pr
         return "Key Ayurvedic herbs: Ashwagandha (stress relief, strength), Turmeric (anti-inflammatory), Tulsi (immunity, stress), Amla (Vitamin C, rejuvenation), Brahmi (memory, clarity), and Neem (blood purification)."
     
     else:
-        return """Hello! I'm AyurVaani™, your Ayurvedic wellness assistant. I can help you with:<br><br>
+        return """Hello! I'm AyurVaani, your Ayurvedic wellness assistant. I can help you with:<br><br>
 🌬️ Understanding Vata, Pitta, and Kapha doshas<br>
 🍽️ Personalized diet recommendations<br>
 🌿 Herbal remedies and natural treatments<br>

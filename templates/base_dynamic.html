@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{% block title %}AyurAI Veda - Time-Aware Ayurvedic Intelligence{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            overflow-x: hidden;
+            transition: all 1s ease;
+            min-height: 100vh;
+        }
+
+        /* Background System */
+        .bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+
+        .bg-image.active {
+            opacity: 1;
+        }
+
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: -1;
+        }
+
+        /* Particles & Effects */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .particles.active {
+            opacity: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(244, 162, 97, 0.6);
+            border-radius: 50%;
+            animation: float 8s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-30px) translateX(20px); }
+            50% { transform: translateY(-60px) translateX(-20px); }
+            75% { transform: translateY(-30px) translateX(20px); }
+        }
+
+        .glow-effect {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(231, 111, 81, 0.3), transparent);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse 4s infinite ease-in-out;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .glow-effect.active {
+            opacity: 1;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.5; }
+        }
+
+        /* Header */
+        .top-bar {
+            position: relative;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .top-bar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .top-bar-left {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .top-bar-right {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .header {
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-section img {
+            height: 50px;
+            width: auto;
+        }
+
+        .logo-text h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin: 0;
+        }
+
+        .logo-text p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        nav {
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        nav a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            min-height: calc(100vh - 400px);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .glass-card h2, .glass-card h3 {
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-card p {
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-3px);
+        }
+
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        footer p {
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            display: none;
+        }
+
+        /* Ayurvedic Status Badge */
+        .ayur-status {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            z-index: 100;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Language Selector */
+        #languageSelector {
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        #languageSelector:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        #languageSelector option {
+            background: rgba(0, 0, 0, 0.95);
+            color: #ffffff;
+            padding: 0.5rem;
+        }
+
+        body.vata #languageSelector,
+        body.pitta #languageSelector,
+        body.kapha #languageSelector {
+            color: var(--text);
+        }
+
+        /* Theme Colors */
+        body.vata {
+            --primary: #F4A261;
+            --accent: #E9C46A;
+            --text: #1a1a1a;
+            --text-bold: #000000;
+        }
+
+        body.pitta {
+            --primary: #E76F51;
+            --accent: #FFD166;
+            --text: #0d0d0d;
+            --text-bold: #000000;
+        }
+
+        body.kapha {
+            --primary: #264653;
+            --accent: #2A9D8F;
+            --text: #ffffff;
+            --text-bold: #ffffff;
+        }
+
+        body.vata .logo-text h1,
+        body.vata .logo-text p,
+        body.vata nav a,
+        body.vata .top-bar-left,
+        body.vata .top-bar-right,
+        body.vata .glass-card,
+        body.vata .glass-card p,
+        body.vata .glass-card h2,
+        body.vata .glass-card h3,
+        body.vata .glass-card h4,
+        body.vata .glass-card li,
+        body.vata .btn-secondary,
+        body.vata footer,
+        body.vata .theme-toggle,
+        body.vata .ayur-status {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        body.vata .glass-card strong,
+        body.vata .glass-card h2,
+        body.vata .glass-card h3 {
+            color: var(--text-bold);
+            font-weight: 700;
+        }
+
+        body.pitta .logo-text h1,
+        body.pitta .logo-text p,
+        body.pitta nav a,
+        body.pitta .top-bar-left,
+        body.pitta .top-bar-right,
+        body.pitta .glass-card,
+        body.pitta .glass-card p,
+        body.pitta .glass-card h2,
+        body.pitta .glass-card h3,
+        body.pitta .glass-card h4,
+        body.pitta .glass-card li,
+        body.pitta .btn-secondary,
+        body.pitta footer,
+        body.pitta .theme-toggle,
+        body.pitta .ayur-status {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        body.pitta .glass-card strong,
+        body.pitta .glass-card h2,
+        body.pitta .glass-card h3 {
+            color: var(--text-bold);
+            font-weight: 700;
+        }
+
+        body.kapha .logo-text h1,
+        body.kapha .logo-text p,
+        body.kapha nav a,
+        body.kapha .top-bar-left,
+        body.kapha .top-bar-right,
+        body.kapha .glass-card,
+        body.kapha .glass-card p,
+        body.kapha .glass-card h2,
+        body.kapha .glass-card h3,
+        body.kapha .glass-card h4,
+        body.kapha .glass-card li,
+        body.kapha .btn-secondary,
+        body.kapha footer,
+        body.kapha .theme-toggle,
+        body.kapha .ayur-status {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        body.kapha .glass-card strong,
+        body.kapha .glass-card h2,
+        body.kapha .glass-card h3 {
+            color: var(--text-bold);
+            font-weight: 700;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .top-bar-content {
+                flex-direction: column;
+                text-align: center;
+                padding: 0 1rem;
+            }
+
+            .top-bar-left {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .top-bar-right {
+                font-size: 0.65rem;
+                text-align: center;
+            }
+
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                padding: 1rem;
+            }
+
+            #languageSelector {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+            }
+
+            .logo-text h1 {
+                font-size: 1.5rem;
+            }
+
+            .logo-section img {
+                height: 40px;
+            }
+
+            nav ul {
+                gap: 1rem;
+                font-size: 0.85rem;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+            }
+
+            .glass-card {
+                padding: 1.5rem;
+            }
+
+            .theme-toggle {
+                display: none;
+            }
+
+            .ayur-status {
+                bottom: 1rem;
+                right: 1rem;
+                font-size: 0.75rem;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Background System -->
+    <div class="bg-container">
+        <div class="bg-image" id="bg-vata-1" style="background-image: url('https://images.unsplash.com/photo-1589998059171-988d887df646?w=1920&q=80');"></div>
+        <div class="bg-image" id="bg-vata-2" style="background-image: url('https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=1920&q=80');"></div>
+        <div class="bg-image" id="bg-pitta-1" style="background-image: url('https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=1920&q=80');"></div>
+        <div class="bg-image" id="bg-pitta-2" style="background-image: url('https://images.unsplash.com/photo-1589998059171-988d887df646?w=1920&q=80');"></div>
+        <div class="bg-image" id="bg-kapha-1" style="background-image: url('https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=1920&q=80');"></div>
+        <div class="bg-image" id="bg-kapha-2" style="background-image: url('https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=1920&q=80');"></div>
+    </div>
+    <div class="bg-overlay"></div>
+
+    <!-- Particles & Effects -->
+    <div class="particles" id="vata-particles"></div>
+    <div class="glow-effect" id="pitta-glow"></div>
+
+    <!-- Ayurvedic Status Badge -->
+    <div class="ayur-status" id="ayur-status">Loading...</div>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <div class="top-bar-left">
+                <span>🕉️ Indian Knowledge Systems</span>
+                <span>|</span>
+                <span>Ayurveda + AI</span>
+            </div>
+            <div class="top-bar-right">
+                MSME Registered | Udyam Registration No: UDYAM-GJ-24-0218250 | Government of India
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="AyurAI Veda Logo">
+                <div class="logo-text">
+                    <h1 data-i18n="title">AyurAI Veda</h1>
+                    <p data-i18n="subtitle">Powered by Tridosha Intelligence Engine</p>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <select id="languageSelector" style="padding: 0.5rem 1rem; border-radius: 25px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); font-weight: 600; cursor: pointer; font-size: 0.9rem;">
+                    <option value="en">English</option>
+                    <option value="hi">हिंदी</option>
+                    <option value="gu">ગુજરાતી</option>
+                </select>
+                <div class="badge" data-i18n="badge">Tridosha Intelligence Engine</div>
+            </div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/" data-i18n="nav_home">Home</a></li>
+                <li><a href="/about" data-i18n="nav_about">About</a></li>
+                <li><a href="/clinical-assessment" data-i18n="nav_assessment">Clinical Assessment</a></li>
+                <li><a href="/chatbot" data-i18n="nav_chat">AyurVaani Chat</a></li>
+                <li><a href="/contact" data-i18n="nav_contact">Contact</a></li>
+                <li><a href="/feedback" data-i18n="nav_feedback">Feedback</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p data-i18n="footer_copyright">© 2026 AyurAI Veda. All rights reserved.</p>
+        <p><strong>AyurAI Veda</strong> | <span data-i18n="footer_tagline">Reviving Indian Knowledge Systems through Artificial Intelligence</span></p>
+        <p style="margin-top: 0.5rem; font-size: 0.85rem;" data-i18n="footer_powered">Powered by Tridosha Intelligence Engine</p>
+        <p style="margin-top: 0.25rem; font-size: 0.8rem; opacity: 0.8;" data-i18n="footer_company">A Sudarshan Technologies Production</p>
+    </footer>
+
+<!-- Dynamic Theme Script -->
+    <script>
+        function getAyurvedaPhase(hour) {
+            if (hour >= 4 && hour < 10) return "VATA";
+            if (hour >= 10 && hour < 14) return "PITTA";
+            if (hour >= 18 && hour < 22) return "KAPHA";
+            return "KAPHA";
+        }
+
+        function getPhaseDetails(phase) {
+            const details = {
+                VATA: {
+                    name: "Vata Time",
+                    time: "4:00 AM - 10:00 AM",
+                    backgrounds: ['bg-vata-1', 'bg-vata-2'],
+                    class: 'vata'
+                },
+                PITTA: {
+                    name: "Pitta Time",
+                    time: "10:00 AM - 2:00 PM",
+                    backgrounds: ['bg-pitta-1', 'bg-pitta-2'],
+                    class: 'pitta'
+                },
+                KAPHA: {
+                    name: "Kapha Time",
+                    time: "6:00 PM - 10:00 PM",
+                    backgrounds: ['bg-kapha-1', 'bg-kapha-2'],
+                    class: 'kapha'
+                }
+            };
+            return details[phase];
+        }
+
+        function createVataParticles() {
+            const container = document.getElementById('vata-particles');
+            container.innerHTML = '';
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (8 + Math.random() * 4) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        function applyTheme(phase) {
+            const details = getPhaseDetails(phase);
+            const body = document.body;
+
+            body.classList.remove('vata', 'pitta', 'kapha');
+            body.classList.add(details.class);
+
+            document.getElementById('ayur-status').textContent = `${details.name} (${details.time})`;
+
+            document.querySelectorAll('.bg-image').forEach(bg => bg.classList.remove('active'));
+            const randomBg = details.backgrounds[Math.floor(Math.random() * details.backgrounds.length)];
+            document.getElementById(randomBg).classList.add('active');
+
+            document.getElementById('vata-particles').classList.remove('active');
+            document.getElementById('pitta-glow').classList.remove('active');
+
+            if (phase === 'VATA') {
+                createVataParticles();
+                document.getElementById('vata-particles').classList.add('active');
+            } else if (phase === 'PITTA') {
+                document.getElementById('pitta-glow').classList.add('active');
+            }
+        }
+
+        function updateThemeBasedOnTime() {
+            const now = new Date();
+            const hour = now.getHours();
+            const phase = getAyurvedaPhase(hour);
+            applyTheme(phase);
+        }
+
+        function init() {
+            updateThemeBasedOnTime();
+        }
+
+        // Auto-update every 60 seconds
+        setInterval(updateThemeBasedOnTime, 60000);
+
+        init();
+    </script>
+
+    <!-- Multilingual Translation System -->
+    <script>
+        const translations = {
+            en: {
+                title: "AyurAI Veda",
+                subtitle: "Powered by Tridosha Intelligence Engine",
+                badge: "Tridosha Intelligence Engine",
+                nav_home: "Home",
+                nav_about: "About",
+                nav_assessment: "Clinical Assessment",
+                nav_chat: "AyurVaani Chat",
+                nav_contact: "Contact",
+                nav_feedback: "Feedback",
+                footer_copyright: "© 2026 AyurAI Veda. All rights reserved.",
+                footer_tagline: "Reviving Indian Knowledge Systems through Artificial Intelligence",
+                footer_powered: "Powered by Tridosha Intelligence Engine",
+                footer_company: "A Sudarshan Technologies Production",
+                vata_time: "Vata Time",
+                pitta_time: "Pitta Time",
+                kapha_time: "Kapha Time"
+            },
+            hi: {
+                title: "आयुरएआई वेदा",
+                subtitle: "त्रिदोष इंटेलिजेंस इंजन द्वारा संचालित",
+                badge: "त्रिदोष इंटेलिजेंस इंजन",
+                nav_home: "होम",
+                nav_about: "हमारे बारे में",
+                nav_assessment: "क्लिनिकल मूल्यांकन",
+                nav_chat: "आयुरवाणी चैट",
+                nav_contact: "संपर्क करें",
+                nav_feedback: "फीडबैक",
+                footer_copyright: "© 2026 आयुरएआई वेदा. सभी अधिकार सुरक्षित.",
+                footer_tagline: "कृत्रिम बुद्धिमत्ता के माध्यम से भारतीय ज्ञान प्रणालियों को पुनर्जीवित करना",
+                footer_powered: "त्रिदोष इंटेलिजेंस इंजन द्वारा संचालित",
+                footer_company: "एक सुदर्शन टेक्नोलॉजीज प्रोडक्शन",
+                vata_time: "वात समय",
+                pitta_time: "पित्त समय",
+                kapha_time: "कफ समय"
+            },
+            gu: {
+                title: "આયુરએઆઈ વેદા",
+                subtitle: "ત્રિદોષ ઇન્ટેલિજન્સ ઇંજિન દ્વારા સંચાલિત",
+                badge: "ત્રિદોષ ઇન્ટેલિજન્સ ઇંજિન",
+                nav_home: "હોમ",
+                nav_about: "અમારી વિશે",
+                nav_assessment: "ક્લિનિકલ મૂલ્યાંકન",
+                nav_chat: "આયુરવાણી ચેટ",
+                nav_contact: "સંપર્ક કરો",
+                nav_feedback: "ફીડબેક",
+                footer_copyright: "© 2026 આયુરએઆઈ વેદા. બધા અધિકારો રક્ષિત.",
+                footer_tagline: "કૃત્રિમ બુદ્ધિમત્તા દ્વારા ભારતીય જ્ઞાન પ્રણાલીઓને પુનર્જીવિત કરવી",
+                footer_powered: "ત્રિદોષ ઇન્ટેલિજન્સ ઇંજિન દ્વારા સંચાલિત",
+                footer_company: "એક સુદર્શન ટેક્નોલોજીઝ પ્રોડક્શન",
+                vata_time: "વાત સમય",
+                pitta_time: "પિત્ત સમય",
+                kapha_time: "કફ સમય"
+            }
+        };
+
+        function setLanguage(lang) {
+            localStorage.setItem('ayurveda_lang', lang);
+            applyTranslations(lang);
+            document.getElementById('languageSelector').value = lang;
+        }
+
+        function applyTranslations(lang) {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+        }
+
+        // Initialize language on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLang = localStorage.getItem('ayurveda_lang') || 'en';
+            setLanguage(savedLang);
+            
+            // Add language selector event listener
+            document.getElementById('languageSelector').addEventListener('change', function() {
+                setLanguage(this.value);
+            });
+        });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

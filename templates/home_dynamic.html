@@ -1,0 +1,99 @@
+{% extends "base_dynamic.html" %}
+
+{% block title %}AyurAI Veda - Ancient Wisdom. Intelligent Health.{% endblock %}
+
+{% block content %}
+<div style="text-align: center; margin-bottom: 3rem; animation: fadeInDown 1s ease;">
+    <h2 style="font-size: 3rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: -1px; text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5); color: #ffffff;">Ancient Wisdom. Intelligent Health.</h2>
+    <p style="font-size: 1.2rem; opacity: 1; max-width: 800px; margin: 0 auto; line-height: 1.8; font-weight: 600; text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5); color: #ffffff;">
+        Experience the fusion of 5000-year-old Ayurvedic wisdom with cutting-edge Artificial Intelligence. 
+        Our Tridosha Intelligence Engine analyzes your health patterns to provide personalized preventive guidance.
+    </p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 3rem; animation: fadeInUp 1s ease 0.3s both;">
+    <div class="glass-card" style="text-align: center;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">🌬️</div>
+        <h3 style="color: #9C27B0; margin-bottom: 0.5rem;">Vata Dosha</h3>
+        <p style="font-size: 0.95rem;">Air + Space | Movement, Creativity, Nervous System</p>
+    </div>
+    <div class="glass-card" style="text-align: center;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">🔥</div>
+        <h3 style="color: #FF5722; margin-bottom: 0.5rem;">Pitta Dosha</h3>
+        <p style="font-size: 0.95rem;">Fire + Water | Metabolism, Digestion, Transformation</p>
+    </div>
+    <div class="glass-card" style="text-align: center;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">🌊</div>
+        <h3 style="color: #4CAF50; margin-bottom: 0.5rem;">Kapha Dosha</h3>
+        <p style="font-size: 0.95rem;">Water + Earth | Structure, Stability, Immunity</p>
+    </div>
+</div>
+
+<div class="glass-card" style="animation: fadeInUp 1s ease 0.6s both;">
+    <h3>🧠 What is AyurAI Veda?</h3>
+    <p>AyurAI Veda is an AI-powered health prediction system rooted in Indian Knowledge Systems (IKS), specifically Ayurveda. Using the Tridosha Intelligence Engine™, we analyze your lifestyle patterns to identify potential health imbalances in Vata, Pitta, and Kapha doshas.</p>
+    <p><strong>Purpose:</strong> Educational and preventive health insights for students, researchers, and wellness enthusiasts.</p>
+</div>
+
+<div class="glass-card" style="background: linear-gradient(135deg, rgba(255, 248, 240, 0.15), rgba(240, 248, 255, 0.15)); animation: fadeInUp 1s ease 0.9s both;">
+    <h3>💬 AyurVaani AI Chatbot</h3>
+    <p style="margin-bottom: 1.5rem;">Introducing <strong>AyurVaani</strong> - Your personal Ayurveda knowledge assistant powered by Tridosha Intelligence Engine. Get instant answers to your Ayurveda questions!</p>
+    <ul style="list-style: none; padding: 0; margin-bottom: 1.5rem;">
+        <li style="padding: 0.5rem 0;">✓ Comprehensive Ayurveda knowledge base</li>
+        <li style="padding: 0.5rem 0;">✓ Instant answers on Doshas, diet, yoga, and lifestyle</li>
+        <li style="padding: 0.5rem 0;">✓ Available 24/7, completely free</li>
+    </ul>
+    <a href="/chatbot" class="btn btn-primary">🚀 Chat with AyurVaani Now →</a>
+</div>
+
+<div class="glass-card" style="animation: fadeInUp 1s ease 1.2s both;">
+    <h3>🔬 How It Works</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 1.5rem;">
+        <div style="text-align: center;">
+            <h4 style="margin-bottom: 0.5rem;">1. Input</h4>
+            <p>Answer questions about your lifestyle, diet, sleep, and stress patterns</p>
+        </div>
+        <div style="text-align: center;">
+            <h4 style="margin-bottom: 0.5rem;">2. AI Analysis</h4>
+            <p>Tridosha Intelligence Engine processes your data using Ayurvedic principles</p>
+        </div>
+        <div style="text-align: center;">
+            <h4 style="margin-bottom: 0.5rem;">3. Insights</h4>
+            <p>Receive personalized preventive recommendations for diet, yoga, and lifestyle</p>
+        </div>
+    </div>
+</div>
+
+<div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-top: 3rem; animation: fadeInUp 1s ease 1.5s both;">
+    <a href="/clinical-assessment" class="btn btn-primary">Start Clinical Assessment</a>
+    <a href="/chatbot" class="btn btn-secondary">Chat with AyurVaani</a>
+</div>
+
+<div class="glass-card" style="background: rgba(255, 243, 224, 0.15); border-left: 4px solid var(--accent); margin-top: 3rem; animation: fadeInUp 1s ease 1.8s both;">
+    <p style="margin: 0; font-size: 0.9rem;"><strong>⚠️ Important Disclaimer:</strong> This system provides educational and preventive insights only. It is NOT a medical diagnosis platform. Always consult qualified healthcare professionals for medical advice.</p>
+</div>
+
+<style>
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+{% endblock %}

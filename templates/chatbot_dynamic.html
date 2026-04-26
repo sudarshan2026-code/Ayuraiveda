@@ -1,0 +1,262 @@
+{% extends "base_dynamic.html" %}
+
+{% block title %}AyurVaani AI Chatbot - AyurAI Veda{% endblock %}
+
+{% block extra_css %}
+<style>
+    .chat-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .chat-box {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        min-height: 500px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        max-height: 400px;
+    }
+
+    .message {
+        margin-bottom: 1rem;
+        padding: 1rem 1.5rem;
+        border-radius: 15px;
+        animation: fadeIn 0.3s ease;
+        font-weight: 500;
+    }
+
+    .user-message {
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: white;
+        margin-left: 20%;
+        text-align: right;
+        font-weight: 600;
+    }
+
+    .bot-message {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        margin-right: 20%;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        font-weight: 500;
+    }
+
+    body.vata .bot-message {
+        color: #1a1a1a;
+        font-weight: 600;
+    }
+
+    body.pitta .bot-message {
+        color: #0d0d0d;
+        font-weight: 600;
+    }
+
+    body.kapha .bot-message {
+        color: #ffffff;
+        font-weight: 600;
+    }
+
+    .chat-input-container {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .chat-input {
+        flex: 1;
+        padding: 1rem 1.5rem;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+
+    body.vata .chat-input {
+        color: #1a1a1a;
+    }
+
+    body.pitta .chat-input {
+        color: #0d0d0d;
+    }
+
+    body.kapha .chat-input {
+        color: #ffffff;
+    }
+
+    .chat-input::placeholder {
+        opacity: 0.6;
+    }
+
+    .chat-input:focus {
+        outline: none;
+        border-color: var(--primary);
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+    .send-btn {
+        padding: 1rem 2.5rem;
+        border: none;
+        border-radius: 50px;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: white;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .send-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .send-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .user-message {
+            margin-left: 10%;
+        }
+
+        .bot-message {
+            margin-right: 10%;
+        }
+
+        .chat-input-container {
+            flex-direction: column;
+        }
+
+        .send-btn {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="glass-card" style="text-align: center; margin-bottom: 2rem; animation: fadeInDown 1s ease;">
+        <h2 style="font-size: 2.5rem; margin-bottom: 1rem; font-weight: 700;">💬 AyurVaani AI Chatbot</h2>
+        <p style="font-size: 1.1rem; opacity: 0.95; font-weight: 500;">Your 24/7 Ayurvedic Wellness Assistant powered by Tridosha Intelligence Engine™</p>
+    </div>
+
+    <div class="chat-box" style="animation: fadeInUp 1s ease 0.3s both;">
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot-message">
+                <strong>AyurVaani:</strong> Hello! I'm AyurVaani™, your Ayurvedic wellness assistant. I can help you with:<br><br>
+                🌬️ Understanding Vata, Pitta, and Kapha doshas<br>
+                🍽️ Personalized diet recommendations<br>
+                🌿 Herbal remedies and natural treatments<br>
+                🧘 Yoga and pranayama practices<br>
+                😌 Stress management and sleep improvement<br>
+                🔥 Digestive health and Agni strengthening<br><br>
+                What would you like to know about Ayurveda today?
+            </div>
+        </div>
+
+        <div class="chat-input-container">
+            <input type="text" id="userInput" class="chat-input" placeholder="Ask me about Ayurveda..." />
+            <button id="sendBtn" class="send-btn">Send</button>
+        </div>
+    </div>
+
+    <div class="glass-card" style="background: rgba(255, 243, 224, 0.15); border-left: 4px solid var(--accent); margin-top: 2rem; animation: fadeInUp 1s ease 0.6s both;">
+        <p style="margin: 0; font-size: 0.9rem; font-weight: 600;"><strong>💡 Tip:</strong> Ask about specific doshas, diet recommendations, yoga practices, or any Ayurvedic health topic!</p>
+    </div>
+</div>
+
+<script>
+    const chatMessages = document.getElementById('chatMessages');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    function addMessage(text, isUser) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+        messageDiv.innerHTML = isUser ? text : `<strong>AyurVaani:</strong> ${text}`;
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    async function sendMessage() {
+        const message = userInput.value.trim();
+        if (!message) return;
+
+        addMessage(message, true);
+        userInput.value = '';
+        sendBtn.disabled = true;
+
+        try {
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({message: message})
+            });
+
+            const data = await response.json();
+            addMessage(data.response, false);
+        } catch (error) {
+            addMessage('Sorry, I encountered an error. Please try again.', false);
+        } finally {
+            sendBtn.disabled = false;
+        }
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendMessage();
+    });
+</script>
+
+<style>
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+{% endblock %}

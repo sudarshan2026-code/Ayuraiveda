@@ -205,20 +205,25 @@
             <div class="logo">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="AyurAI Veda Logo" style="height: 50px; width: auto; margin-right: 15px; vertical-align: middle;">
                 <div style="display: inline-block; vertical-align: middle;">
-                    <h1 style="margin: 0; display: inline;">AyurAI Veda</h1>
-                    <p style="margin: 0; font-size: 0.9rem;">Powered by Tridosha Intelligence Engine</p>
+                    <h1 t="title" style="margin: 0; display: inline;"></h1>
+                    <p t="tagline" style="margin: 0; font-size: 0.9rem;">Powered by Tridosha Intelligence Engine</p>
                 </div>
             </div>
-            <div class="badge">IKS + AI Powered</div>
+            <div class="badge" t="badge">IKS + AI Powered</div>
+            <select id="langSelect" onchange="setLang(this.value)" style="padding: 0.5rem; border-radius: 4px; border: 1px solid var(--border); background: white; cursor: pointer;">
+                <option value="en">EN</option>
+                <option value="hi">HI</option>
+                <option value="gu">GU</option>
+            </select>
         </div>
         <nav>
             <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/about">About</a></li>
-                <li><a href="/clinical-assessment">Clinical Assessment</a></li>
-                <li><a href="/chatbot">AyurVaani Chat</a></li>
-                <li><a href="/contact">Contact</a></li>
-                <li><a href="/feedback">Feedback</a></li>
+                <li><a href="/" t="nav_home">Home</a></li>
+                <li><a href="/about" t="nav_about">About</a></li>
+                <li><a href="/clinical-assessment" t="nav_assessment">Clinical Assessment</a></li>
+                <li><a href="/chatbot" t="nav_chat">AyurVaani Chat</a></li>
+                <li><a href="/contact" t="nav_contact">Contact</a></li>
+                <li><a href="/feedback" t="nav_feedback">Feedback</a></li>
             </ul>
         </nav>
     </header>
@@ -357,5 +362,6 @@
             }
         }
     </script>
+    <script src="{{ url_for('static', filename='js/translations.js') }}"></script>
 </body>
 </html>

@@ -1,0 +1,84 @@
+{% extends "base_dynamic.html" %}
+
+{% block title %}Contact Us - AyurAI Veda{% endblock %}
+
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto;">
+    <div class="glass-card" style="text-align: center; margin-bottom: 2rem; animation: fadeInDown 1s ease;">
+        <h2 style="font-size: 2.5rem; margin-bottom: 1rem; font-weight: 700;">📞 Contact Us</h2>
+        <p style="font-size: 1.1rem; opacity: 0.95; font-weight: 500;">Get in touch with the AyurAI Veda team</p>
+    </div>
+
+    <div class="glass-card" style="animation: fadeInUp 1s ease 0.3s both;">
+        <h3 style="margin-bottom: 1.5rem; font-weight: 700;">📧 Contact Information</h3>
+        
+        <div style="display: grid; gap: 1.5rem;">
+            <div style="padding: 1.5rem; background: rgba(255, 255, 255, 0.1); border-radius: 15px; border-left: 4px solid var(--primary);">
+                <h4 style="margin-bottom: 0.5rem; font-weight: 700;">🏢 Organization</h4>
+                <p style="margin: 0; font-weight: 600;">Sudarshan Technologies</p>
+                <p style="margin: 0.5rem 0 0 0; font-weight: 500;">MSME Registered | Udyam: UDYAM-GJ-24-0218250</p>
+            </div>
+
+            <div style="padding: 1.5rem; background: rgba(255, 255, 255, 0.1); border-radius: 15px; border-left: 4px solid var(--accent);">
+                <h4 style="margin-bottom: 0.5rem; font-weight: 700;">📧 Email</h4>
+                <p style="margin: 0; font-weight: 600;">zjay5398@gmail.com</p>
+            </div>
+
+            <div style="padding: 1.5rem; background: rgba(255, 255, 255, 0.1); border-radius: 15px; border-left: 4px solid var(--primary);">
+                <h4 style="margin-bottom: 0.5rem; font-weight: 700;">🌐 Platform</h4>
+                <p style="margin: 0; font-weight: 600;">AyurAI Veda - Time-Aware Ayurvedic Intelligence</p>
+                <p style="margin: 0.5rem 0 0 0; font-weight: 500;">Powered by Tridosha Intelligence Engine™</p>
+            </div>
+
+            <div style="padding: 1.5rem; background: rgba(255, 255, 255, 0.1); border-radius: 15px; border-left: 4px solid var(--accent);">
+                <h4 style="margin-bottom: 0.5rem; font-weight: 700;">🎯 Purpose</h4>
+                <p style="margin: 0; font-weight: 500;">Educational and preventive health insights based on Indian Knowledge Systems (IKS) and Ayurveda</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card" style="animation: fadeInUp 1s ease 0.6s both;">
+        <h3 style="margin-bottom: 1.5rem; font-weight: 700;">💬 Quick Links</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <a href="/chatbot" class="btn btn-primary" style="text-align: center;">Chat with AyurVaani</a>
+            <a href="/clinical-assessment" class="btn btn-secondary" style="text-align: center;">Clinical Assessment</a>
+            <a href="/feedback" class="btn btn-secondary" style="text-align: center;">Send Feedback</a>
+        </div>
+    </div>
+
+    <div class="glass-card" style="background: rgba(255, 243, 224, 0.15); border-left: 4px solid var(--accent); animation: fadeInUp 1s ease 0.9s both;">
+        <h3 style="margin-bottom: 1rem; font-weight: 700;">⚠️ Important Notice</h3>
+        <p style="margin: 0; font-weight: 600;">This system provides educational and preventive insights only. It is NOT a medical diagnosis platform. Always consult qualified healthcare professionals for medical advice.</p>
+    </div>
+
+    <div class="glass-card" style="text-align: center; animation: fadeInUp 1s ease 1.2s both;">
+        <h3 style="margin-bottom: 1rem; font-weight: 700;">🌿 About AyurAI Veda</h3>
+        <p style="font-weight: 500; line-height: 1.8;">AyurAI Veda is an AI-powered health prediction system rooted in Indian Knowledge Systems (IKS), specifically Ayurveda. Using the Tridosha Intelligence Engine™, we analyze lifestyle patterns to identify potential health imbalances and provide personalized preventive guidance.</p>
+        <p style="margin-top: 1rem; font-weight: 600;">Ancient Wisdom. Intelligent Health.</p>
+    </div>
+</div>
+
+<style>
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+{% endblock %}
