@@ -255,23 +255,39 @@
 </div>
 
 <div class="upload-section" style="animation: fadeInUp 1s ease 0.3s both;">
-    <div class="upload-area" id="uploadArea">
-        <div class="upload-icon">📸</div>
-        <h2>Click to Upload, Capture Photo, or Drag & Drop</h2>
-        <p style="margin-top: 10px; opacity: 0.8;">Upload a full-body image (JPG, PNG, JPEG)</p>
-        <input type="file" id="imageInput" accept="image/*" capture="environment" style="display: none;">
-        <div style="margin-top: 20px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-            <button onclick="document.getElementById('imageInput').click()" class="btn btn-primary" style="padding: 12px 30px; font-size: 16px; border-radius: 50px; background: linear-gradient(135deg, var(--primary), var(--accent)); border: none; color: white; cursor: pointer;">
-                📁 Choose File
-            </button>
-            <button onclick="capturePhoto()" class="btn btn-secondary" style="padding: 12px 30px; font-size: 16px; border-radius: 50px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; cursor: pointer;">
-                📷 Take Photo
-            </button>
+    <h2 style="text-align: center; margin-bottom: 30px; font-size: 2rem;">Choose Upload Method</h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-bottom: 30px;">
+        <!-- Choose Image Option -->
+        <div class="upload-option" onclick="document.getElementById('imageInput').click()" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); padding: 40px; border-radius: 20px; text-align: center; cursor: pointer; transition: all 0.3s; border: 2px solid rgba(255, 255, 255, 0.2);">
+            <div style="font-size: 80px; margin-bottom: 20px;">📁</div>
+            <h3 style="font-size: 1.5rem; margin-bottom: 15px;">Choose Image</h3>
+            <p style="opacity: 0.8; font-size: 1rem;">Select from your device gallery</p>
+        </div>
+        
+        <!-- Click Image Option -->
+        <div class="upload-option" onclick="openCamera()" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); padding: 40px; border-radius: 20px; text-align: center; cursor: pointer; transition: all 0.3s; border: 2px solid rgba(255, 255, 255, 0.2);">
+            <div style="font-size: 80px; margin-bottom: 20px;">📷</div>
+            <h3 style="font-size: 1.5rem; margin-bottom: 15px;">Click Image</h3>
+            <p style="opacity: 0.8; font-size: 1rem;">Take photo with camera</p>
         </div>
     </div>
+    
+    <input type="file" id="imageInput" accept="image/*" style="display: none;">
+    <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;">
+    
     <img id="imagePreview" alt="Preview">
     <button class="analyze-btn" id="analyzeBtn">🔍 Analyze Face & Body</button>
 </div>
+
+<style>
+    .upload-option:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.15) !important;
+        border-color: var(--primary) !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+</style>
 
 <div class="glass-card" style="animation: fadeInUp 1s ease 0.6s both;">
     <strong style="font-size: 18px;">📌 Tips for Best Results:</strong>
@@ -526,8 +542,8 @@
 
 {% block extra_js %}
 <script>
-    const uploadArea = document.getElementById('uploadArea');
     const imageInput = document.getElementById('imageInput');
+    const cameraInput = document.getElementById('cameraInput');
     const imagePreview = document.getElementById('imagePreview');
     const analyzeBtn = document.getElementById('analyzeBtn');
     const loading = document.getElementById('loading');
@@ -535,35 +551,26 @@
 
     let selectedImage = null;
 
-    uploadArea.addEventListener('click', () => imageInput.click());
-
-    uploadArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        uploadArea.style.background = 'rgba(255, 255, 255, 0.15)';
-    });
-
-    uploadArea.addEventListener('dragleave', () => {
-        uploadArea.style.background = 'rgba(255, 255, 255, 0.05)';
-    });
-
-    uploadArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        uploadArea.style.background = 'rgba(255, 255, 255, 0.05)';
-        const file = e.dataTransfer.files[0];
-        if (file && file.type.startsWith('image/')) {
-            handleImageUpload(file);
-        }
-    });
-
+    // Handle file selection from gallery
     imageInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) handleImageUpload(file);
     });
 
-    function capturePhoto() {
-        const input = document.getElementById('imageInput');
-        input.setAttribute('capture', 'environment');
-        input.click();
+    // Handle camera capture
+    cameraInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            handleImageUpload(file);
+            // Auto-scroll to preview after capture
+            setTimeout(() => {
+                imagePreview.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
+        }
+    });
+
+    function openCamera() {
+        cameraInput.click();
     }
 
     function handleImageUpload(file) {
