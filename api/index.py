@@ -276,19 +276,24 @@ def extract_facial_regions():
 def analyze_face_enhanced():
     """Enhanced face analysis with automatic image quality enhancement and texture detection"""
     try:
+        # Handle both JSON and form data
+        if request.is_json:
+            data = request.json
+        else:
+            data = request.form.to_dict()
+        
+        image_data = data.get('image')
+        user_data = data.get('user_data', {})
+        
+        if not image_data:
+            return jsonify({'success': False, 'error': 'No image provided'}), 400
+        
         import cv2
         import numpy as np
         import base64
         from io import BytesIO
         from PIL import Image
         from image_quality_enhancer import ImageQualityEnhancer
-        
-        data = request.json
-        image_data = data.get('image')
-        user_data = data.get('user_data', {})
-        
-        if not image_data:
-            return jsonify({'success': False, 'error': 'No image provided'})
         
         # Step 1: Enhance image quality automatically
         print("🔍 Enhancing image quality...")
@@ -595,6 +600,22 @@ def analyze_body():
 def analyze_face_body_fusion():
     """Perform face-body fusion analysis with automatic quality enhancement"""
     try:
+        # Handle both JSON and form data
+        if request.is_json:
+            data = request.json
+        else:
+            data = request.form.to_dict()
+        
+        image_data = data.get('image')
+        face_scores = data.get('face_scores')  # {'vata': x, 'pitta': y, 'kapha': z}
+        user_data = data.get('user_data', {})
+        
+        if not image_data:
+            return jsonify({'success': False, 'error': 'No image provided'}), 400
+        
+        if not face_scores:
+            return jsonify({'success': False, 'error': 'Face scores required for fusion'}), 400
+        
         from face_body_detection_extended import FaceBodyDetector
         from image_quality_enhancer import ImageQualityEnhancer
         import numpy as np
@@ -602,17 +623,6 @@ def analyze_face_body_fusion():
         from io import BytesIO
         from PIL import Image
         import cv2
-        
-        data = request.json
-        image_data = data.get('image')
-        face_scores = data.get('face_scores')  # {'vata': x, 'pitta': y, 'kapha': z}
-        user_data = data.get('user_data', {})
-        
-        if not image_data:
-            return jsonify({'success': False, 'error': 'No image provided'})
-        
-        if not face_scores:
-            return jsonify({'success': False, 'error': 'Face scores required for fusion'})
         
         # Step 1: Enhance image quality automatically
         print("🔍 Enhancing image quality for fusion analysis...")
