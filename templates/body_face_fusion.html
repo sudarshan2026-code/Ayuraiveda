@@ -257,9 +257,17 @@
 <div class="upload-section" style="animation: fadeInUp 1s ease 0.3s both;">
     <div class="upload-area" id="uploadArea">
         <div class="upload-icon">📸</div>
-        <h2>Click to Upload or Drag & Drop</h2>
+        <h2>Click to Upload, Capture Photo, or Drag & Drop</h2>
         <p style="margin-top: 10px; opacity: 0.8;">Upload a full-body image (JPG, PNG, JPEG)</p>
-        <input type="file" id="imageInput" accept="image/*" style="display: none;">
+        <input type="file" id="imageInput" accept="image/*" capture="environment" style="display: none;">
+        <div style="margin-top: 20px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            <button onclick="document.getElementById('imageInput').click()" class="btn btn-primary" style="padding: 12px 30px; font-size: 16px; border-radius: 50px; background: linear-gradient(135deg, var(--primary), var(--accent)); border: none; color: white; cursor: pointer;">
+                📁 Choose File
+            </button>
+            <button onclick="capturePhoto()" class="btn btn-secondary" style="padding: 12px 30px; font-size: 16px; border-radius: 50px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; cursor: pointer;">
+                📷 Take Photo
+            </button>
+        </div>
     </div>
     <img id="imagePreview" alt="Preview">
     <button class="analyze-btn" id="analyzeBtn">🔍 Analyze Face & Body</button>
@@ -551,6 +559,12 @@
         const file = e.target.files[0];
         if (file) handleImageUpload(file);
     });
+
+    function capturePhoto() {
+        const input = document.getElementById('imageInput');
+        input.setAttribute('capture', 'environment');
+        input.click();
+    }
 
     function handleImageUpload(file) {
         const reader = new FileReader();
