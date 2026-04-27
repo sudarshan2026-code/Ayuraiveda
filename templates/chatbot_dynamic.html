@@ -7,34 +7,41 @@
     .chat-container {
         max-width: 900px;
         margin: 0 auto;
+        width: 100%;
     }
 
     .chat-box {
         background: rgba(255, 255, 255, 0.15);
         backdrop-filter: blur(20px);
-        border-radius: 20px;
-        padding: 2rem;
+        border-radius: clamp(15px, 3vw, 20px);
+        padding: clamp(1.25rem, 3vw, 2rem);
         border: 1px solid rgba(255, 255, 255, 0.2);
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         min-height: 500px;
         display: flex;
         flex-direction: column;
+        width: 100%;
     }
 
     .chat-messages {
         flex: 1;
         overflow-y: auto;
         margin-bottom: 1.5rem;
-        padding: 1rem;
+        padding: clamp(0.75rem, 2vw, 1rem);
         max-height: 400px;
+        -webkit-overflow-scrolling: touch;
     }
 
     .message {
         margin-bottom: 1rem;
-        padding: 1rem 1.5rem;
+        padding: clamp(0.85rem, 2vw, 1rem) clamp(1rem, 3vw, 1.5rem);
         border-radius: 15px;
         animation: fadeIn 0.3s ease;
         font-weight: 500;
+        font-size: clamp(0.9rem, 2.5vw, 1rem);
+        line-height: 1.6;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
 
     .user-message {
@@ -70,19 +77,22 @@
 
     .chat-input-container {
         display: flex;
-        gap: 1rem;
+        gap: clamp(0.75rem, 2vw, 1rem);
+        flex-wrap: wrap;
     }
 
     .chat-input {
         flex: 1;
-        padding: 1rem 1.5rem;
+        min-width: min(200px, 100%);
+        padding: clamp(0.85rem, 2vw, 1rem) clamp(1rem, 3vw, 1.5rem);
         border: 2px solid rgba(255, 255, 255, 0.3);
         border-radius: 50px;
         background: rgba(255, 255, 255, 0.1);
         backdrop-filter: blur(10px);
-        font-size: 1rem;
+        font-size: 16px;
         transition: all 0.3s ease;
         font-weight: 500;
+        min-height: 44px;
     }
 
     body.vata .chat-input {
@@ -108,7 +118,7 @@
     }
 
     .send-btn {
-        padding: 1rem 2.5rem;
+        padding: clamp(0.85rem, 2vw, 1rem) clamp(1.75rem, 4vw, 2.5rem);
         border: none;
         border-radius: 50px;
         background: linear-gradient(135deg, var(--primary), var(--accent));
@@ -117,6 +127,9 @@
         cursor: pointer;
         transition: all 0.3s ease;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        min-height: 44px;
+        font-size: clamp(0.9rem, 2.5vw, 1rem);
+        white-space: nowrap;
     }
 
     .send-btn:hover {
@@ -141,21 +154,82 @@
         }
     }
 
+    /* Responsive Breakpoints */
     @media (max-width: 768px) {
+        .chat-box {
+            min-height: calc(100vh - 300px);
+        }
+        
+        .chat-messages {
+            max-height: calc(100vh - 400px);
+        }
+        
         .user-message {
-            margin-left: 10%;
+            margin-left: 5%;
         }
 
         .bot-message {
-            margin-right: 10%;
+            margin-right: 5%;
         }
 
         .chat-input-container {
             flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .chat-input {
+            width: 100%;
+            min-width: 100%;
         }
 
         .send-btn {
             width: 100%;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .chat-box {
+            padding: 1rem;
+            border-radius: 12px;
+        }
+        
+        .chat-messages {
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .message {
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .user-message {
+            margin-left: 0;
+        }
+        
+        .bot-message {
+            margin-right: 0;
+        }
+    }
+    
+    @media (max-width: 360px) {
+        .chat-box {
+            padding: 0.85rem;
+        }
+        
+        .message {
+            padding: 0.65rem 0.85rem;
+            font-size: 0.85rem;
+        }
+    }
+    
+    @media (max-height: 600px) and (orientation: landscape) {
+        .chat-box {
+            min-height: 300px;
+        }
+        
+        .chat-messages {
+            max-height: 200px;
         }
     }
 </style>

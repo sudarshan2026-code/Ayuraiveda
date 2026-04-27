@@ -1,0 +1,700 @@
+{% extends "base_dynamic.html" %}
+
+{% block title %}Face Analysis - AyurAI Veda{% endblock %}
+
+{% block extra_css %}
+<style>
+    .upload-section {
+        text-align: center;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-radius: 15px;
+        border: 2px dashed rgba(255, 255, 255, 0.3);
+        margin: 2rem 0;
+    }
+    
+    .upload-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 1.5rem;
+    }
+    
+    .upload-btn {
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .upload-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .btn-upload {
+        background: linear-gradient(135deg, #00D9FF, #7B2FFF);
+        color: white;
+    }
+    
+    .btn-camera {
+        background: linear-gradient(135deg, #FF2E97, #FF6B00);
+        color: white;
+    }
+    
+    #imagePreview {
+        max-width: 100%;
+        max-height: 400px;
+        margin: 2rem auto;
+        display: none;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    #videoPreview {
+        max-width: 100%;
+        max-height: 400px;
+        margin: 2rem auto;
+        display: none;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .camera-controls {
+        display: none;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+    
+    .form-group input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        font-size: 1rem;
+        color: #ffffff;
+        font-weight: 600;
+    }
+    
+    .form-group input::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+    
+    .form-group select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        font-size: 1rem;
+        color: #ffffff;
+        font-weight: 600;
+    }
+    
+    .form-group select option {
+        background: rgba(0, 0, 0, 0.95);
+        color: #ffffff;
+    }
+    
+    .results-section {
+        display: none;
+        animation: fadeIn 0.5s;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin: 2rem 0;
+    }
+    
+    .feature-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        padding: 1.5rem;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        text-align: center;
+    }
+    
+    .feature-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin: 0.5rem 0;
+    }
+    
+    .dosha-meters {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin: 2rem 0;
+    }
+    
+    .meter {
+        text-align: center;
+    }
+    
+    .meter h4 {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .meter-bar {
+        background: rgba(0, 0, 0, 0.3);
+        height: 30px;
+        border-radius: 15px;
+        overflow: hidden;
+        position: relative;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .meter-fill {
+        height: 100%;
+        transition: width 1s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #000000;
+        font-weight: 700;
+    }
+    
+    .vata-fill { background: linear-gradient(90deg, #F4A261, #E9C46A); }
+    .pitta-fill { background: linear-gradient(90deg, #E76F51, #FFD166); }
+    .kapha-fill { background: linear-gradient(90deg, #264653, #2A9D8F); }
+    
+    .recommendations {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        padding: 1.5rem;
+        border-radius: 15px;
+        margin-top: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .recommendations ul {
+        list-style: none;
+        padding-left: 0;
+    }
+    
+    .recommendations li {
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-left: 4px solid var(--primary);
+        border-radius: 8px;
+    }
+    
+    .loading-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .loading-content {
+        text-align: center;
+        color: white;
+    }
+    
+    .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top-color: var(--primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    @media (max-width: 768px) {
+        .upload-buttons {
+            flex-direction: column;
+        }
+        
+        .upload-btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="glass-card" style="background: rgba(0, 217, 255, 0.1); border-color: rgba(0, 217, 255, 0.3);">
+    <p style="margin: 0; font-weight: 600;">📸 AI-Powered Face Analysis: Upload or capture your photo for instant Ayurvedic dosha detection</p>
+</div>
+
+<div class="glass-card">
+    <h2>🔬 Face Analysis - Dosha Detection</h2>
+    <p>Our AI analyzes your facial features to determine your Ayurvedic constitution (Prakriti)</p>
+    
+    <!-- Personal Details Form -->
+    <div style="margin: 2rem 0;">
+        <h3>Personal Information</h3>
+        <div class="form-group">
+            <label>Name *</label>
+            <input type="text" id="userName" placeholder="Enter your name" required>
+        </div>
+        <div class="form-group">
+            <label>Age *</label>
+            <input type="number" id="userAge" placeholder="Enter your age" required>
+        </div>
+        <div class="form-group">
+            <label>Gender *</label>
+            <select id="userGender" required>
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Location</label>
+            <input type="text" id="userLocation" placeholder="City, Country">
+        </div>
+    </div>
+    
+    <!-- Image Upload Section -->
+    <div class="upload-section">
+        <h3>📷 Choose Image Input Method</h3>
+        <p>Upload a clear front-facing photo or capture one using your camera</p>
+        
+        <div class="upload-buttons">
+            <button class="upload-btn btn-upload" onclick="triggerFileUpload()">
+                <span>📁</span> Upload Image
+            </button>
+            <button class="upload-btn btn-camera" onclick="startCamera()">
+                <span>📸</span> Use Camera
+            </button>
+        </div>
+        
+        <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="handleFileUpload(event)">
+        
+        <img id="imagePreview" alt="Preview">
+        <video id="videoPreview" autoplay playsinline></video>
+        
+        <div class="camera-controls">
+            <button class="btn btn-primary" onclick="capturePhoto()">📸 Capture Photo</button>
+            <button class="btn btn-secondary" onclick="stopCamera()">❌ Cancel</button>
+        </div>
+        
+        <button id="analyzeBtn" class="btn btn-primary" style="display: none; margin-top: 1rem; width: 100%;" onclick="analyzeImage()">
+            🔬 Analyze Face
+        </button>
+    </div>
+    
+    <div class="glass-card" style="background: rgba(255, 46, 151, 0.1); border-color: rgba(255, 46, 151, 0.3); margin-top: 2rem;">
+        <p style="margin: 0; font-size: 0.9rem;">🔒 <strong>Privacy Notice:</strong> Your image is processed securely and not stored on our servers</p>
+    </div>
+</div>
+
+<!-- Results Section -->
+<div class="glass-card results-section" id="resultsSection">
+    <h2>📊 Analysis Results</h2>
+    
+    <div class="glass-card" style="margin: 2rem 0;">
+        <h3>Detected Features</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div>💡 Skin Brightness</div>
+                <div class="feature-value" id="brightnessValue">-</div>
+            </div>
+            <div class="feature-card">
+                <div>🔴 Redness Level</div>
+                <div class="feature-value" id="rednessValue">-</div>
+            </div>
+            <div class="feature-card">
+                <div>📐 Face Ratio</div>
+                <div class="feature-value" id="ratioValue">-</div>
+            </div>
+            <div class="feature-card">
+                <div>🌟 Skin Texture</div>
+                <div class="feature-value" id="textureValue">-</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="glass-card" style="margin: 2rem 0;">
+        <h3>Dosha Analysis</h3>
+        <p><strong>Dominant Dosha:</strong> <span id="dominantDosha" style="font-size: 1.5rem; font-weight: 700; color: var(--primary);"></span></p>
+        <p><strong>Risk Level:</strong> <span id="riskLevel"></span></p>
+        <p id="explanation" style="margin-top: 1rem; font-style: italic;"></p>
+    </div>
+    
+    <div class="dosha-meters">
+        <div class="meter">
+            <h4>🌬️ Vata</h4>
+            <div class="meter-bar">
+                <div class="meter-fill vata-fill" id="vataFill"></div>
+            </div>
+        </div>
+        <div class="meter">
+            <h4>🔥 Pitta</h4>
+            <div class="meter-bar">
+                <div class="meter-fill pitta-fill" id="pittaFill"></div>
+            </div>
+        </div>
+        <div class="meter">
+            <h4>🌊 Kapha</h4>
+            <div class="meter-bar">
+                <div class="meter-fill kapha-fill" id="kaphaFill"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="recommendations">
+        <h3>🌿 Personalized Recommendations</h3>
+        <ul id="recommendationsList"></ul>
+    </div>
+    
+    <div class="recommendations">
+        <h3>🥗 Diet Recommendations</h3>
+        <h4 style="color: var(--primary); margin-top: 1rem;">✅ Foods to Take:</h4>
+        <ul id="foodsToFavor"></ul>
+        
+        <h4 style="color: var(--accent); margin-top: 1rem;">❌ Foods to Avoid:</h4>
+        <ul id="foodsToAvoid"></ul>
+        
+        <h4 style="color: var(--secondary); margin-top: 1rem;">⏰ Meal Timing:</h4>
+        <ul id="mealTiming"></ul>
+    </div>
+    
+    <div class="recommendations">
+        <h3>🧘 Lifestyle Recommendations</h3>
+        <h4 style="color: var(--primary); margin-top: 1rem;">🌿 Daily Routine:</h4>
+        <ul id="dailyRoutine"></ul>
+        
+        <h4 style="color: var(--secondary); margin-top: 1rem;">💪 Exercise:</h4>
+        <ul id="exercise"></ul>
+        
+        <h4 style="color: var(--accent); margin-top: 1rem;">🌸 Seasonal Care:</h4>
+        <ul id="seasonalCare"></ul>
+    </div>
+    
+    <div style="display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;">
+        <button class="btn btn-primary" onclick="downloadFaceReport()">📥 Download Report</button>
+        <button class="btn btn-secondary" onclick="location.reload()">🔄 New Analysis</button>
+    </div>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+        <div class="spinner"></div>
+        <p>Analyzing your face...</p>
+        <p style="font-size: 0.9rem; opacity: 0.8;">Detecting features and calculating dosha scores</p>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let currentImageData = null;
+    let videoStream = null;
+    let analysisResult = null;
+    
+    function triggerFileUpload() {
+        document.getElementById('fileInput').click();
+    }
+    
+    function handleFileUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.getElementById('imagePreview');
+            img.src = e.target.result;
+            img.style.display = 'block';
+            
+            document.getElementById('videoPreview').style.display = 'none';
+            document.querySelector('.camera-controls').style.display = 'none';
+            document.getElementById('analyzeBtn').style.display = 'block';
+            
+            currentImageData = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+    
+    async function startCamera() {
+        try {
+            // Check if mediaDevices is supported
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                alert('Camera access is not supported in your browser. Please use a modern browser (Chrome, Firefox, Edge) or access via HTTPS.');
+                return;
+            }
+            
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { facingMode: 'user' } 
+            });
+            
+            const video = document.getElementById('videoPreview');
+            video.srcObject = stream;
+            video.style.display = 'block';
+            
+            document.getElementById('imagePreview').style.display = 'none';
+            document.querySelector('.camera-controls').style.display = 'flex';
+            document.getElementById('analyzeBtn').style.display = 'none';
+            
+            videoStream = stream;
+        } catch (error) {
+            let errorMsg = 'Error accessing camera: ' + error.message;
+            if (error.name === 'NotAllowedError') {
+                errorMsg = 'Camera access denied. Please allow camera permissions in your browser settings.';
+            } else if (error.name === 'NotFoundError') {
+                errorMsg = 'No camera found on your device.';
+            } else if (error.name === 'NotReadableError') {
+                errorMsg = 'Camera is already in use by another application.';
+            }
+            alert(errorMsg);
+        }
+    }
+    
+    function capturePhoto() {
+        const video = document.getElementById('videoPreview');
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0);
+        
+        currentImageData = canvas.toDataURL('image/jpeg');
+        
+        const img = document.getElementById('imagePreview');
+        img.src = currentImageData;
+        img.style.display = 'block';
+        
+        stopCamera();
+        
+        document.getElementById('analyzeBtn').style.display = 'block';
+    }
+    
+    function stopCamera() {
+        if (videoStream) {
+            videoStream.getTracks().forEach(track => track.stop());
+            videoStream = null;
+        }
+        
+        document.getElementById('videoPreview').style.display = 'none';
+        document.querySelector('.camera-controls').style.display = 'none';
+    }
+    
+    async function analyzeImage() {
+        if (!currentImageData) {
+            alert('Please upload or capture an image first');
+            return;
+        }
+        
+        // Validate personal details
+        const name = document.getElementById('userName').value.trim();
+        const age = document.getElementById('userAge').value;
+        const gender = document.getElementById('userGender').value;
+        
+        if (!name || !age || !gender) {
+            alert('Please fill in all required personal details');
+            return;
+        }
+        
+        const userData = {
+            name: name,
+            age: age,
+            gender: gender,
+            location: document.getElementById('userLocation').value.trim() || 'Not specified'
+        };
+        
+        // Show loading
+        document.getElementById('loadingOverlay').style.display = 'flex';
+        
+        try {
+            const response = await fetch('/analyze-face', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    image: currentImageData,
+                    user_data: userData
+                })
+            });
+            
+            const result = await response.json();
+            
+            document.getElementById('loadingOverlay').style.display = 'none';
+            
+            if (!result.success) {
+                alert('Error: ' + (result.error || 'Analysis failed'));
+                return;
+            }
+            
+            analysisResult = result;
+            displayResults(result);
+            
+        } catch (error) {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            alert('Error analyzing image: ' + error.message);
+        }
+    }
+    
+    function displayResults(result) {
+        // Display quality enhancement info if available
+        if (result.quality_enhancement) {
+            const qe = result.quality_enhancement;
+            document.getElementById('qualityInfo').style.display = 'block';
+            document.getElementById('originalQuality').textContent = qe.original_quality + '%';
+            document.getElementById('enhancedQuality').textContent = qe.enhanced_quality + '%';
+            document.getElementById('qualityImprovement').textContent = '+' + qe.improvement + '%';
+            
+            if (qe.enhancements_applied && qe.enhancements_applied.length > 0) {
+                document.getElementById('enhancementsApplied').style.display = 'block';
+                const enhList = document.getElementById('enhancementsList');
+                enhList.innerHTML = qe.enhancements_applied.map(e => `<span style="display: inline-block; margin: 0.25rem; padding: 0.5rem 1rem; background: rgba(255, 255, 255, 0.2); border-radius: 20px; font-size: 0.9rem;">${e}</span>`).join('');
+            }
+        }
+        
+        // Display features
+        document.getElementById('brightnessValue').textContent = result.features.brightness.toFixed(1);
+        document.getElementById('rednessValue').textContent = result.features.redness.toFixed(1);
+        document.getElementById('ratioValue').textContent = result.features.face_ratio.toFixed(3);
+        document.getElementById('textureValue').textContent = result.features.texture.toFixed(1);
+        
+        // Display dosha info
+        document.getElementById('dominantDosha').textContent = result.dominant;
+        document.getElementById('riskLevel').textContent = result.risk;
+        document.getElementById('explanation').textContent = result.explanation;
+        
+        // Display dosha meters
+        document.getElementById('vataFill').style.width = result.scores.vata + '%';
+        document.getElementById('vataFill').textContent = result.scores.vata + '%';
+        document.getElementById('pittaFill').style.width = result.scores.pitta + '%';
+        document.getElementById('pittaFill').textContent = result.scores.pitta + '%';
+        document.getElementById('kaphaFill').style.width = result.scores.kapha + '%';
+        document.getElementById('kaphaFill').textContent = result.scores.kapha + '%';
+        
+        // Display recommendations
+        const recList = document.getElementById('recommendationsList');
+        recList.innerHTML = '';
+        result.recommendations.forEach(rec => {
+            const li = document.createElement('li');
+            li.textContent = rec;
+            recList.appendChild(li);
+        });
+        
+        // Display diet suggestions
+        if (result.diet_suggestions) {
+            populateList('foodsToFavor', result.diet_suggestions.foods_to_favor);
+            populateList('foodsToAvoid', result.diet_suggestions.foods_to_avoid);
+            populateList('mealTiming', result.diet_suggestions.meal_timing);
+        }
+        
+        // Display lifestyle tips
+        if (result.lifestyle_tips) {
+            populateList('dailyRoutine', result.lifestyle_tips.daily_routine);
+            populateList('exercise', result.lifestyle_tips.exercise);
+            populateList('seasonalCare', result.lifestyle_tips.seasonal_care);
+        }
+        
+        // Show results section
+        document.getElementById('resultsSection').style.display = 'block';
+        document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    function populateList(elementId, items) {
+        const list = document.getElementById(elementId);
+        list.innerHTML = '';
+        if (items && items.length > 0) {
+            items.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                list.appendChild(li);
+            });
+        }
+    }
+    
+    async function downloadFaceReport() {
+        if (!analysisResult) {
+            alert('No analysis data available');
+            return;
+        }
+        
+        try {
+            // Prepare comprehensive report data
+            const reportData = {
+                dominant: analysisResult.dominant,
+                scores: analysisResult.scores,
+                risk: analysisResult.risk,
+                recommendations: analysisResult.recommendations,
+                diet_suggestions: analysisResult.diet_suggestions,
+                lifestyle_tips: analysisResult.lifestyle_tips,
+                justification: `Face Analysis: ${analysisResult.dominant} dominance detected based on facial features including skin texture (${analysisResult.features.texture.toFixed(1)}), brightness (${analysisResult.features.brightness.toFixed(1)}), and facial structure ratio (${analysisResult.features.face_ratio.toFixed(3)}). ${analysisResult.explanation}`
+            };
+            
+            const response = await fetch('/download-report', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(reportData)
+            });
+            
+            if (!response.ok) {
+                throw new Error('Failed to generate PDF');
+            }
+            
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'AyurAI_Face_Analysis_' + new Date().getTime() + '.pdf';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
+            
+            alert('✅ Report downloaded successfully!');
+            
+        } catch (error) {
+            alert('Error downloading report: ' + error.message);
+        }
+    }
+</script>
+{% endblock %}

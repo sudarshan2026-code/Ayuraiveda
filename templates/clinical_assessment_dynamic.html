@@ -252,8 +252,36 @@
     </div>
 
     <div class="recommendations">
-        <h3>🌿 Clinical Recommendations</h3>
+        <h3>🌿 Personalized Recommendations</h3>
         <ul id="recommendations-list"></ul>
+    </div>
+
+    <div class="recommendations">
+        <h3>🥗 Diet Recommendations</h3>
+        <div id="diet-section">
+            <h4 style="color: var(--primary); margin-top: 1rem;">✅ Foods to Take:</h4>
+            <ul id="foods-to-favor"></ul>
+            
+            <h4 style="color: var(--accent); margin-top: 1rem;">❌ Foods to Avoid:</h4>
+            <ul id="foods-to-avoid"></ul>
+            
+            <h4 style="color: var(--secondary); margin-top: 1rem;">⏰ Meal Timing:</h4>
+            <ul id="meal-timing"></ul>
+        </div>
+    </div>
+
+    <div class="recommendations">
+        <h3>🧘 Lifestyle Recommendations</h3>
+        <div id="lifestyle-section">
+            <h4 style="color: var(--primary); margin-top: 1rem;">🌿 Daily Routine:</h4>
+            <ul id="daily-routine"></ul>
+            
+            <h4 style="color: var(--secondary); margin-top: 1rem;">💪 Exercise:</h4>
+            <ul id="exercise"></ul>
+            
+            <h4 style="color: var(--accent); margin-top: 1rem;">🌸 Seasonal Care:</h4>
+            <ul id="seasonal-care"></ul>
+        </div>
     </div>
 
     <div class="action-buttons">
@@ -314,6 +342,72 @@
             li.textContent = rec;
             recList.appendChild(li);
         });
+        
+        // Display Diet Suggestions
+        if (result.diet_suggestions) {
+            const foodsToFavor = document.getElementById('foods-to-favor');
+            foodsToFavor.innerHTML = '';
+            if (result.diet_suggestions.foods_to_favor) {
+                result.diet_suggestions.foods_to_favor.forEach(food => {
+                    const li = document.createElement('li');
+                    li.textContent = food;
+                    foodsToFavor.appendChild(li);
+                });
+            }
+            
+            const foodsToAvoid = document.getElementById('foods-to-avoid');
+            foodsToAvoid.innerHTML = '';
+            if (result.diet_suggestions.foods_to_avoid) {
+                result.diet_suggestions.foods_to_avoid.forEach(food => {
+                    const li = document.createElement('li');
+                    li.textContent = food;
+                    foodsToAvoid.appendChild(li);
+                });
+            }
+            
+            const mealTiming = document.getElementById('meal-timing');
+            mealTiming.innerHTML = '';
+            if (result.diet_suggestions.meal_timing) {
+                result.diet_suggestions.meal_timing.forEach(timing => {
+                    const li = document.createElement('li');
+                    li.textContent = timing;
+                    mealTiming.appendChild(li);
+                });
+            }
+        }
+        
+        // Display Lifestyle Tips
+        if (result.lifestyle_tips) {
+            const dailyRoutine = document.getElementById('daily-routine');
+            dailyRoutine.innerHTML = '';
+            if (result.lifestyle_tips.daily_routine) {
+                result.lifestyle_tips.daily_routine.forEach(routine => {
+                    const li = document.createElement('li');
+                    li.textContent = routine;
+                    dailyRoutine.appendChild(li);
+                });
+            }
+            
+            const exercise = document.getElementById('exercise');
+            exercise.innerHTML = '';
+            if (result.lifestyle_tips.exercise) {
+                result.lifestyle_tips.exercise.forEach(ex => {
+                    const li = document.createElement('li');
+                    li.textContent = ex;
+                    exercise.appendChild(li);
+                });
+            }
+            
+            const seasonalCare = document.getElementById('seasonal-care');
+            seasonalCare.innerHTML = '';
+            if (result.lifestyle_tips.seasonal_care) {
+                result.lifestyle_tips.seasonal_care.forEach(care => {
+                    const li = document.createElement('li');
+                    li.textContent = care;
+                    seasonalCare.appendChild(li);
+                });
+            }
+        }
         
         document.getElementById('assessment-form').style.display = 'none';
         document.getElementById('results').style.display = 'block';

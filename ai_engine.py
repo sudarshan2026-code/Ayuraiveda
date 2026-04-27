@@ -15,17 +15,21 @@ class TridoshaIntelligenceEngine:
         self._reset_scores()
         self._calculate_dosha_scores(user_data)
         
-        total = sum(self.dosha_weights.values())
+        # Voting logic: max raw score determines dominant dosha
+        raw_scores = self.dosha_weights.copy()
+        dominant = max(raw_scores, key=raw_scores.get)
+        
+        # Calculate percentages for display
+        total = sum(raw_scores.values())
         if total == 0:
             total = 1
         
         scores = {
-            'vata': round((self.dosha_weights['vata'] / total) * 100, 1),
-            'pitta': round((self.dosha_weights['pitta'] / total) * 100, 1),
-            'kapha': round((self.dosha_weights['kapha'] / total) * 100, 1)
+            'vata': round((raw_scores['vata'] / total) * 100, 1),
+            'pitta': round((raw_scores['pitta'] / total) * 100, 1),
+            'kapha': round((raw_scores['kapha'] / total) * 100, 1)
         }
         
-        dominant = max(scores, key=scores.get)
         risk_level = self._calculate_risk(scores[dominant])
         recommendations = self._get_recommendations(dominant, user_data)
         
@@ -123,61 +127,99 @@ class TridoshaIntelligenceEngine:
         return descriptions.get(dosha, '')
     
     def _get_recommendations(self, dosha, data):
-        # Try to get classical recommendations from Ashtanga Hridaya
-        try:
-            from ashtanga_knowledge import AshtangaKnowledge
-            ak = AshtangaKnowledge()
-            
-            # Get symptoms for context
-            symptoms = {
-                'sleep': data.get('sleep'),
-                'digestion': data.get('digestion'),
-                'stress': data.get('stress'),
-                'skin': data.get('skin')
-            }
-            
-            classical_recs = ak.get_recommendations(dosha, symptoms)
-            
-            # Parse into bullet points
-            lines = classical_recs.split('\n')
-            recommendations = []
-            for line in lines:
-                line = line.strip()
-                if line.startswith('•') or line.startswith('-'):
-                    recommendations.append(line.strip('•- '))
-                elif ':' in line and len(line) > 20 and len(line) < 150:
-                    recommendations.append(line)
-            
-            if len(recommendations) >= 4:
-                return recommendations[:8]  # Return top 8 recommendations
-        except Exception as e:
-            print(f"Ashtanga knowledge error: {str(e)}")
-        
-        # Fallback to basic recommendations
+        """Clinical assessment pattern recommendations"""
         recommendations = {
-            'vata': [
-                'Diet: Warm, cooked foods; ghee, nuts, sweet fruits; avoid cold, raw foods',
-                'Yoga: Gentle poses - Child pose, Cat-Cow, Legs-up-the-wall',
-                'Pranayama: Nadi Shodhana (alternate nostril breathing) for 10 minutes daily',
-                'Lifestyle: Regular sleep schedule (10 PM - 6 AM), oil massage, warm baths',
-                'Herbs: Ashwagandha, Brahmi for stress relief',
-                'Avoid: Excessive travel, irregular routines, cold weather exposure'
-            ],
-            'pitta': [
-                'Diet: Cool, fresh foods; cucumber, coconut, sweet fruits; avoid spicy, fried foods',
-                'Yoga: Cooling poses - Moon salutation, Forward bends, Shavasana',
-                'Pranayama: Sheetali (cooling breath) and Sheetkari for 10 minutes',
-                'Lifestyle: Avoid midday sun, practice meditation, maintain work-life balance',
-                'Herbs: Amla, Neem, Aloe vera for cooling effect',
-                'Avoid: Competitive activities, anger triggers, excessive heat'
-            ],
-            'kapha': [
-                'Diet: Light, warm, spicy foods; ginger, turmeric, leafy greens; avoid dairy, sweets',
-                'Yoga: Energizing poses - Sun salutation, Warrior poses, Backbends',
-                'Pranayama: Kapalabhati (skull shining breath) and Bhastrika for energy',
-                'Lifestyle: Wake early (6 AM), regular exercise, avoid daytime sleep',
-                'Herbs: Trikatu, Guggulu for metabolism boost',
-                'Avoid: Sedentary lifestyle, oversleeping, cold/damp environments'
-            ]
+            'vata': {
+                'diet': [
+                    'Favor: Warm, cooked, moist foods with healthy fats (ghee, sesame oil)',
+                    'Include: Sweet fruits (bananas, dates), cooked grains (rice, oats), root vegetables',
+                    'Avoid: Cold, dry, raw foods; excessive caffeine and stimulants',
+                    'Timing: Regular meal times, largest meal at lunch (12-1 PM)'
+                ],
+                'lifestyle': [
+                    'Daily Routine: Wake 6 AM, sleep 10 PM; maintain consistent schedule',
+                    'Abhyanga: Daily warm sesame oil massage before bath',
+                    'Environment: Keep warm, avoid cold winds and air conditioning',
+                    'Rest: 7-8 hours quality sleep in quiet, warm room'
+                ],
+                'yoga_pranayama': [
+                    'Yoga: Gentle, grounding poses - Child pose, Cat-Cow, Legs-up-wall',
+                    'Pranayama: Nadi Shodhana (alternate nostril) 10 min daily',
+                    'Meditation: Grounding practices, body scan meditation',
+                    'Exercise: Gentle walking, swimming, avoid excessive cardio'
+                ],
+                'herbs': [
+                    'Ashwagandha: 500mg twice daily for stress and anxiety',
+                    'Brahmi: For mental clarity and nervous system support',
+                    'Triphala: At bedtime for gentle detox and regularity',
+                    'Dashamula: For Vata pacification and grounding'
+                ]
+            },
+            'pitta': {
+                'diet': [
+                    'Favor: Cool, fresh foods; cucumber, coconut, sweet fruits, leafy greens',
+                    'Include: Cooling spices (coriander, fennel, cardamom), ghee in moderation',
+                    'Avoid: Spicy, fried, acidic, fermented foods; alcohol and red meat',
+                    'Timing: Never skip meals, eat in cool environment, avoid eating when angry'
+                ],
+                'lifestyle': [
+                    'Daily Routine: Wake 5:30 AM, sleep 10:30 PM; avoid midday sun',
+                    'Cooling Practices: Cool showers, moonlight walks, time in nature',
+                    'Work-Life Balance: Avoid overwork, competition, and perfectionism',
+                    'Environment: Stay cool, use cooling colors (blue, green, white)'
+                ],
+                'yoga_pranayama': [
+                    'Yoga: Cooling poses - Moon salutation, Forward bends, Shavasana',
+                    'Pranayama: Sheetali and Sheetkari (cooling breaths) 10 min daily',
+                    'Meditation: Loving-kindness meditation, visualization of cool places',
+                    'Exercise: Swimming, yoga in cool place, moderate intensity'
+                ],
+                'herbs': [
+                    'Amla: Rich in Vitamin C, cooling and rejuvenating',
+                    'Neem: Blood purifier, cooling effect on body',
+                    'Aloe Vera: Cooling, anti-inflammatory, digestive support',
+                    'Shatavari: Cooling tonic, especially for women'
+                ]
+            },
+            'kapha': {
+                'diet': [
+                    'Favor: Light, warm, spicy foods; ginger, turmeric, black pepper, leafy greens',
+                    'Include: Astringent fruits (apples, pomegranate), light proteins, warming spices',
+                    'Avoid: Heavy, oily, sweet foods; dairy products, cold foods, excessive salt',
+                    'Timing: Light breakfast or skip, main meal at lunch, early light dinner'
+                ],
+                'lifestyle': [
+                    'Daily Routine: Wake 5 AM (before sunrise), avoid daytime sleep',
+                    'Activity: Stay physically and mentally active throughout day',
+                    'Dry Brushing: Before shower to stimulate circulation',
+                    'Environment: Bright, warm, stimulating; avoid damp, cold places'
+                ],
+                'yoga_pranayama': [
+                    'Yoga: Energizing poses - Sun salutation, Warrior poses, Backbends',
+                    'Pranayama: Kapalabhati and Bhastrika (energizing breaths) 10 min daily',
+                    'Meditation: Active meditation, walking meditation',
+                    'Exercise: High-intensity cardio, running, weight training, dynamic yoga'
+                ],
+                'herbs': [
+                    'Trikatu: Ginger, black pepper, long pepper for metabolism',
+                    'Guggulu: For weight management and cholesterol',
+                    'Punarnava: Diuretic, reduces water retention',
+                    'Tulsi: Energizing, immune-boosting, respiratory support'
+                ]
+            }
         }
-        return recommendations.get(dosha, [])
+        
+        dosha_recs = recommendations.get(dosha, recommendations['vata'])
+        
+        # Flatten into clinical format
+        clinical_recs = []
+        clinical_recs.append('DIETARY RECOMMENDATIONS:')
+        clinical_recs.extend(dosha_recs['diet'])
+        clinical_recs.append('\nLIFESTYLE MODIFICATIONS:')
+        clinical_recs.extend(dosha_recs['lifestyle'])
+        clinical_recs.append('\nYOGA & PRANAYAMA:')
+        clinical_recs.extend(dosha_recs['yoga_pranayama'])
+        clinical_recs.append('\nHERBAL SUPPORT:')
+        clinical_recs.extend(dosha_recs['herbs'])
+        
+        return clinical_recs

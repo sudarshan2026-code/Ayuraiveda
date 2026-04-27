@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>{% block title %}AyurAI Veda - Time-Aware Ayurvedic Intelligence{% endblock %}</title>
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    
+    <!-- Mobile-Only Responsive CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile-only.css') }}">
     
     <style>
         * {
@@ -13,11 +16,19 @@
             box-sizing: border-box;
         }
 
+        html {
+            font-size: 16px;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             overflow-x: hidden;
             transition: all 1s ease;
             min-height: 100vh;
+            width: 100%;
+            position: relative;
         }
 
         /* Background System */
@@ -53,7 +64,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.45);
+            background: rgba(0, 0, 0, 0.2);
             z-index: -1;
         }
 
@@ -115,120 +126,162 @@
         }
 
         /* Header */
-        .top-bar {
-            position: relative;
-            z-index: 10;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(20px);
-            padding: 0.8rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .top-bar-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .top-bar-left {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        .top-bar-right {
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-align: right;
-        }
-
         .header {
-            position: relative;
-            z-index: 10;
+            position: sticky;
+            top: 0;
+            z-index: 999;
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
 
         .header-content {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 1.5rem 2rem;
+            padding: 1rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 1rem;
             flex-wrap: wrap;
-            gap: 1.5rem;
+        }
+
+        .msme-badge {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: clamp(0.65rem, 1.5vw, 0.75rem);
+            font-weight: 600;
+            white-space: normal;
+            text-align: center;
+            max-width: 90%;
+            overflow: hidden;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-word;
+            line-height: 1.5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-left: auto;
+        }
+        
+        .msme-full {
+            display: inline;
+        }
+        
+        .msme-short {
+            display: none;
         }
 
         .logo-section {
             display: flex;
             align-items: center;
             gap: 1rem;
+            flex-shrink: 0;
         }
 
         .logo-section img {
             height: 50px;
             width: auto;
+            max-width: 50px;
         }
 
         .logo-text h1 {
-            font-size: 2rem;
+            font-size: clamp(1.25rem, 4vw, 2rem);
             font-weight: 700;
             letter-spacing: -1px;
             margin: 0;
+            line-height: 1.2;
         }
 
         .logo-text p {
-            font-size: 0.85rem;
+            font-size: clamp(0.7rem, 2vw, 0.85rem);
             opacity: 0.9;
             margin: 0;
+            line-height: 1.3;
         }
 
         .badge {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            padding: 0.5rem 1.2rem;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            white-space: nowrap;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        /* Language Selector */
+        #languageSelector {
+            display: none;
         }
 
         nav {
             width: 100%;
-            margin-top: 1rem;
+            padding: 1rem 0;
         }
 
         nav ul {
             list-style: none;
             display: flex;
-            gap: 2rem;
+            gap: 1.5rem;
             justify-content: center;
             flex-wrap: wrap;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav li {
+            margin: 0;
         }
 
         nav a {
             text-decoration: none;
             font-weight: 600;
-            font-size: 0.95rem;
-            padding: 0.5rem 1rem;
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            padding: 0.6rem 1.2rem;
             border-radius: 50px;
             transition: all 0.3s ease;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
+            display: inline-block;
+            white-space: nowrap;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         nav a:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.25);
             transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        nav a.active {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--text);
+            transition: all 0.3s ease;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1001;
+        }
+
+        .mobile-menu-toggle:hover {
+            background: rgba(255, 255, 255, 0.25);
         }
 
         /* Main Content */
@@ -237,19 +290,23 @@
             z-index: 1;
             max-width: 1400px;
             margin: 0 auto;
-            padding: 3rem 2rem;
+            padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 3vw, 2rem);
             min-height: calc(100vh - 400px);
+            width: 100%;
         }
 
         .glass-card {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 2.5rem;
+            border-radius: clamp(12px, 3vw, 20px);
+            padding: clamp(1.5rem, 4vw, 2.5rem);
             margin-bottom: 2rem;
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
+            width: 100%;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
         }
 
         .glass-card:hover {
@@ -261,6 +318,13 @@
             margin-bottom: 1.5rem;
             font-weight: 700;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            font-size: clamp(1.25rem, 4vw, 1.75rem);
+            line-height: 1.3;
+        }
+
+        .glass-card h4 {
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
+            line-height: 1.3;
         }
 
         .glass-card p {
@@ -272,15 +336,20 @@
         /* Buttons */
         .btn {
             display: inline-block;
-            padding: 1rem 2.5rem;
+            padding: clamp(0.85rem, 2.5vw, 1rem) clamp(1.5rem, 4vw, 2.5rem);
             border: none;
             border-radius: 50px;
-            font-size: 1rem;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
         }
 
         .btn-primary {
@@ -342,35 +411,6 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
-        /* Language Selector */
-        #languageSelector {
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        #languageSelector:hover {
-            background: rgba(255, 255, 255, 0.25);
-        }
-
-        #languageSelector option {
-            background: rgba(0, 0, 0, 0.95);
-            color: #ffffff;
-            padding: 0.5rem;
-        }
-
-        body.vata #languageSelector,
-        body.pitta #languageSelector,
-        body.kapha #languageSelector {
-            color: var(--text);
-        }
-
         /* Theme Colors */
         body.vata {
             --primary: #F4A261;
@@ -396,8 +436,6 @@
         body.vata .logo-text h1,
         body.vata .logo-text p,
         body.vata nav a,
-        body.vata .top-bar-left,
-        body.vata .top-bar-right,
         body.vata .glass-card,
         body.vata .glass-card p,
         body.vata .glass-card h2,
@@ -422,8 +460,6 @@
         body.pitta .logo-text h1,
         body.pitta .logo-text p,
         body.pitta nav a,
-        body.pitta .top-bar-left,
-        body.pitta .top-bar-right,
         body.pitta .glass-card,
         body.pitta .glass-card p,
         body.pitta .glass-card h2,
@@ -448,8 +484,6 @@
         body.kapha .logo-text h1,
         body.kapha .logo-text p,
         body.kapha nav a,
-        body.kapha .top-bar-left,
-        body.kapha .top-bar-right,
         body.kapha .glass-card,
         body.kapha .glass-card p,
         body.kapha .glass-card h2,
@@ -471,69 +505,335 @@
             font-weight: 700;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .top-bar-content {
-                flex-direction: column;
-                text-align: center;
-                padding: 0 1rem;
-            }
-
-            .top-bar-left {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            .top-bar-right {
-                font-size: 0.65rem;
-                text-align: center;
-            }
-
-            .header-content {
-                flex-direction: column;
-                text-align: center;
-                padding: 1rem;
-            }
-
-            #languageSelector {
-                font-size: 0.8rem;
-                padding: 0.4rem 0.8rem;
-            }
-
-            .logo-text h1 {
-                font-size: 1.5rem;
-            }
-
-            .logo-section img {
-                height: 40px;
-            }
-
-            nav ul {
-                gap: 1rem;
-                font-size: 0.85rem;
-            }
-
+        /* Responsive Breakpoints */
+        
+        /* Large Desktop (1440px+) */
+        @media (min-width: 1440px) {
             .container {
-                padding: 2rem 1rem;
+                max-width: 1400px;
             }
-
-            .glass-card {
-                padding: 1.5rem;
+        }
+        
+        /* Desktop (1024px - 1439px) */
+        @media (max-width: 1439px) {
+            .container {
+                max-width: 1200px;
             }
-
-            .theme-toggle {
+        }
+        
+        /* Tablet Landscape (1024px) */
+        @media (max-width: 1024px) {
+            .header-content {
+                padding: 1rem 1.5rem;
+            }
+            
+            nav ul {
+                gap: 0.75rem;
+            }
+            
+            nav a {
+                padding: 0.5rem 1rem;
+            }
+            
+            .container {
+                max-width: 100%;
+                padding: 2rem 1.5rem;
+            }
+        }
+        
+        /* Tablet Portrait (768px) */
+        @media (max-width: 768px) {
+            .header {
+                position: sticky;
+                top: 0;
+            }
+            
+            .header-content {
+                position: relative;
+                padding: 0.75rem 1rem;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .logo-section {
+                order: 1;
+                flex: 1;
+            }
+            
+            .msme-badge {
                 display: none;
             }
-
+            
+            .mobile-menu-toggle {
+                display: block;
+                order: 3;
+                position: relative;
+                top: auto;
+                right: auto;
+                z-index: 1001;
+            }
+            
+            nav {
+                display: none;
+                order: 4;
+                width: 100%;
+                padding: 0;
+                background: rgba(0, 0, 0, 0.95);
+                backdrop-filter: blur(20px);
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                max-height: calc(100vh - 80px);
+                overflow-y: auto;
+            }
+            
+            nav.active {
+                display: block;
+                animation: slideDown 0.3s ease;
+            }
+            
+            @keyframes slideDown {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 0;
+                padding: 0.5rem;
+            }
+            
+            nav li {
+                width: 100%;
+            }
+            
+            nav a {
+                display: flex;
+                width: 100%;
+                text-align: center;
+                padding: 1rem;
+                margin: 0.25rem 0;
+                border-radius: 8px;
+            }
+            
+            .logo-section img {
+                height: 40px;
+                max-width: 40px;
+            }
+            
+            .container {
+                padding: 1.5rem 1rem;
+            }
+            
+            .glass-card {
+                padding: 1.25rem;
+                border-radius: 12px;
+            }
+            
             .ayur-status {
                 bottom: 1rem;
                 right: 1rem;
-                font-size: 0.75rem;
+                font-size: 0.7rem;
+                padding: 0.5rem 0.85rem;
             }
-
+            
             .btn {
                 width: 100%;
-                text-align: center;
+                padding: 1rem;
+            }
+            
+            footer {
+                padding: 1.5rem 1rem;
+            }
+            
+            footer p {
+                font-size: 0.85rem;
+            }
+        }
+        
+        /* Mobile Landscape (640px) */
+        @media (max-width: 640px) {
+            .logo-text h1 {
+                font-size: 1.25rem;
+            }
+            
+            .logo-text p {
+                font-size: 0.7rem;
+            }
+            
+            .glass-card h2 {
+                font-size: 1.35rem;
+            }
+            
+            .glass-card h3 {
+                font-size: 1.2rem;
+            }
+        }
+        
+        /* Mobile Portrait (480px) */
+        @media (max-width: 480px) {
+            html {
+                font-size: 15px;
+            }
+            
+            .header-content {
+                padding: 0.65rem 0.85rem;
+            }
+            
+            .logo-section {
+                gap: 0.65rem;
+            }
+            
+            .logo-section img {
+                height: 35px;
+                max-width: 35px;
+            }
+            
+            .logo-text h1 {
+                font-size: 1.1rem;
+            }
+            
+            .logo-text p {
+                font-size: 0.65rem;
+            }
+            
+            .mobile-menu-toggle {
+                padding: 0.4rem 0.85rem;
+                font-size: 1.3rem;
+            }
+            
+            .container {
+                padding: 1.25rem 0.85rem;
+            }
+            
+            .glass-card {
+                padding: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .glass-card h2 {
+                font-size: 1.25rem;
+                margin-bottom: 1rem;
+            }
+            
+            .glass-card h3 {
+                font-size: 1.1rem;
+            }
+            
+            .glass-card p {
+                font-size: 0.95rem;
+                line-height: 1.6;
+            }
+            
+            .btn {
+                padding: 0.85rem 1.25rem;
+                font-size: 0.9rem;
+            }
+            
+            .ayur-status {
+                font-size: 0.65rem;
+                padding: 0.4rem 0.7rem;
+                bottom: 0.75rem;
+                right: 0.75rem;
+            }
+            
+            footer {
+                padding: 1.25rem 0.85rem;
+            }
+            
+            footer p {
+                font-size: 0.8rem;
+            }
+        }
+        
+        /* Small Mobile (360px) */
+        @media (max-width: 360px) {
+            html {
+                font-size: 14px;
+            }
+            
+            .logo-section img {
+                height: 32px;
+                max-width: 32px;
+            }
+            
+            .logo-text h1 {
+                font-size: 1rem;
+            }
+            
+            .logo-text p {
+                font-size: 0.6rem;
+            }
+            
+            .container {
+                padding: 1rem 0.75rem;
+            }
+            
+            .glass-card {
+                padding: 0.85rem;
+            }
+        }
+        
+        /* Extra Small Mobile (320px) */
+        @media (max-width: 320px) {
+            html {
+                font-size: 13px;
+            }
+            
+            .logo-section img {
+                height: 30px;
+                max-width: 30px;
+            }
+            
+            .logo-text h1 {
+                font-size: 0.95rem;
+            }
+            
+            .logo-text p {
+                font-size: 0.55rem;
+            }
+        }
+        
+        /* Touch Device Optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            nav a,
+            .btn,
+            .mobile-menu-toggle {
+                min-height: 44px;
+                min-width: 44px;
+            }
+            
+            nav a:active,
+            .btn:active {
+                transform: scale(0.98);
+            }
+        }
+        
+        /* Landscape Orientation */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .header-content {
+                padding: 0.5rem 1rem;
+            }
+            
+            .logo-section img {
+                height: 35px;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .ayur-status {
+                display: none;
             }
         }
     </style>
@@ -543,12 +843,12 @@
 <body>
     <!-- Background System -->
     <div class="bg-container">
-        <div class="bg-image" id="bg-vata-1" style="background-image: url('https://images.unsplash.com/photo-1589998059171-988d887df646?w=1920&q=80');"></div>
-        <div class="bg-image" id="bg-vata-2" style="background-image: url('https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=1920&q=80');"></div>
-        <div class="bg-image" id="bg-pitta-1" style="background-image: url('https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=1920&q=80');"></div>
-        <div class="bg-image" id="bg-pitta-2" style="background-image: url('https://images.unsplash.com/photo-1589998059171-988d887df646?w=1920&q=80');"></div>
-        <div class="bg-image" id="bg-kapha-1" style="background-image: url('https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=1920&q=80');"></div>
-        <div class="bg-image" id="bg-kapha-2" style="background-image: url('https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=1920&q=80');"></div>
+        <div class="bg-image" id="bg-vata-1" style="background-image: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.15)), url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1920&q=80');"></div>
+        <div class="bg-image" id="bg-vata-2" style="background-image: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.15)), url('https://images.unsplash.com/photo-1505576399279-565b52d4ac71?w=1920&q=80');"></div>
+        <div class="bg-image" id="bg-pitta-1" style="background-image: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.15)), url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1920&q=80');"></div>
+        <div class="bg-image" id="bg-pitta-2" style="background-image: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.15)), url('https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=1920&q=80');"></div>
+        <div class="bg-image" id="bg-kapha-1" style="background-image: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.15)), url('https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1920&q=80');"></div>
+        <div class="bg-image" id="bg-kapha-2" style="background-image: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.15)), url('https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=1920&q=80');"></div>
     </div>
     <div class="bg-overlay"></div>
 
@@ -559,47 +859,33 @@
     <!-- Ayurvedic Status Badge -->
     <div class="ayur-status" id="ayur-status">Loading...</div>
 
-    <!-- Top Bar -->
-    <div class="top-bar">
-        <div class="top-bar-content">
-            <div class="top-bar-left">
-                <span>🕉️ Indian Knowledge Systems</span>
-                <span>|</span>
-                <span>Ayurveda + AI</span>
-            </div>
-            <div class="top-bar-right">
-                MSME Registered | Udyam Registration No: UDYAM-GJ-24-0218250 | Government of India
-            </div>
-        </div>
-    </div>
-
     <!-- Header -->
     <header class="header">
         <div class="header-content">
             <div class="logo-section">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="AyurAI Veda Logo">
                 <div class="logo-text">
-                    <h1 data-i18n="title">AyurAI Veda</h1>
-                    <p data-i18n="subtitle">Powered by Tridosha Intelligence Engine</p>
+                    <h1>AyurAI Veda</h1>
+                    <p>Powered by Tridosha Intelligence Engine</p>
                 </div>
             </div>
-            <div style="display: flex; align-items: center; gap: 1rem;">
-                <select id="languageSelector" style="padding: 0.5rem 1rem; border-radius: 25px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); font-weight: 600; cursor: pointer; font-size: 0.9rem;">
-                    <option value="en">English</option>
-                    <option value="hi">हिंदी</option>
-                    <option value="gu">ગુજરાતી</option>
-                </select>
-                <div class="badge" data-i18n="badge">Tridosha Intelligence Engine</div>
+            <div class="msme-badge">
+                <span class="msme-full">MSME Registered | Udyam Registration No: UDYAM-GJ-24-0218250 | Government of India</span>
+                <span class="msme-short">MSME Registered | Udyam Registration No: UDYAM-GJ-24-0218250</span>
             </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+                ☰
+            </button>
         </div>
-        <nav>
+        <nav id="mainNav">
             <ul>
-                <li><a href="/" data-i18n="nav_home">Home</a></li>
-                <li><a href="/about" data-i18n="nav_about">About</a></li>
-                <li><a href="/clinical-assessment" data-i18n="nav_assessment">Clinical Assessment</a></li>
-                <li><a href="/chatbot" data-i18n="nav_chat">AyurVaani Chat</a></li>
-                <li><a href="/contact" data-i18n="nav_contact">Contact</a></li>
-                <li><a href="/feedback" data-i18n="nav_feedback">Feedback</a></li>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/clinical-assessment">Clinical Assessment</a></li>
+                <li><a href="/body-analysis">Face & Body Analysis</a></li>
+                <li><a href="/chatbot">AyurVaani Chat</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/feedback">Feedback</a></li>
             </ul>
         </nav>
     </header>
@@ -705,88 +991,38 @@
         init();
     </script>
 
-    <!-- Multilingual Translation System -->
+    <!-- Mobile Menu Toggle Script -->
     <script>
-        const translations = {
-            en: {
-                title: "AyurAI Veda",
-                subtitle: "Powered by Tridosha Intelligence Engine",
-                badge: "Tridosha Intelligence Engine",
-                nav_home: "Home",
-                nav_about: "About",
-                nav_assessment: "Clinical Assessment",
-                nav_chat: "AyurVaani Chat",
-                nav_contact: "Contact",
-                nav_feedback: "Feedback",
-                footer_copyright: "© 2026 AyurAI Veda. All rights reserved.",
-                footer_tagline: "Reviving Indian Knowledge Systems through Artificial Intelligence",
-                footer_powered: "Powered by Tridosha Intelligence Engine",
-                footer_company: "A Sudarshan Technologies Production",
-                vata_time: "Vata Time",
-                pitta_time: "Pitta Time",
-                kapha_time: "Kapha Time"
-            },
-            hi: {
-                title: "आयुरएआई वेदा",
-                subtitle: "त्रिदोष इंटेलिजेंस इंजन द्वारा संचालित",
-                badge: "त्रिदोष इंटेलिजेंस इंजन",
-                nav_home: "होम",
-                nav_about: "हमारे बारे में",
-                nav_assessment: "क्लिनिकल मूल्यांकन",
-                nav_chat: "आयुरवाणी चैट",
-                nav_contact: "संपर्क करें",
-                nav_feedback: "फीडबैक",
-                footer_copyright: "© 2026 आयुरएआई वेदा. सभी अधिकार सुरक्षित.",
-                footer_tagline: "कृत्रिम बुद्धिमत्ता के माध्यम से भारतीय ज्ञान प्रणालियों को पुनर्जीवित करना",
-                footer_powered: "त्रिदोष इंटेलिजेंस इंजन द्वारा संचालित",
-                footer_company: "एक सुदर्शन टेक्नोलॉजीज प्रोडक्शन",
-                vata_time: "वात समय",
-                pitta_time: "पित्त समय",
-                kapha_time: "कफ समय"
-            },
-            gu: {
-                title: "આયુરએઆઈ વેદા",
-                subtitle: "ત્રિદોષ ઇન્ટેલિજન્સ ઇંજિન દ્વારા સંચાલિત",
-                badge: "ત્રિદોષ ઇન્ટેલિજન્સ ઇંજિન",
-                nav_home: "હોમ",
-                nav_about: "અમારી વિશે",
-                nav_assessment: "ક્લિનિકલ મૂલ્યાંકન",
-                nav_chat: "આયુરવાણી ચેટ",
-                nav_contact: "સંપર્ક કરો",
-                nav_feedback: "ફીડબેક",
-                footer_copyright: "© 2026 આયુરએઆઈ વેદા. બધા અધિકારો રક્ષિત.",
-                footer_tagline: "કૃત્રિમ બુદ્ધિમત્તા દ્વારા ભારતીય જ્ઞાન પ્રણાલીઓને પુનર્જીવિત કરવી",
-                footer_powered: "ત્રિદોષ ઇન્ટેલિજન્સ ઇંજિન દ્વારા સંચાલિત",
-                footer_company: "એક સુદર્શન ટેક્નોલોજીઝ પ્રોડક્શન",
-                vata_time: "વાત સમય",
-                pitta_time: "પિત્ત સમય",
-                kapha_time: "કફ સમય"
-            }
-        };
-
-        function setLanguage(lang) {
-            localStorage.setItem('ayurveda_lang', lang);
-            applyTranslations(lang);
-            document.getElementById('languageSelector').value = lang;
-        }
-
-        function applyTranslations(lang) {
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[lang] && translations[lang][key]) {
-                    el.textContent = translations[lang][key];
-                }
-            });
-        }
-
-        // Initialize language on page load
         document.addEventListener('DOMContentLoaded', function() {
-            const savedLang = localStorage.getItem('ayurveda_lang') || 'en';
-            setLanguage(savedLang);
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const mainNav = document.getElementById('mainNav');
             
-            // Add language selector event listener
-            document.getElementById('languageSelector').addEventListener('change', function() {
-                setLanguage(this.value);
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    mainNav.classList.toggle('active');
+                    this.textContent = mainNav.classList.contains('active') ? '✕' : '☰';
+                });
+            }
+            
+            // Close mobile menu when clicking on a link
+            const navLinks = mainNav.querySelectorAll('a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        mainNav.classList.remove('active');
+                        if (mobileMenuToggle) {
+                            mobileMenuToggle.textContent = '☰';
+                        }
+                    }
+                });
+            });
+            
+            // Highlight active page
+            const currentPath = window.location.pathname;
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+                }
             });
         });
     </script>

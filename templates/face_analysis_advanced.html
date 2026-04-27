@@ -1,0 +1,426 @@
+{% extends "base_dynamic.html" %}
+
+{% block title %}Advanced Face Analysis - AyurAI Veda{% endblock %}
+
+{% block extra_css %}
+<style>
+    .upload-section {
+        text-align: center;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-radius: 15px;
+        border: 2px dashed rgba(255, 255, 255, 0.3);
+        margin: 2rem 0;
+    }
+    
+    .upload-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 1.5rem;
+    }
+    
+    .upload-btn {
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+    }
+    
+    .btn-upload {
+        background: linear-gradient(135deg, #00D9FF, #7B2FFF);
+        color: white;
+    }
+    
+    .btn-camera {
+        background: linear-gradient(135deg, #FF2E97, #FF6B00);
+        color: white;
+    }
+    
+    #imagePreview, #videoPreview {
+        max-width: 100%;
+        max-height: 400px;
+        margin: 2rem auto;
+        display: none;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .camera-controls {
+        display: none;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    
+    .processing-steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin: 2rem 0;
+    }
+    
+    .step-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        padding: 1rem;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        text-align: center;
+    }
+    
+    .step-card img {
+        width: 100%;
+        border-radius: 8px;
+        margin-top: 0.5rem;
+    }
+    
+    .dosha-meters {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin: 2rem 0;
+    }
+    
+    .meter-bar {
+        background: rgba(0, 0, 0, 0.3);
+        height: 30px;
+        border-radius: 15px;
+        overflow: hidden;
+        position: relative;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .meter-fill {
+        height: 100%;
+        transition: width 1s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #000000;
+        font-weight: 700;
+    }
+    
+    .vata-fill { background: linear-gradient(90deg, #F4A261, #E9C46A); }
+    .pitta-fill { background: linear-gradient(90deg, #E76F51, #FFD166); }
+    .kapha-fill { background: linear-gradient(90deg, #264653, #2A9D8F); }
+    
+    .results-section {
+        display: none;
+        animation: fadeIn 0.5s;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .loading-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top-color: var(--primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="glass-card" style="background: rgba(0, 217, 255, 0.1); border-color: rgba(0, 217, 255, 0.3);">
+    <p style="margin: 0; font-weight: 600;">🔬 AI Face Analysis: Upload or capture your photo for instant Ayurvedic dosha detection</p>
+</div>
+
+<div class="glass-card">
+    <h2>📷 Upload or Capture Image</h2>
+    
+    <div class="upload-section">
+        <div class="upload-buttons">
+            <button class="upload-btn btn-upload" onclick="triggerFileUpload()">
+                📁 Upload Image
+            </button>
+            <button class="upload-btn btn-camera" onclick="startCamera()">
+                📸 Use Camera
+            </button>
+        </div>
+        
+        <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="handleFileUpload(event)">
+        
+        <img id="imagePreview" alt="Preview">
+        <video id="videoPreview" autoplay playsinline></video>
+        
+        <div class="camera-controls">
+            <button class="btn btn-primary" onclick="capturePhoto()">📸 Capture</button>
+            <button class="btn btn-secondary" onclick="stopCamera()">❌ Cancel</button>
+        </div>
+        
+        <button id="analyzeBtn" class="btn btn-primary" style="display: none; margin-top: 1rem; width: 100%;" onclick="analyzeImage()">
+            🔬 Analyze Face
+        </button>
+    </div>
+</div>
+
+<!-- Processing Steps (Enhanced Method Only) -->
+<div class="glass-card results-section" id="processingSection">
+    <h2>🔄 Processing Steps</h2>
+    <div class="processing-steps" id="processingSteps"></div>
+</div>
+
+<!-- Results Section -->
+<div class="glass-card results-section" id="resultsSection">
+    <h2>📊 Analysis Results</h2>
+    
+    <div class="glass-card" style="margin: 2rem 0;">
+        <h3>Dosha Analysis</h3>
+        <p><strong>Dominant Dosha:</strong> <span id="dominantDosha" style="font-size: 1.5rem; font-weight: 700; color: var(--primary);"></span></p>
+        <p><strong>Risk Level:</strong> <span id="riskLevel"></span></p>
+        <p id="explanation" style="margin-top: 1rem; font-style: italic;"></p>
+    </div>
+    
+    <div class="dosha-meters">
+        <div class="meter">
+            <h4>🌬️ Vata</h4>
+            <div class="meter-bar">
+                <div class="meter-fill vata-fill" id="vataFill"></div>
+            </div>
+        </div>
+        <div class="meter">
+            <h4>🔥 Pitta</h4>
+            <div class="meter-bar">
+                <div class="meter-fill pitta-fill" id="pittaFill"></div>
+            </div>
+        </div>
+        <div class="meter">
+            <h4>🌊 Kapha</h4>
+            <div class="meter-bar">
+                <div class="meter-fill kapha-fill" id="kaphaFill"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="glass-card" style="margin: 2rem 0;">
+        <h3>🌿 Recommendations</h3>
+        <ul id="recommendationsList"></ul>
+    </div>
+    
+    <div style="display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;">
+        <button class="btn btn-secondary" onclick="location.reload()">🔄 New Analysis</button>
+    </div>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div style="text-align: center; color: white;">
+        <div class="spinner"></div>
+        <p>Analyzing your face...</p>
+        <p style="font-size: 0.9rem; opacity: 0.8;">Processing with <span id="loadingMethod"></span></p>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let currentImageData = null;
+    let videoStream = null;
+    const selectedMethod = 'enhanced'; // Auto-select enhanced method
+    
+    function triggerFileUpload() {
+        document.getElementById('fileInput').click();
+    }
+    
+    function handleFileUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.getElementById('imagePreview');
+            img.src = e.target.result;
+            img.style.display = 'block';
+            
+            document.getElementById('videoPreview').style.display = 'none';
+            document.querySelector('.camera-controls').style.display = 'none';
+            document.getElementById('analyzeBtn').style.display = 'block';
+            
+            currentImageData = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+    
+    async function startCamera() {
+        try {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                alert('Camera not supported. Use HTTPS or modern browser.');
+                return;
+            }
+            
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { facingMode: 'user' } 
+            });
+            
+            const video = document.getElementById('videoPreview');
+            video.srcObject = stream;
+            video.style.display = 'block';
+            
+            document.getElementById('imagePreview').style.display = 'none';
+            document.querySelector('.camera-controls').style.display = 'flex';
+            document.getElementById('analyzeBtn').style.display = 'none';
+            
+            videoStream = stream;
+        } catch (error) {
+            alert('Camera error: ' + error.message);
+        }
+    }
+    
+    function capturePhoto() {
+        const video = document.getElementById('videoPreview');
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0);
+        
+        currentImageData = canvas.toDataURL('image/jpeg');
+        
+        const img = document.getElementById('imagePreview');
+        img.src = currentImageData;
+        img.style.display = 'block';
+        
+        stopCamera();
+        document.getElementById('analyzeBtn').style.display = 'block';
+    }
+    
+    function stopCamera() {
+        if (videoStream) {
+            videoStream.getTracks().forEach(track => track.stop());
+            videoStream = null;
+        }
+        document.getElementById('videoPreview').style.display = 'none';
+        document.querySelector('.camera-controls').style.display = 'none';
+    }
+    
+    async function analyzeImage() {
+        if (!currentImageData) {
+            alert('Please upload or capture an image first');
+            return;
+        }
+        
+        document.getElementById('loadingMethod').textContent = 'Enhanced AI Analysis';
+        document.getElementById('loadingOverlay').style.display = 'flex';
+        
+        const endpoint = '/analyze-face-enhanced';
+        
+        try {
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image: currentImageData })
+            });
+            
+            const result = await response.json();
+            
+            document.getElementById('loadingOverlay').style.display = 'none';
+            
+            if (!result.success) {
+                alert('Error: ' + (result.error || 'Analysis failed'));
+                return;
+            }
+            
+            displayResults(result);
+            
+        } catch (error) {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            alert('Error: ' + error.message);
+        }
+    }
+    
+    function displayResults(result) {
+        // Show processing steps (enhanced method always shows them)
+        if (result.processing_steps) {
+            const stepsContainer = document.getElementById('processingSteps');
+            stepsContainer.innerHTML = '';
+            
+            const steps = result.processing_steps;
+            const stepNames = {
+                'grayscale': '⚫ Grayscale',
+                'equalized': '📊 Histogram Equalized',
+                'sharpened': '🔪 Sharpened',
+                'blurred': '🌫️ Gaussian Blur',
+                'texture': '🔬 Texture Map'
+            };
+            
+            Object.keys(stepNames).forEach(key => {
+                if (steps[key]) {
+                    const stepCard = document.createElement('div');
+                    stepCard.className = 'step-card';
+                    stepCard.innerHTML = `
+                        <h4>${stepNames[key]}</h4>
+                        <img src="${steps[key]}" alt="${key}">
+                    `;
+                    stepsContainer.appendChild(stepCard);
+                }
+            });
+            
+            document.getElementById('processingSection').style.display = 'block';
+        }
+        
+        // Display dosha info
+        document.getElementById('dominantDosha').textContent = result.dominant;
+        document.getElementById('riskLevel').textContent = result.risk || 'N/A';
+        document.getElementById('explanation').textContent = result.explanation || '';
+        
+        // Display dosha meters
+        document.getElementById('vataFill').style.width = result.scores.vata + '%';
+        document.getElementById('vataFill').textContent = result.scores.vata + '%';
+        document.getElementById('pittaFill').style.width = result.scores.pitta + '%';
+        document.getElementById('pittaFill').textContent = result.scores.pitta + '%';
+        document.getElementById('kaphaFill').style.width = result.scores.kapha + '%';
+        document.getElementById('kaphaFill').textContent = result.scores.kapha + '%';
+        
+        // Display recommendations
+        const recList = document.getElementById('recommendationsList');
+        recList.innerHTML = '';
+        if (result.recommendations) {
+            result.recommendations.forEach(rec => {
+                const li = document.createElement('li');
+                li.textContent = rec;
+                li.style.padding = '0.75rem';
+                li.style.marginBottom = '0.5rem';
+                li.style.background = 'rgba(255, 255, 255, 0.1)';
+                li.style.borderLeft = '4px solid var(--primary)';
+                li.style.borderRadius = '8px';
+                recList.appendChild(li);
+            });
+        }
+        
+        // Show results section
+        document.getElementById('resultsSection').style.display = 'block';
+        document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+{% endblock %}

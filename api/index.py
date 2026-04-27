@@ -52,9 +52,655 @@ def comprehensive_assessment():
 def feedback():
     return render_template('feedback_dynamic.html')
 
-@app.route('/dashboard')
-def dashboard():
-    return render_template('dashboard.html')
+@app.route('/face-analysis')
+def face_analysis():
+    return render_template('face_analysis.html')
+
+@app.route('/face-analysis-advanced')
+def face_analysis_advanced():
+    return render_template('face_analysis_advanced.html')
+
+@app.route('/body-analysis')
+def body_analysis():
+    return render_template('body_face_fusion.html')
+
+@app.route('/analyze-face', methods=['POST'])
+def analyze_face():
+    """Analyze face from uploaded image or camera capture with automatic quality enhancement"""
+    try:
+        from face_analysis_engine import FaceAnalysisEngine
+        from image_quality_enhancer import ImageQualityEnhancer
+        import numpy as np
+        
+        data = request.json
+        image_data = data.get('image')
+        user_data = data.get('user_data', {})
+        
+        if not image_data:
+            return jsonify({'success': False, 'error': 'No image provided'})
+        
+        # Step 1: Enhance image quality automatically
+        print("🔍 Analyzing image quality...")
+        enhancer = ImageQualityEnhancer()
+        enhancement_result = enhancer.analyze_and_enhance(image_data, input_type='base64')
+        
+        if not enhancement_result['success']:
+            return jsonify({'success': False, 'error': 'Failed to process image'})
+        
+        enhanced_image = enhancement_result['enhanced_image']
+        quality_report = enhancer.create_quality_report(
+            enhancement_result['original_metrics'],
+            enhancement_result['enhanced_metrics']
+        )
+        
+        print(f"✅ Image quality improved: {quality_report['original_quality']}% → {quality_report['enhanced_quality']}%")
+        print(f"📋 Enhancements applied: {', '.join(quality_report['enhancements_applied']) if quality_report['enhancements_applied'] else 'None needed'}")
+        
+        # Step 2: Initialize face analysis engine
+        engine = FaceAnalysisEngine()
+        
+        # Step 3: Analyze enhanced face
+        result = engine.analyze_face(enhanced_image, input_type='array')
+        
+        if 'error' in result:
+            # If face detection fails, try with original image as fallback
+            print("⚠️ Face detection failed on enhanced image, trying original...")
+            result = engine.analyze_face(image_data, input_type='base64')
+            
+            if 'error' in result:
+                return jsonify({
+                    'success': False, 
+                    'error': result['error'],
+                    'quality_report': quality_report,
+                    'suggestion': 'Please ensure your face is clearly visible and well-lit in the image'
+                })
+        
+        # Convert numpy types to Python native types for JSON serialization
+        def convert_to_native(obj):
+            if isinstance(obj, np.integer):
+                return int(obj)
+            elif isinstance(obj, np.floating):
+                return float(obj)
+            elif isinstance(obj, np.ndarray):
+                return obj.tolist()
+            elif isinstance(obj, dict):
+                return {key: convert_to_native(value) for key, value in obj.items()}
+            elif isinstance(obj, list):
+                return [convert_to_native(item) for item in obj]
+            return obj
+        
+        result = convert_to_native(result)
+        
+        # Add quality enhancement info
+        result['quality_enhancement'] = quality_report
+        result['user_data'] = user_data
+        
+        # Get recommendations based on dominant dosha
+        dominant_lower = result['dominant'].lower()
+        result['recommendations'] = get_recommendations(dominant_lower)
+        result['diet_suggestions'] = get_diet_suggestions(dominant_lower)
+        result['lifestyle_tips'] = get_lifestyle_tips(dominant_lower)
+        
+        return jsonify(result)
+        
+    except Exception as e:
+        print(f"Face analysis error: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'success': False,
+            'error': f'Analysis failed: {str(e)}',
+            'suggestion': 'Please try with a different image or check image format'
+        }), 500
+
+@app.route('/analyze-face-structural', methods=['POST'])
+def analyze_face_structural():
+    """Analyze face using structural pattern analysis (geometry-based)"""
+    try:
+        from structural_face_analysis_simple import StructuralFaceAnalyzer
+        import numpy as np
+        
+        data = request.json
+        image_data = data.get('image')
+        user_data = data.get('user_data', {})
+        
+        if not image_data:
+            return jsonify({'success': False, 'error': 'No image provided'})
+        
+        # Initialize structural face analyzer
+        analyzer = StructuralFaceAnalyzer()
+        
+        # Analyze face from base64 image
+        result = analyzer.analyze_face(image_data, input_type='base64')
+        
+        if 'error' in result:
+            return jsonify({'success': False, 'error': result['error']})
+        
+        # Convert numpy types to Python native types
+        def convert_to_native(obj):
+            if isinstance(obj, np.integer):
+                return int(obj)
+            elif isinstance(obj, np.floating):
+                return float(obj)
+            elif isinstance(obj, np.ndarray):
+                return obj.tolist()
+            elif isinstance(obj, dict):
+                return {key: convert_to_native(value) for key, value in obj.items()}
+            elif isinstance(obj, list):
+                return [convert_to_native(item) for item in obj]
+            return obj
+        
+        result = convert_to_native(result)
+        
+        # Add user data
+        result['user_data'] = user_data
+        result['analysis_type'] = 'Structural Pattern Analysis (OpenCV DNN)'
+        
+        # Get recommendations
+        dominant_lower = result['dominant'].lower()
+        result['recommendations'] = get_recommendations(dominant_lower)
+        result['diet_suggestions'] = get_diet_suggestions(dominant_lower)
+        result['lifestyle_tips'] = get_lifestyle_tips(dominant_lower)
+        
+        return jsonify(result)
+        
+    except Exception as e:
+        print(f"Structural face analysis error: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'success': False,
+            'error': f'Structural analysis failed: {str(e)}'
+        }), 500
+
+@app.route('/extract-facial-regions', methods=['POST'])
+def extract_facial_regions():
+    """Extract facial regions using MediaPipe Face Mesh"""
+    try:
+        from facial_region_extraction import FacialRegionExtractor
+        import numpy as np
+        import cv2
+        import base64
+        
+        data = request.json
+        image_data = data.get('image')
+        
+        if not image_data:
+            return jsonify({'success': False, 'error': 'No image provided'})
+        
+        # Initialize extractor
+        extractor = FacialRegionExtractor()
+        
+        # Load image from base64
+        image = extractor.load_image_from_base64(image_data)
+        if image is None:
+            return jsonify({'success': False, 'error': 'Failed to load image'})
+        
+        # Detect face
+        face_landmarks = extractor.detect_face(image)
+        if face_landmarks is None:
+            return jsonify({'success': False, 'error': 'No face detected'})
+        
+        # Extract landmarks
+        landmarks = extractor.extract_landmarks(face_landmarks, image.shape)
+        
+        # Segment regions
+        regions = extractor.segment_regions(image, landmarks)
+        
+        # Convert regions to base64
+        region_images = {}
+        for region_name, region_img in regions.items():
+            if region_img is not None and region_img.size > 0:
+                # Encode to base64
+                _, buffer = cv2.imencode('.jpg', region_img)
+                region_base64 = base64.b64encode(buffer).decode('utf-8')
+                region_images[region_name] = f"data:image/jpeg;base64,{region_base64}"
+        
+        return jsonify({
+            'success': True,
+            'regions': region_images,
+            'total_regions': len(region_images),
+            'landmark_count': len(landmarks)
+        })
+        
+    except Exception as e:
+        print(f"Facial region extraction error: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'success': False,
+            'error': f'Region extraction failed: {str(e)}'
+        }), 500
+
+@app.route('/analyze-face-enhanced', methods=['POST'])
+def analyze_face_enhanced():
+    """Enhanced face analysis with automatic image quality enhancement and texture detection"""
+    try:
+        import cv2
+        import numpy as np
+        import base64
+        from io import BytesIO
+        from PIL import Image
+        from image_quality_enhancer import ImageQualityEnhancer
+        
+        data = request.json
+        image_data = data.get('image')
+        user_data = data.get('user_data', {})
+        
+        if not image_data:
+            return jsonify({'success': False, 'error': 'No image provided'})
+        
+        # Step 1: Enhance image quality automatically
+        print("🔍 Enhancing image quality...")
+        enhancer = ImageQualityEnhancer()
+        enhancement_result = enhancer.analyze_and_enhance(image_data, input_type='base64')
+        
+        if not enhancement_result['success']:
+            return jsonify({'success': False, 'error': 'Failed to process image'})
+        
+        image = enhancement_result['enhanced_image']
+        quality_report = enhancer.create_quality_report(
+            enhancement_result['original_metrics'],
+            enhancement_result['enhanced_metrics']
+        )
+        
+        print(f"✅ Quality: {quality_report['original_quality']}% → {quality_report['enhanced_quality']}%")
+        
+        # Detect face using OpenCV
+        face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+        
+        if len(faces) == 0:
+            return jsonify({'success': False, 'error': 'No face detected'})
+        
+        # Get largest face
+        face = max(faces, key=lambda f: f[2] * f[3])
+        x, y, w, h = face
+        
+        # Extract face region with padding
+        padding = 20
+        x_min = max(0, x - padding)
+        y_min = max(0, y - padding)
+        x_max = min(image.shape[1], x + w + padding)
+        y_max = min(image.shape[0], y + h + padding)
+        
+        face_region = image[y_min:y_max, x_min:x_max].copy()
+        
+        # Image enhancement pipeline
+        processing_steps = {}
+        
+        # Step 1: Grayscale
+        gray_face = cv2.cvtColor(face_region, cv2.COLOR_BGR2GRAY)
+        _, buffer = cv2.imencode('.jpg', cv2.cvtColor(gray_face, cv2.COLOR_GRAY2BGR))
+        processing_steps['grayscale'] = f"data:image/jpeg;base64,{base64.b64encode(buffer).decode('utf-8')}"
+        
+        # Step 2: Histogram equalization
+        equalized = cv2.equalizeHist(gray_face)
+        _, buffer = cv2.imencode('.jpg', cv2.cvtColor(equalized, cv2.COLOR_GRAY2BGR))
+        processing_steps['equalized'] = f"data:image/jpeg;base64,{base64.b64encode(buffer).decode('utf-8')}"
+        
+        # Step 3: Sharpening
+        kernel_sharpen = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]])
+        sharpened = cv2.filter2D(equalized, -1, kernel_sharpen)
+        _, buffer = cv2.imencode('.jpg', cv2.cvtColor(sharpened, cv2.COLOR_GRAY2BGR))
+        processing_steps['sharpened'] = f"data:image/jpeg;base64,{base64.b64encode(buffer).decode('utf-8')}"
+        
+        # Step 4: Gaussian blur
+        blurred = cv2.GaussianBlur(sharpened, (3, 3), 0)
+        _, buffer = cv2.imencode('.jpg', cv2.cvtColor(blurred, cv2.COLOR_GRAY2BGR))
+        processing_steps['blurred'] = f"data:image/jpeg;base64,{base64.b64encode(buffer).decode('utf-8')}"
+        
+        # Texture extraction
+        laplacian = cv2.Laplacian(blurred, cv2.CV_64F)
+        texture_variance = float(laplacian.var())
+        texture_mean = float(np.abs(laplacian).mean())
+        
+        # Create texture map
+        texture_map = np.abs(laplacian)
+        texture_map = cv2.normalize(texture_map, None, 0, 255, cv2.NORM_MINMAX)
+        texture_map = texture_map.astype(np.uint8)
+        texture_map_colored = cv2.applyColorMap(texture_map, cv2.COLORMAP_JET)
+        _, buffer = cv2.imencode('.jpg', texture_map_colored)
+        processing_steps['texture'] = f"data:image/jpeg;base64,{base64.b64encode(buffer).decode('utf-8')}"
+        
+        # Face structure
+        face_width = x_max - x_min
+        face_height = y_max - y_min
+        face_ratio = face_width / face_height if face_height > 0 else 0
+        
+        # Dosha scoring
+        vata = pitta = kapha = 0
+        
+        # Texture-based scoring
+        if texture_variance > 120:
+            vata += 2
+        elif texture_variance >= 60:
+            pitta += 2
+        else:
+            kapha += 2
+        
+        # Structure-based scoring
+        if face_ratio < 0.75:
+            vata += 2
+        elif face_ratio > 0.9:
+            kapha += 2
+        else:
+            pitta += 2
+        
+        # Additional texture metrics
+        if texture_mean > 15:
+            vata += 1
+        elif texture_mean < 8:
+            kapha += 1
+        else:
+            pitta += 1
+        
+        # Normalization
+        total = vata + pitta + kapha
+        if total > 0:
+            vata_percent = round((vata / total) * 100, 1)
+            pitta_percent = round((pitta / total) * 100, 1)
+            kapha_percent = round((kapha / total) * 100, 1)
+        else:
+            vata_percent = pitta_percent = kapha_percent = 33.3
+        
+        # Determine dominant
+        doshas = {'Vata': vata_percent, 'Pitta': pitta_percent, 'Kapha': kapha_percent}
+        dominant = max(doshas, key=doshas.get)
+        
+        # Risk level
+        max_score = max(vata_percent, pitta_percent, kapha_percent)
+        if max_score >= 50:
+            risk = 'High'
+        elif max_score >= 40:
+            risk = 'Moderate'
+        else:
+            risk = 'Low'
+        
+        # Generate explanation
+        explanation = f"{dominant} dominance detected based on "
+        if dominant == 'Vata':
+            explanation += f"high skin texture variance ({texture_variance:.2f}) indicating rough, dry skin"
+            if face_ratio < 0.75:
+                explanation += f" and narrow facial structure (ratio: {face_ratio:.3f})"
+        elif dominant == 'Pitta':
+            explanation += f"moderate skin texture variance ({texture_variance:.2f})"
+            if 0.75 <= face_ratio <= 0.9:
+                explanation += f" and balanced facial structure (ratio: {face_ratio:.3f})"
+        elif dominant == 'Kapha':
+            explanation += f"low skin texture variance ({texture_variance:.2f}) indicating smooth, oily skin"
+            if face_ratio > 0.9:
+                explanation += f" and wide facial structure (ratio: {face_ratio:.3f})"
+        
+        # Compile result
+        result = {
+            'success': True,
+            'analysis_type': 'Enhanced Texture Analysis with Auto Quality Enhancement',
+            'dominant': dominant,
+            'scores': {
+                'vata': vata_percent,
+                'pitta': pitta_percent,
+                'kapha': kapha_percent
+            },
+            'risk': risk,
+            'texture': {
+                'variance': round(texture_variance, 2),
+                'mean': round(texture_mean, 2)
+            },
+            'structure': {
+                'width': int(face_width),
+                'height': int(face_height),
+                'ratio': round(face_ratio, 3)
+            },
+            'processing_steps': processing_steps,
+            'explanation': explanation,
+            'quality_enhancement': quality_report,
+            'user_data': user_data
+        }
+        
+        # Add recommendations
+        dominant_lower = dominant.lower()
+        result['recommendations'] = get_recommendations(dominant_lower)
+        result['diet_suggestions'] = get_diet_suggestions(dominant_lower)
+        result['lifestyle_tips'] = get_lifestyle_tips(dominant_lower)
+        
+        return jsonify(result)
+        
+    except Exception as e:
+        print(f"Enhanced face analysis error: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'success': False,
+            'error': f'Enhanced analysis failed: {str(e)}'
+        }), 500
+
+@app.route('/analyze-body', methods=['POST'])
+def analyze_body():
+    """Analyze body from uploaded image with automatic quality enhancement"""
+    try:
+        from face_body_detection_extended import FaceBodyDetector
+        from image_quality_enhancer import ImageQualityEnhancer
+        import numpy as np
+        import base64
+        from io import BytesIO
+        from PIL import Image
+        import cv2
+        
+        data = request.json
+        image_data = data.get('image')
+        user_data = data.get('user_data', {})
+        
+        if not image_data:
+            return jsonify({'success': False, 'error': 'No image provided'})
+        
+        # Step 1: Enhance image quality automatically
+        print("🔍 Enhancing image quality for body analysis...")
+        enhancer = ImageQualityEnhancer()
+        enhancement_result = enhancer.analyze_and_enhance(image_data, input_type='base64')
+        
+        if not enhancement_result['success']:
+            return jsonify({'success': False, 'error': 'Failed to process image'})
+        
+        image = enhancement_result['enhanced_image']
+        quality_report = enhancer.create_quality_report(
+            enhancement_result['original_metrics'],
+            enhancement_result['enhanced_metrics']
+        )
+        
+        print(f"✅ Quality improved: {quality_report['original_quality']}% → {quality_report['enhanced_quality']}%")
+        
+        # Initialize detector
+        detector = FaceBodyDetector()
+        
+        # Detect faces and bodies
+        faces = detector.detect_faces(image)
+        bodies = detector.detect_bodies(image)
+        
+        if len(bodies) == 0:
+            return jsonify({'success': False, 'error': 'No body detected. Please ensure full body is visible in the image.'})
+        
+        # Analyze body
+        body_analyses = []
+        for body_bbox in bodies:
+            analysis = detector.analyze_body(body_bbox)
+            body_analyses.append(analysis)
+        
+        # Get first body analysis
+        body_result = body_analyses[0]
+        
+        # Encode result image with bounding boxes
+        result_image = detector.draw_detections(image, faces, bodies)
+        _, buffer = cv2.imencode('.jpg', result_image)
+        result_image_base64 = f"data:image/jpeg;base64,{base64.b64encode(buffer).decode('utf-8')}"
+        
+        # Determine dominant dosha
+        max_score = max(body_result['vata'], body_result['pitta'], body_result['kapha'])
+        if body_result['vata'] == max_score:
+            dominant = 'Vata'
+        elif body_result['pitta'] == max_score:
+            dominant = 'Pitta'
+        else:
+            dominant = 'Kapha'
+        
+        # Calculate percentages
+        total = body_result['vata'] + body_result['pitta'] + body_result['kapha']
+        if total > 0:
+            vata_percent = round((body_result['vata'] / total) * 100, 1)
+            pitta_percent = round((body_result['pitta'] / total) * 100, 1)
+            kapha_percent = round((body_result['kapha'] / total) * 100, 1)
+        else:
+            vata_percent = pitta_percent = kapha_percent = 33.3
+        
+        result = {
+            'success': True,
+            'analysis_type': 'Body Structure Analysis with Auto Quality Enhancement',
+            'dominant': dominant,
+            'scores': {
+                'vata': vata_percent,
+                'pitta': pitta_percent,
+                'kapha': kapha_percent
+            },
+            'body_measurements': {
+                'width': body_result['width'],
+                'height': body_result['height'],
+                'ratio': body_result['ratio']
+            },
+            'result_image': result_image_base64,
+            'faces_detected': len(faces),
+            'bodies_detected': len(bodies),
+            'quality_enhancement': quality_report,
+            'user_data': user_data
+        }
+        
+        # Add recommendations
+        dominant_lower = dominant.lower()
+        result['recommendations'] = get_recommendations(dominant_lower)
+        result['diet_suggestions'] = get_diet_suggestions(dominant_lower)
+        result['lifestyle_tips'] = get_lifestyle_tips(dominant_lower)
+        
+        return jsonify(result)
+        
+    except Exception as e:
+        print(f"Body analysis error: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'success': False,
+            'error': f'Body analysis failed: {str(e)}'
+        }), 500
+
+@app.route('/analyze-face-body-fusion', methods=['POST'])
+def analyze_face_body_fusion():
+    """Perform face-body fusion analysis with automatic quality enhancement"""
+    try:
+        from face_body_detection_extended import FaceBodyDetector
+        from image_quality_enhancer import ImageQualityEnhancer
+        import numpy as np
+        import base64
+        from io import BytesIO
+        from PIL import Image
+        import cv2
+        
+        data = request.json
+        image_data = data.get('image')
+        face_scores = data.get('face_scores')  # {'vata': x, 'pitta': y, 'kapha': z}
+        user_data = data.get('user_data', {})
+        
+        if not image_data:
+            return jsonify({'success': False, 'error': 'No image provided'})
+        
+        if not face_scores:
+            return jsonify({'success': False, 'error': 'Face scores required for fusion'})
+        
+        # Step 1: Enhance image quality automatically
+        print("🔍 Enhancing image quality for fusion analysis...")
+        enhancer = ImageQualityEnhancer()
+        enhancement_result = enhancer.analyze_and_enhance(image_data, input_type='base64')
+        
+        if not enhancement_result['success']:
+            return jsonify({'success': False, 'error': 'Failed to process image'})
+        
+        image = enhancement_result['enhanced_image']
+        quality_report = enhancer.create_quality_report(
+            enhancement_result['original_metrics'],
+            enhancement_result['enhanced_metrics']
+        )
+        
+        print(f"✅ Quality improved: {quality_report['original_quality']}% → {quality_report['enhanced_quality']}%")
+        
+        # Initialize detector
+        detector = FaceBodyDetector()
+        
+        # Detect and analyze body
+        bodies = detector.detect_bodies(image)
+        
+        if len(bodies) == 0:
+            return jsonify({'success': False, 'error': 'No body detected. Please ensure full body is visible in the image with good lighting.'})
+        
+        # Get largest body
+        body_bbox = max(bodies, key=lambda b: b[2] * b[3])
+        
+        # Analyze body
+        body_analysis = detector.analyze_body(body_bbox)
+        
+        # Perform fusion
+        fusion_result = detector.fuse_results(face_scores, body_analysis)
+        
+        # Draw detections on image
+        faces = detector.detect_faces(image)
+        result_image = detector.draw_detections(image, faces, bodies)
+        _, buffer = cv2.imencode('.jpg', result_image)
+        result_image_base64 = f"data:image/jpeg;base64,{base64.b64encode(buffer).decode('utf-8')}"
+        
+        result = {
+            'success': True,
+            'analysis_type': 'Face-Body Fusion Analysis with Auto Quality Enhancement',
+            'dominant': fusion_result['dominant_dosha'],
+            'scores': {
+                'vata': fusion_result['vata_percent'],
+                'pitta': fusion_result['pitta_percent'],
+                'kapha': fusion_result['kapha_percent']
+            },
+            'fusion_details': {
+                'face_weight': '60%',
+                'body_weight': '40%',
+                'face_scores': face_scores,
+                'body_scores': {
+                    'vata': body_analysis['vata'],
+                    'pitta': body_analysis['pitta'],
+                    'kapha': body_analysis['kapha']
+                },
+                'body_measurements': {
+                    'width': body_analysis['width'],
+                    'height': body_analysis['height'],
+                    'ratio': body_analysis['ratio']
+                }
+            },
+            'result_image': result_image_base64,
+            'faces_detected': len(faces),
+            'bodies_detected': len(bodies),
+            'quality_enhancement': quality_report,
+            'user_data': user_data
+        }
+        
+        # Add recommendations
+        dominant_lower = fusion_result['dominant_dosha'].lower()
+        result['recommendations'] = get_recommendations(dominant_lower)
+        result['diet_suggestions'] = get_diet_suggestions(dominant_lower)
+        result['lifestyle_tips'] = get_lifestyle_tips(dominant_lower)
+        
+        return jsonify(result)
+        
+    except Exception as e:
+        print(f"Fusion analysis error: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'success': False,
+            'error': f'Fusion analysis failed: {str(e)}'
+        }), 500
 
 # ============= API ENDPOINTS =============
 
@@ -94,7 +740,19 @@ def analyze():
 def clinical_analyze():
     try:
         data = request.json
+        
+        # Get user details
+        user_data = {
+            'name': data.get('name', 'User'),
+            'age': data.get('age', 'N/A'),
+            'gender': data.get('gender', 'N/A'),
+            'location': data.get('location', 'N/A')
+        }
+        
+        # Perform clinical analysis
         result = analyze_clinical(data)
+        result['raw_answers'] = data  # Store for report generation
+        
         return jsonify(result)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -183,30 +841,57 @@ def send_report_email():
         print(f"Email error: {str(e)}")
         return jsonify({'success': False, 'message': 'An error occurred'}), 500
 
-@app.route('/download-report', methods=['POST'])
-def download_report():
+@app.route('/generate-clinical-report', methods=['POST'])
+def generate_clinical_report_endpoint():
+    """Generate comprehensive clinical report with LLM"""
+    try:
+        from clinical_report_generator import generate_clinical_report
+        
+        data = request.json
+        user_data = data.get('user_data', {})
+        assessment_results = data.get('assessment_results', {})
+        
+        # Generate comprehensive report
+        report = generate_clinical_report(user_data, assessment_results)
+        
+        return jsonify({
+            'success': True,
+            'report': report
+        })
+    except Exception as e:
+        print(f"Report generation error: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@app.route('/download-clinical-report', methods=['POST'])
+def download_clinical_report():
+    """Download clinical report as PDF"""
     try:
         from reportlab.lib.pagesizes import letter
         from reportlab.lib import colors
         from reportlab.lib.units import inch
-        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
         from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-        from reportlab.lib.enums import TA_CENTER, TA_LEFT
+        from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_JUSTIFY
         
         data = request.json
+        report = data.get('report', {})
         
         # Create PDF in memory
         buffer = io.BytesIO()
         doc = SimpleDocTemplate(
             buffer,
             pagesize=letter,
-            rightMargin=72,
-            leftMargin=72,
-            topMargin=72,
-            bottomMargin=18
+            rightMargin=60,
+            leftMargin=60,
+            topMargin=60,
+            bottomMargin=40
         )
         
-        # Container for PDF elements
         elements = []
         styles = getSampleStyleSheet()
         
@@ -214,9 +899,9 @@ def download_report():
         title_style = ParagraphStyle(
             'CustomTitle',
             parent=styles['Heading1'],
-            fontSize=20,
+            fontSize=22,
             textColor=colors.HexColor('#FF9933'),
-            spaceAfter=6,
+            spaceAfter=8,
             alignment=TA_CENTER,
             fontName='Helvetica-Bold'
         )
@@ -224,21 +909,23 @@ def download_report():
         subtitle_style = ParagraphStyle(
             'Subtitle',
             parent=styles['Normal'],
-            fontSize=14,
-            textColor=colors.HexColor('#1a237e'),
+            fontSize=12,
+            textColor=colors.HexColor('#138808'),
             spaceAfter=20,
             alignment=TA_CENTER,
-            fontName='Helvetica'
+            fontName='Helvetica-Bold'
         )
         
-        heading_style = ParagraphStyle(
-            'CustomHeading',
+        section_heading = ParagraphStyle(
+            'SectionHeading',
             parent=styles['Heading2'],
             fontSize=14,
             textColor=colors.HexColor('#1a237e'),
             spaceAfter=10,
             spaceBefore=15,
-            fontName='Helvetica-Bold'
+            fontName='Helvetica-Bold',
+            borderPadding=5,
+            backColor=colors.HexColor('#f5f5f5')
         )
         
         body_style = ParagraphStyle(
@@ -246,82 +933,161 @@ def download_report():
             parent=styles['Normal'],
             fontSize=10,
             spaceAfter=6,
+            fontName='Helvetica',
+            alignment=TA_JUSTIFY
+        )
+        
+        bullet_style = ParagraphStyle(
+            'Bullet',
+            parent=styles['Normal'],
+            fontSize=10,
+            spaceAfter=4,
+            leftIndent=20,
             fontName='Helvetica'
         )
         
-        # Title
-        elements.append(Paragraph("AyurAI Veda", title_style))
-        elements.append(Paragraph("Clinical Assessment Report", subtitle_style))
+        # Header
+        elements.append(Paragraph("🕉️ AyurAI Veda", title_style))
+        elements.append(Paragraph("Ayurvedic Clinical Assessment Report", subtitle_style))
         elements.append(Spacer(1, 0.2*inch))
         
-        # Results Summary
-        elements.append(Paragraph("Assessment Results", heading_style))
+        # Personal Details
+        personal = report.get('personal_details', {})
+        elements.append(Paragraph("👤 Personal Details", section_heading))
         
-        summary_data = [
-            ['Dominant Dosha:', str(data.get('dominant', 'N/A'))],
-            ['Dosha State:', str(data.get('dosha_state', 'N/A'))],
-            ['Agni State:', str(data.get('agni_state', 'N/A'))],
-            ['Ama Status:', str(data.get('ama_status', 'N/A'))],
-            ['Risk Level:', str(data.get('risk', 'N/A'))]
+        personal_data = [
+            ['Name:', str(personal.get('name', 'N/A'))],
+            ['Age:', str(personal.get('age', 'N/A'))],
+            ['Gender:', str(personal.get('gender', 'N/A'))],
+            ['Location:', str(personal.get('location', 'N/A'))],
+            ['Assessment Date:', report.get('timestamp', datetime.now().strftime('%d %B %Y at %I:%M %p'))]
         ]
         
-        summary_table = Table(summary_data, colWidths=[2*inch, 4*inch])
-        summary_table.setStyle(TableStyle([
+        personal_table = Table(personal_data, colWidths=[1.5*inch, 4.5*inch])
+        personal_table.setStyle(TableStyle([
             ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f5f5f5')),
             ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
             ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
             ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
-            ('FONTNAME', (1, 0), (1, -1), 'Helvetica'),
             ('FONTSIZE', (0, 0), (-1, -1), 10),
             ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
             ('TOPPADDING', (0, 0), (-1, -1), 8),
             ('GRID', (0, 0), (-1, -1), 0.5, colors.grey)
         ]))
-        elements.append(summary_table)
+        elements.append(personal_table)
         elements.append(Spacer(1, 0.2*inch))
         
-        # Dosha Distribution
-        elements.append(Paragraph("Dosha Distribution", heading_style))
-        scores = data.get('scores', {})
+        # Dosha Analysis
+        dosha_analysis = report.get('dosha_analysis', {})
+        elements.append(Paragraph("🧠 Dosha Analysis", section_heading))
+        
         dosha_data = [
-            ['Dosha', 'Percentage'],
-            ['Vata', str(scores.get('vata', 0)) + '%'],
-            ['Pitta', str(scores.get('pitta', 0)) + '%'],
-            ['Kapha', str(scores.get('kapha', 0)) + '%']
+            ['Dominant Dosha:', str(dosha_analysis.get('dominant_dosha', 'N/A'))],
+            ['Secondary Dosha:', str(dosha_analysis.get('secondary_dosha', 'N/A'))],
+            ['Current Imbalance:', str(dosha_analysis.get('vikriti', 'N/A'))]
         ]
         
-        dosha_table = Table(dosha_data, colWidths=[3*inch, 3*inch])
+        dosha_table = Table(dosha_data, colWidths=[2*inch, 4*inch])
         dosha_table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#1a237e')),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+            ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#fff3e0')),
+            ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
             ('FONTSIZE', (0, 0), (-1, -1), 10),
             ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
             ('TOPPADDING', (0, 0), (-1, -1), 8),
-            ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
-            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#f9f9f9')])
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.grey)
         ]))
         elements.append(dosha_table)
+        elements.append(Spacer(1, 0.1*inch))
+        
+        explanation = dosha_analysis.get('explanation', '')
+        if explanation:
+            elements.append(Paragraph(explanation, body_style))
         elements.append(Spacer(1, 0.2*inch))
         
-        # Clinical Justification
-        if data.get('justification'):
-            elements.append(Paragraph("Clinical Justification", heading_style))
-            justification_text = str(data['justification']).replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-            elements.append(Paragraph(justification_text, body_style))
-            elements.append(Spacer(1, 0.15*inch))
+        # Diet Recommendations
+        diet = report.get('diet_recommendations', {})
+        elements.append(Paragraph("🥗 Diet Recommendations", section_heading))
         
-        # Recommendations
-        elements.append(Paragraph("Personalized Recommendations", heading_style))
-        recommendations = data.get('recommendations', [])
-        for i, rec in enumerate(recommendations[:8], 1):  # Limit to 8 recommendations
-            rec_text = str(rec).replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-            elements.append(Paragraph(f"{i}. {rec_text}", body_style))
-            elements.append(Spacer(1, 0.05*inch))
+        elements.append(Paragraph("<b>✅ Foods to Take:</b>", body_style))
+        for food in diet.get('foods_to_take', []):
+            elements.append(Paragraph(f"• {food}", bullet_style))
+        elements.append(Spacer(1, 0.1*inch))
         
+        elements.append(Paragraph("<b>❌ Foods to Avoid:</b>", body_style))
+        for food in diet.get('foods_to_avoid', []):
+            elements.append(Paragraph(f"• {food}", bullet_style))
+        elements.append(Spacer(1, 0.1*inch))
+        
+        elements.append(Paragraph("<b>💡 Eating Guidelines:</b>", body_style))
+        for guideline in diet.get('eating_guidelines', []):
+            elements.append(Paragraph(f"• {guideline}", bullet_style))
         elements.append(Spacer(1, 0.2*inch))
+        
+        # Lifestyle Recommendations
+        lifestyle = report.get('lifestyle_recommendations', {})
+        elements.append(Paragraph("🧘 Lifestyle Recommendations", section_heading))
+        
+        elements.append(Paragraph("<b>🌿 Daily Routine (Dinacharya):</b>", body_style))
+        for routine in lifestyle.get('daily_routine', []):
+            elements.append(Paragraph(f"• {routine}", bullet_style))
+        elements.append(Spacer(1, 0.1*inch))
+        
+        practices = lifestyle.get('practices', {})
+        if practices.get('yoga'):
+            elements.append(Paragraph("<b>🧘♂️ Yoga Practices:</b>", body_style))
+            for yoga in practices['yoga']:
+                elements.append(Paragraph(f"• {yoga}", bullet_style))
+            elements.append(Spacer(1, 0.1*inch))
+        
+        if practices.get('pranayama'):
+            elements.append(Paragraph("<b>🌬️ Pranayama:</b>", body_style))
+            for prana in practices['pranayama']:
+                elements.append(Paragraph(f"• {prana}", bullet_style))
+            elements.append(Spacer(1, 0.1*inch))
+        
+        if practices.get('meditation'):
+            elements.append(Paragraph("<b>🧘 Meditation:</b>", body_style))
+            for med in practices['meditation']:
+                elements.append(Paragraph(f"• {med}", bullet_style))
+        elements.append(Spacer(1, 0.2*inch))
+        
+        # Herbal Support
+        herbal = report.get('herbal_support', {})
+        elements.append(Paragraph("🌱 Herbal Support", section_heading))
+        
+        elements.append(Paragraph("<b>🌿 Recommended Herbs:</b>", body_style))
+        for herb in herbal.get('recommended_herbs', []):
+            elements.append(Paragraph(f"• {herb}", bullet_style))
+        elements.append(Spacer(1, 0.1*inch))
+        
+        elements.append(Paragraph("<b>💊 Usage Guidance:</b>", body_style))
+        for usage in herbal.get('usage_guidance', []):
+            elements.append(Paragraph(f"• {usage}", bullet_style))
+        elements.append(Spacer(1, 0.2*inch))
+        
+        # Wellness Advice
+        wellness = report.get('wellness_advice', {})
+        elements.append(Paragraph("🧭 Additional Wellness Advice", section_heading))
+        
+        if wellness.get('seasonal_tips'):
+            elements.append(Paragraph("<b>Seasonal Care (Ritucharya):</b>", body_style))
+            for tip in wellness['seasonal_tips']:
+                elements.append(Paragraph(f"• {tip}", bullet_style))
+            elements.append(Spacer(1, 0.1*inch))
+        
+        if wellness.get('stress_management'):
+            elements.append(Paragraph("<b>Stress Management:</b>", body_style))
+            for tip in wellness['stress_management']:
+                elements.append(Paragraph(f"• {tip}", bullet_style))
+            elements.append(Spacer(1, 0.1*inch))
+        
+        if wellness.get('digestive_care'):
+            elements.append(Paragraph("<b>Digestive Care:</b>", body_style))
+            for tip in wellness['digestive_care']:
+                elements.append(Paragraph(f"• {tip}", bullet_style))
+        elements.append(Spacer(1, 0.3*inch))
         
         # Disclaimer
         disclaimer_style = ParagraphStyle(
@@ -331,11 +1097,11 @@ def download_report():
             textColor=colors.HexColor('#d32f2f'),
             leftIndent=10,
             rightIndent=10,
-            fontName='Helvetica'
+            fontName='Helvetica',
+            alignment=TA_JUSTIFY
         )
         elements.append(Paragraph(
-            "<b>Important Disclaimer:</b> This report provides educational and preventive health insights only. "
-            "It is NOT a medical diagnosis. Always consult qualified healthcare professionals for medical advice.",
+            "<b>⚠️ Important Disclaimer:</b> " + report.get('disclaimer', ''),
             disclaimer_style
         ))
         
@@ -350,9 +1116,325 @@ def download_report():
             textColor=colors.HexColor('#666666'),
             fontName='Helvetica'
         )
-        elements.append(Paragraph("AyurAI Veda | Ancient Wisdom. Intelligent Health.", footer_style))
+        elements.append(Paragraph("🌿 AyurAI Veda | Ancient Wisdom. Intelligent Health.", footer_style))
+        elements.append(Paragraph("Powered by Tridosha Intelligence Engine™", footer_style))
+        
+        # Build PDF
+        doc.build(elements)
+        
+        # Get PDF data
+        pdf_data = buffer.getvalue()
+        buffer.close()
+        
+        # Create new buffer with PDF data
+        output = io.BytesIO(pdf_data)
+        output.seek(0)
+        
+        return send_file(
+            output,
+            mimetype='application/pdf',
+            as_attachment=True,
+            download_name=f'AyurAI_Clinical_Report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.pdf'
+        )
+        
+    except Exception as e:
+        print(f"PDF generation error: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': f'Failed to generate PDF: {str(e)}'}), 500
+@app.route('/download-report', methods=['POST'])
+def download_report():
+    try:
+        from reportlab.lib.pagesizes import letter, A4
+        from reportlab.lib import colors
+        from reportlab.lib.units import inch
+        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, Image
+        from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+        from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_JUSTIFY
+        from reportlab.graphics.shapes import Drawing, Rect, String
+        from reportlab.graphics.charts.barcharts import VerticalBarChart
+        from reportlab.graphics import renderPDF
+        
+        data = request.json
+        
+        # Create PDF in memory
+        buffer = io.BytesIO()
+        doc = SimpleDocTemplate(
+            buffer,
+            pagesize=letter,
+            rightMargin=50,
+            leftMargin=50,
+            topMargin=50,
+            bottomMargin=30
+        )
+        
+        elements = []
+        styles = getSampleStyleSheet()
+        
+        # Custom styles
+        title_style = ParagraphStyle(
+            'CustomTitle',
+            parent=styles['Heading1'],
+            fontSize=24,
+            textColor=colors.HexColor('#FF9933'),
+            spaceAfter=8,
+            alignment=TA_CENTER,
+            fontName='Helvetica-Bold'
+        )
+        
+        subtitle_style = ParagraphStyle(
+            'Subtitle',
+            parent=styles['Normal'],
+            fontSize=14,
+            textColor=colors.HexColor('#138808'),
+            spaceAfter=20,
+            alignment=TA_CENTER,
+            fontName='Helvetica-Bold'
+        )
+        
+        section_heading = ParagraphStyle(
+            'SectionHeading',
+            parent=styles['Heading2'],
+            fontSize=13,
+            textColor=colors.white,
+            spaceAfter=10,
+            spaceBefore=15,
+            fontName='Helvetica-Bold',
+            backColor=colors.HexColor('#1a237e'),
+            borderPadding=8
+        )
+        
+        body_style = ParagraphStyle(
+            'CustomBody',
+            parent=styles['Normal'],
+            fontSize=10,
+            spaceAfter=6,
+            fontName='Helvetica',
+            alignment=TA_JUSTIFY
+        )
+        
+        bullet_style = ParagraphStyle(
+            'Bullet',
+            parent=styles['Normal'],
+            fontSize=10,
+            spaceAfter=4,
+            leftIndent=20,
+            fontName='Helvetica'
+        )
+        
+        # Header
+        elements.append(Paragraph("🕉️ AyurAI Veda™", title_style))
+        elements.append(Paragraph("Tridosha Intelligence Engine™ Report", subtitle_style))
+        elements.append(Spacer(1, 0.3*inch))
+        
+        # Assessment Summary Box
+        summary_data = [
+            ['Assessment Date:', datetime.now().strftime('%d %B %Y at %I:%M %p')],
+            ['Dominant Dosha:', str(data.get('dominant', 'N/A'))],
+            ['Risk Level:', str(data.get('risk', 'N/A'))]
+        ]
+        
+        if data.get('dosha_state'):
+            summary_data.append(['Dosha State:', str(data.get('dosha_state'))])
+        if data.get('agni_state'):
+            summary_data.append(['Agni State:', str(data.get('agni_state'))])
+        if data.get('ama_status'):
+            summary_data.append(['Ama Status:', str(data.get('ama_status'))])
+        
+        summary_table = Table(summary_data, colWidths=[2*inch, 4.5*inch])
+        summary_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (0, -1), colors.HexColor('#f5f5f5')),
+            ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 10),
+            ('TOPPADDING', (0, 0), (-1, -1), 10),
+            ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+            ('BOX', (0, 0), (-1, -1), 2, colors.HexColor('#1a237e'))
+        ]))
+        elements.append(summary_table)
+        elements.append(Spacer(1, 0.3*inch))
+        
+        # Dosha Distribution with Visual Meters
+        elements.append(Paragraph("⚖️ DOSHA DISTRIBUTION ANALYSIS", section_heading))
+        elements.append(Spacer(1, 0.15*inch))
+        
+        scores = data.get('scores', {})
+        vata_score = scores.get('vata', 0)
+        pitta_score = scores.get('pitta', 0)
+        kapha_score = scores.get('kapha', 0)
+        
+        # Create visual bar chart
+        drawing = Drawing(400, 200)
+        chart = VerticalBarChart()
+        chart.x = 50
+        chart.y = 50
+        chart.height = 120
+        chart.width = 300
+        chart.data = [[vata_score, pitta_score, kapha_score]]
+        chart.categoryAxis.categoryNames = ['Vata', 'Pitta', 'Kapha']
+        chart.bars[0].fillColor = colors.HexColor('#9C27B0')
+        chart.bars[1].fillColor = colors.HexColor('#FF5722')
+        chart.bars[2].fillColor = colors.HexColor('#4CAF50')
+        chart.valueAxis.valueMin = 0
+        chart.valueAxis.valueMax = 100
+        chart.valueAxis.valueStep = 20
+        chart.categoryAxis.labels.fontSize = 10
+        chart.valueAxis.labels.fontSize = 8
+        drawing.add(chart)
+        elements.append(drawing)
+        elements.append(Spacer(1, 0.15*inch))
+        
+        # Dosha percentage table
+        dosha_data = [
+            ['Dosha', 'Percentage', 'Status'],
+            ['🌬️ Vata (Air + Space)', f"{vata_score}%", '✓ Dominant' if data.get('dominant', '').lower().startswith('vata') else ''],
+            ['🔥 Pitta (Fire + Water)', f"{pitta_score}%", '✓ Dominant' if data.get('dominant', '').lower().startswith('pitta') else ''],
+            ['🌊 Kapha (Water + Earth)', f"{kapha_score}%", '✓ Dominant' if data.get('dominant', '').lower().startswith('kapha') else '']
+        ]
+        
+        dosha_table = Table(dosha_data, colWidths=[2.5*inch, 1.5*inch, 2.5*inch])
+        dosha_table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#1a237e')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 10),
+            ('TOPPADDING', (0, 0), (-1, -1), 10),
+            ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#f9f9f9')])
+        ]))
+        elements.append(dosha_table)
+        elements.append(Spacer(1, 0.2*inch))
+        
+        # Clinical Justification
+        if data.get('justification'):
+            elements.append(Paragraph("🔬 CLINICAL ASSESSMENT", section_heading))
+            elements.append(Spacer(1, 0.1*inch))
+            justification_text = str(data['justification']).replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+            elements.append(Paragraph(justification_text, body_style))
+            elements.append(Spacer(1, 0.2*inch))
+        
+        # Recommendations Section
+        recommendations = data.get('recommendations', [])
+        if recommendations:
+            elements.append(Paragraph("📋 PERSONALIZED RECOMMENDATIONS", section_heading))
+            elements.append(Spacer(1, 0.1*inch))
+            
+            current_category = None
+            for rec in recommendations:
+                rec_text = str(rec).strip()
+                
+                # Check if it's a category header
+                if rec_text.endswith(':') and rec_text.isupper():
+                    if current_category:
+                        elements.append(Spacer(1, 0.1*inch))
+                    category_style = ParagraphStyle(
+                        'Category',
+                        parent=body_style,
+                        fontSize=11,
+                        textColor=colors.HexColor('#1a237e'),
+                        fontName='Helvetica-Bold',
+                        spaceAfter=6,
+                        spaceBefore=8
+                    )
+                    elements.append(Paragraph(rec_text, category_style))
+                    current_category = rec_text
+                else:
+                    # Regular recommendation
+                    rec_clean = rec_text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+                    elements.append(Paragraph(f"• {rec_clean}", bullet_style))
+            
+            elements.append(Spacer(1, 0.2*inch))
+        
+        # Diet Suggestions
+        diet_suggestions = data.get('diet_suggestions', {})
+        if diet_suggestions:
+            elements.append(Paragraph("🥗 DIETARY GUIDELINES", section_heading))
+            elements.append(Spacer(1, 0.1*inch))
+            
+            if diet_suggestions.get('foods_to_favor'):
+                elements.append(Paragraph("<b>✅ Foods to Favor:</b>", body_style))
+                for food in diet_suggestions['foods_to_favor']:
+                    elements.append(Paragraph(f"• {food}", bullet_style))
+                elements.append(Spacer(1, 0.1*inch))
+            
+            if diet_suggestions.get('foods_to_avoid'):
+                elements.append(Paragraph("<b>❌ Foods to Avoid:</b>", body_style))
+                for food in diet_suggestions['foods_to_avoid']:
+                    elements.append(Paragraph(f"• {food}", bullet_style))
+                elements.append(Spacer(1, 0.1*inch))
+            
+            if diet_suggestions.get('meal_timing'):
+                elements.append(Paragraph("<b>⏰ Meal Timing:</b>", body_style))
+                for timing in diet_suggestions['meal_timing']:
+                    elements.append(Paragraph(f"• {timing}", bullet_style))
+            
+            elements.append(Spacer(1, 0.2*inch))
+        
+        # Lifestyle Tips
+        lifestyle_tips = data.get('lifestyle_tips', {})
+        if lifestyle_tips:
+            elements.append(Paragraph("🧘 LIFESTYLE MODIFICATIONS", section_heading))
+            elements.append(Spacer(1, 0.1*inch))
+            
+            if lifestyle_tips.get('daily_routine'):
+                elements.append(Paragraph("<b>📅 Daily Routine (Dinacharya):</b>", body_style))
+                for routine in lifestyle_tips['daily_routine']:
+                    elements.append(Paragraph(f"• {routine}", bullet_style))
+                elements.append(Spacer(1, 0.1*inch))
+            
+            if lifestyle_tips.get('exercise'):
+                elements.append(Paragraph("<b>💪 Exercise Recommendations:</b>", body_style))
+                for exercise in lifestyle_tips['exercise']:
+                    elements.append(Paragraph(f"• {exercise}", bullet_style))
+                elements.append(Spacer(1, 0.1*inch))
+            
+            if lifestyle_tips.get('seasonal_care'):
+                elements.append(Paragraph("<b>🌦️ Seasonal Care (Ritucharya):</b>", body_style))
+                for care in lifestyle_tips['seasonal_care']:
+                    elements.append(Paragraph(f"• {care}", bullet_style))
+            
+            elements.append(Spacer(1, 0.3*inch))
+        
+        # Disclaimer Box
+        disclaimer_style = ParagraphStyle(
+            'Disclaimer',
+            parent=styles['Normal'],
+            fontSize=8,
+            textColor=colors.HexColor('#d32f2f'),
+            leftIndent=10,
+            rightIndent=10,
+            fontName='Helvetica',
+            alignment=TA_JUSTIFY,
+            backColor=colors.HexColor('#ffebee'),
+            borderPadding=10
+        )
+        elements.append(Paragraph(
+            "<b>⚠️ IMPORTANT MEDICAL DISCLAIMER:</b> This report provides educational and preventive health insights based on Ayurvedic principles only. "
+            "It is NOT a medical diagnosis and should not replace professional medical advice, diagnosis, or treatment. "
+            "Always consult qualified healthcare professionals for medical concerns. The Tridosha Intelligence Engine™ is designed for wellness education purposes.",
+            disclaimer_style
+        ))
+        
+        elements.append(Spacer(1, 0.3*inch))
+        
+        # Footer
+        footer_style = ParagraphStyle(
+            'Footer',
+            parent=styles['Normal'],
+            fontSize=9,
+            alignment=TA_CENTER,
+            textColor=colors.HexColor('#666666'),
+            fontName='Helvetica'
+        )
+        elements.append(Paragraph("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", footer_style))
+        elements.append(Paragraph("🌿 AyurAI Veda™ | Ancient Wisdom. Intelligent Health.", footer_style))
+        elements.append(Paragraph("Powered by Tridosha Intelligence Engine™ | NEP 2020 Aligned", footer_style))
         timestamp = datetime.now().strftime('%d %B %Y at %I:%M %p')
-        elements.append(Paragraph(f"Report generated on {timestamp}", footer_style))
+        elements.append(Paragraph(f"Report Generated: {timestamp}", footer_style))
         
         # Build PDF
         doc.build(elements)

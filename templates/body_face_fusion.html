@@ -1,0 +1,835 @@
+{% extends "base_dynamic.html" %}
+
+{% block title %}Face & Body Fusion Analysis | AyurAI Veda{% endblock %}
+
+{% block extra_css %}
+<style>
+    .upload-section {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        margin-bottom: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .upload-area {
+        border: 3px dashed var(--primary);
+        border-radius: 15px;
+        padding: 60px 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .upload-area:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: var(--accent);
+        transform: translateY(-2px);
+    }
+
+    .upload-icon {
+        font-size: 80px;
+        margin-bottom: 20px;
+    }
+
+    #imagePreview {
+        max-width: 100%;
+        max-height: 500px;
+        margin: 20px auto;
+        display: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .analyze-btn {
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: white;
+        border: none;
+        padding: 18px 50px;
+        font-size: 20px;
+        font-weight: bold;
+        border-radius: 50px;
+        cursor: pointer;
+        margin-top: 20px;
+        display: none;
+        transition: all 0.3s;
+    }
+
+    .analyze-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    .loading {
+        display: none;
+        text-align: center;
+        padding: 60px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .spinner {
+        border: 6px solid rgba(255, 255, 255, 0.3);
+        border-top: 6px solid var(--primary);
+        border-radius: 50%;
+        width: 80px;
+        height: 80px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 30px;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .results-section {
+        display: none;
+    }
+
+    .results-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 30px;
+        margin-bottom: 30px;
+    }
+
+    .measurements-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin: 20px 0;
+    }
+
+    .measurement-box {
+        background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .measurement-value {
+        font-size: 28px;
+        font-weight: bold;
+        color: var(--primary);
+        margin: 10px 0;
+    }
+
+    .measurement-label {
+        font-size: 13px;
+        text-transform: uppercase;
+        opacity: 0.8;
+    }
+
+    .dosha-meter {
+        margin: 20px 0;
+    }
+
+    .meter-label {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .meter-bar {
+        height: 35px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .meter-fill {
+        height: 100%;
+        transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 15px;
+        color: white;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .vata-fill { background: linear-gradient(90deg, #9C27B0, #E1BEE7); }
+    .pitta-fill { background: linear-gradient(90deg, #FF5722, #FFCCBC); }
+    .kapha-fill { background: linear-gradient(90deg, #4CAF50, #C8E6C9); }
+
+    .fusion-card {
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        color: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .fusion-title {
+        font-size: 32px;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    .fusion-dominant {
+        font-size: 48px;
+        font-weight: bold;
+        margin: 20px 0;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .fusion-details {
+        background: rgba(255,255,255,0.2);
+        padding: 20px;
+        border-radius: 12px;
+        margin-top: 20px;
+    }
+
+    .recommendation-item {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 18px;
+        margin: 12px 0;
+        border-left: 5px solid var(--accent);
+        border-radius: 8px;
+        transition: all 0.3s;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .recommendation-item:hover {
+        transform: translateX(5px);
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .result-image {
+        max-width: 100%;
+        border-radius: 12px;
+        margin: 20px 0;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 3px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .card-icon {
+        font-size: 48px;
+    }
+
+    .card-title {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+        .results-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .measurements-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="text-align: center; margin-bottom: 3rem; animation: fadeInDown 1s ease;">
+    <h2 style="font-size: 3rem; font-weight: 700; margin-bottom: 1rem;">🧘 Face & Body Fusion Analysis</h2>
+    <p style="font-size: 1.2rem; opacity: 0.9; max-width: 800px; margin: 0 auto;">
+        Upload ONE full-body image for complete Tridosha analysis combining facial features and body structure
+    </p>
+</div>
+
+<div class="upload-section" style="animation: fadeInUp 1s ease 0.3s both;">
+    <div class="upload-area" id="uploadArea">
+        <div class="upload-icon">📸</div>
+        <h2>Click to Upload or Drag & Drop</h2>
+        <p style="margin-top: 10px; opacity: 0.8;">Upload a full-body image (JPG, PNG, JPEG)</p>
+        <input type="file" id="imageInput" accept="image/*" style="display: none;">
+    </div>
+    <img id="imagePreview" alt="Preview">
+    <button class="analyze-btn" id="analyzeBtn">🔍 Analyze Face & Body</button>
+</div>
+
+<div class="glass-card" style="animation: fadeInUp 1s ease 0.6s both;">
+    <strong style="font-size: 18px;">📌 Tips for Best Results:</strong>
+    <ul style="margin: 15px 0 0 25px;">
+        <li>✅ Ensure full body AND face are clearly visible</li>
+        <li>✅ Stand straight with arms at sides</li>
+        <li>✅ Use good lighting (natural light preferred)</li>
+        <li>✅ Avoid baggy clothing for accurate body measurements</li>
+        <li>✅ Face should be clearly visible (no sunglasses/masks)</li>
+    </ul>
+</div>
+
+<div class="loading" id="loading">
+    <div class="spinner"></div>
+    <h2 style="margin-bottom: 10px;">Analyzing...</h2>
+    <p style="opacity: 0.8;">Processing face and body structure</p>
+</div>
+
+<div class="results-section" id="results">
+    <!-- Visual Processing Steps -->
+    <div class="glass-card" id="visualSteps" style="display: none; margin-bottom: 30px;">
+        <h2 style="text-align: center; margin-bottom: 30px;">🔍 Visual Analysis Steps</h2>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+            <div style="text-align: center;">
+                <h4 style="margin-bottom: 10px; opacity: 0.8;">1. Grayscale</h4>
+                <img id="stepGrayscale" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">
+            </div>
+            <div style="text-align: center;">
+                <h4 style="margin-bottom: 10px; opacity: 0.8;">2. Equalized</h4>
+                <img id="stepEqualized" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">
+            </div>
+            <div style="text-align: center;">
+                <h4 style="margin-bottom: 10px; opacity: 0.8;">3. Sharpened</h4>
+                <img id="stepSharpened" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">
+            </div>
+            <div style="text-align: center;">
+                <h4 style="margin-bottom: 10px; opacity: 0.8;">4. Texture Map</h4>
+                <img id="stepTexture" style="width: 100%; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">
+            </div>
+        </div>
+
+        <div style="background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 12px; margin-top: 20px; border: 1px solid rgba(255, 255, 255, 0.1);">
+            <h4 style="margin-bottom: 10px;">📊 Face Analysis Metrics</h4>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                <div>
+                    <strong>Texture Variance:</strong> <span id="textureVariance">-</span>
+                </div>
+                <div>
+                    <strong>Texture Mean:</strong> <span id="textureMean">-</span>
+                </div>
+            </div>
+            <p id="faceExplanation" style="margin-top: 15px; line-height: 1.6; opacity: 0.9;"></p>
+        </div>
+    </div>
+
+    <!-- Detection Result Image -->
+    <div class="glass-card" id="detectionCard" style="display: none; margin-bottom: 30px;">
+        <h2 style="text-align: center; margin-bottom: 20px;">🎯 Detection Results</h2>
+        <img id="resultImage" class="result-image" style="display: none;">
+        <div style="text-align: center; margin-top: 15px; opacity: 0.8;">
+            <p><strong>Green Box:</strong> Face Detection | <strong>Blue Box:</strong> Body Detection</p>
+        </div>
+    </div>
+
+    <div class="fusion-card">
+        <div class="fusion-title">🎯 Final Result</div>
+        <div class="fusion-dominant" id="fusionDominant">-</div>
+        <div class="fusion-details">
+            <p style="font-size: 18px; margin-bottom: 10px;">Combined Analysis: Face + Body</p>
+            <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                <div>
+                    <div style="font-size: 14px; opacity: 0.9;">Vata</div>
+                    <div style="font-size: 28px; font-weight: bold;" id="fusionVata">0%</div>
+                </div>
+                <div>
+                    <div style="font-size: 14px; opacity: 0.9;">Pitta</div>
+                    <div style="font-size: 28px; font-weight: bold;" id="fusionPitta">0%</div>
+                </div>
+                <div>
+                    <div style="font-size: 14px; opacity: 0.9;">Kapha</div>
+                    <div style="font-size: 28px; font-weight: bold;" id="fusionKapha">0%</div>
+                </div>
+            </div>
+            <div style="margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 8px;">
+                <p style="font-size: 14px; margin: 0; opacity: 0.9;" id="votingLogic">-</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="glass-card" id="recommendations">
+        <h2 style="margin-bottom: 20px;">🌿 Personalized Recommendations</h2>
+        <div id="recommendationsList"></div>
+        
+        <!-- Download Button -->
+        <div style="text-align: center; margin-top: 30px;">
+            <button onclick="downloadFusionReport()" class="btn btn-primary" style="padding: 15px 40px; font-size: 18px; border-radius: 50px; background: linear-gradient(135deg, var(--primary), var(--accent)); border: none; color: white; cursor: pointer; transition: all 0.3s;">
+                📄 Download Comprehensive Report
+            </button>
+        </div>
+    </div>
+
+    <!-- Detailed Analysis (Collapsible) -->
+    <div class="glass-card" style="margin-top: 30px;">
+        <div style="cursor: pointer; display: flex; justify-content: space-between; align-items: center;" onclick="toggleDetails()">
+            <h3 style="margin: 0;">📊 View Detailed Analysis</h3>
+            <span id="toggleIcon" style="font-size: 24px;">▼</span>
+        </div>
+        
+        <div id="detailedAnalysis" style="display: none; margin-top: 20px;">
+            <div class="results-grid">
+                <!-- Face Analysis Card -->
+                <div class="glass-card">
+                    <div class="card-header">
+                        <div class="card-icon">😊</div>
+                        <div class="card-title">Face Analysis</div>
+                    </div>
+
+                    <div class="measurements-grid">
+                        <div class="measurement-box">
+                            <div class="measurement-label">Width</div>
+                            <div class="measurement-value" id="faceWidth">-</div>
+                            <div class="measurement-label">px</div>
+                        </div>
+                        <div class="measurement-box">
+                            <div class="measurement-label">Height</div>
+                            <div class="measurement-value" id="faceHeight">-</div>
+                            <div class="measurement-label">px</div>
+                        </div>
+                        <div class="measurement-box">
+                            <div class="measurement-label">Ratio</div>
+                            <div class="measurement-value" id="faceRatio">-</div>
+                            <div class="measurement-label">w/h</div>
+                        </div>
+                    </div>
+
+                    <div class="dosha-meter">
+                        <div class="meter-label">
+                            <span>🌬️ Vata</span>
+                            <span id="faceVataPercent">0%</span>
+                        </div>
+                        <div class="meter-bar">
+                            <div class="meter-fill vata-fill" id="faceVataBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="dosha-meter">
+                        <div class="meter-label">
+                            <span>🔥 Pitta</span>
+                            <span id="facePittaPercent">0%</span>
+                        </div>
+                        <div class="meter-bar">
+                            <div class="meter-fill pitta-fill" id="facePittaBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="dosha-meter">
+                        <div class="meter-label">
+                            <span>🌊 Kapha</span>
+                            <span id="faceKaphaPercent">0%</span>
+                        </div>
+                        <div class="meter-bar">
+                            <div class="meter-fill kapha-fill" id="faceKaphaBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Body Analysis Card -->
+                <div class="glass-card">
+                    <div class="card-header">
+                        <div class="card-icon">🧍</div>
+                        <div class="card-title">Body Analysis</div>
+                    </div>
+
+                    <div class="measurements-grid">
+                        <div class="measurement-box">
+                            <div class="measurement-label">Width</div>
+                            <div class="measurement-value" id="bodyWidth">-</div>
+                            <div class="measurement-label">px</div>
+                        </div>
+                        <div class="measurement-box">
+                            <div class="measurement-label">Height</div>
+                            <div class="measurement-value" id="bodyHeight">-</div>
+                            <div class="measurement-label">px</div>
+                        </div>
+                        <div class="measurement-box">
+                            <div class="measurement-label">Ratio</div>
+                            <div class="measurement-value" id="bodyRatio">-</div>
+                            <div class="measurement-label">w/h</div>
+                        </div>
+                    </div>
+
+                    <div class="dosha-meter">
+                        <div class="meter-label">
+                            <span>🌬️ Vata</span>
+                            <span id="bodyVataPercent">0%</span>
+                        </div>
+                        <div class="meter-bar">
+                            <div class="meter-fill vata-fill" id="bodyVataBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="dosha-meter">
+                        <div class="meter-label">
+                            <span>🔥 Pitta</span>
+                            <span id="bodyPittaPercent">0%</span>
+                        </div>
+                        <div class="meter-bar">
+                            <div class="meter-fill pitta-fill" id="bodyPittaBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="dosha-meter">
+                        <div class="meter-label">
+                            <span>🌊 Kapha</span>
+                            <span id="bodyKaphaPercent">0%</span>
+                        </div>
+                        <div class="meter-bar">
+                            <div class="meter-fill kapha-fill" id="bodyKaphaBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const uploadArea = document.getElementById('uploadArea');
+    const imageInput = document.getElementById('imageInput');
+    const imagePreview = document.getElementById('imagePreview');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const loading = document.getElementById('loading');
+    const results = document.getElementById('results');
+
+    let selectedImage = null;
+
+    uploadArea.addEventListener('click', () => imageInput.click());
+
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.style.background = 'rgba(255, 255, 255, 0.15)';
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.style.background = 'rgba(255, 255, 255, 0.05)';
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.style.background = 'rgba(255, 255, 255, 0.05)';
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) {
+            handleImageUpload(file);
+        }
+    });
+
+    imageInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) handleImageUpload(file);
+    });
+
+    function handleImageUpload(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            selectedImage = e.target.result;
+            imagePreview.src = selectedImage;
+            imagePreview.style.display = 'block';
+            analyzeBtn.style.display = 'inline-block';
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function displayFaceVisuals(faceData) {
+        const visualSteps = document.getElementById('visualSteps');
+        visualSteps.style.display = 'block';
+
+        if (faceData.processing_steps) {
+            document.getElementById('stepGrayscale').src = faceData.processing_steps.grayscale;
+            document.getElementById('stepEqualized').src = faceData.processing_steps.equalized;
+            document.getElementById('stepSharpened').src = faceData.processing_steps.sharpened;
+            document.getElementById('stepTexture').src = faceData.processing_steps.texture;
+        }
+
+        if (faceData.texture) {
+            document.getElementById('textureVariance').textContent = faceData.texture.variance;
+            document.getElementById('textureMean').textContent = faceData.texture.mean;
+        }
+
+        if (faceData.explanation) {
+            document.getElementById('faceExplanation').textContent = faceData.explanation;
+        }
+    }
+
+    analyzeBtn.addEventListener('click', async () => {
+        if (!selectedImage) return;
+
+        loading.style.display = 'block';
+        results.style.display = 'none';
+
+        try {
+            const faceResponse = await fetch('/analyze-face-enhanced', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image: selectedImage })
+            });
+            const faceData = await faceResponse.json();
+
+            if (!faceData.success) {
+                alert('❌ Face analysis failed: ' + faceData.error);
+                loading.style.display = 'none';
+                return;
+            }
+
+            displayFaceVisuals(faceData);
+
+            const fusionResponse = await fetch('/analyze-face-body-fusion', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    image: selectedImage,
+                    face_scores: faceData.scores
+                })
+            });
+            const fusionData = await fusionResponse.json();
+
+            if (fusionData.success) {
+                fusionResult = fusionData; // Store for PDF download
+                displayResults(faceData, fusionData);
+            } else {
+                alert('❌ Body/Fusion analysis failed: ' + fusionData.error);
+            }
+        } catch (error) {
+            alert('❌ Analysis failed: ' + error.message);
+        } finally {
+            loading.style.display = 'none';
+        }
+    });
+
+    function displayResults(faceData, fusionData) {
+        // Display quality enhancement info
+        if (faceData.quality_enhancement) {
+            const qe = faceData.quality_enhancement;
+            const qualityCard = document.createElement('div');
+            qualityCard.className = 'glass-card';
+            qualityCard.style.cssText = 'margin-bottom: 30px; background: rgba(76, 175, 80, 0.1); border-color: rgba(76, 175, 80, 0.3);';
+            qualityCard.innerHTML = `
+                <h2 style="margin-bottom: 20px;">✨ Image Quality Enhancement</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                    <div style="text-align: center; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 12px;">
+                        <div style="font-size: 14px; opacity: 0.8; margin-bottom: 10px;">Original Quality</div>
+                        <div style="font-size: 32px; font-weight: bold; color: #FF9933;">${qe.original_quality}%</div>
+                    </div>
+                    <div style="text-align: center; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 12px;">
+                        <div style="font-size: 14px; opacity: 0.8; margin-bottom: 10px;">Enhanced Quality</div>
+                        <div style="font-size: 32px; font-weight: bold; color: #4CAF50;">${qe.enhanced_quality}%</div>
+                    </div>
+                    <div style="text-align: center; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 12px;">
+                        <div style="font-size: 14px; opacity: 0.8; margin-bottom: 10px;">Improvement</div>
+                        <div style="font-size: 32px; font-weight: bold; color: #138808;">+${qe.improvement}%</div>
+                    </div>
+                </div>
+                ${qe.enhancements_applied && qe.enhancements_applied.length > 0 ? `
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 12px;">
+                        <strong>🔧 Enhancements Applied:</strong>
+                        <div style="margin-top: 10px;">
+                            ${qe.enhancements_applied.map(e => `<span style="display: inline-block; margin: 5px; padding: 8px 16px; background: rgba(255,255,255,0.2); border-radius: 20px; font-size: 14px;">${e.replace('_', ' ')}</span>`).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+            `;
+            
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.insertBefore(qualityCard, resultsDiv.firstChild);
+        }
+        
+        document.getElementById('faceWidth').textContent = faceData.structure.width;
+        document.getElementById('faceHeight').textContent = faceData.structure.height;
+        document.getElementById('faceRatio').textContent = faceData.structure.ratio.toFixed(3);
+
+        updateMeter('faceVata', faceData.scores.vata);
+        updateMeter('facePitta', faceData.scores.pitta);
+        updateMeter('faceKapha', faceData.scores.kapha);
+
+        const bodyMeasurements = fusionData.fusion_details.body_measurements;
+        document.getElementById('bodyWidth').textContent = bodyMeasurements.width;
+        document.getElementById('bodyHeight').textContent = bodyMeasurements.height;
+        document.getElementById('bodyRatio').textContent = bodyMeasurements.ratio.toFixed(3);
+
+        const bodyScores = fusionData.fusion_details.body_scores;
+        const bodyTotal = bodyScores.vata + bodyScores.pitta + bodyScores.kapha;
+        const bodyVataPercent = bodyTotal > 0 ? (bodyScores.vata / bodyTotal) * 100 : 33.3;
+        const bodyPittaPercent = bodyTotal > 0 ? (bodyScores.pitta / bodyTotal) * 100 : 33.3;
+        const bodyKaphaPercent = bodyTotal > 0 ? (bodyScores.kapha / bodyTotal) * 100 : 33.3;
+
+        updateMeter('bodyVata', bodyVataPercent);
+        updateMeter('bodyPitta', bodyPittaPercent);
+        updateMeter('bodyKapha', bodyKaphaPercent);
+
+        // Determine dominant dosha from face
+        const faceDoshas = {
+            'Vata': faceData.scores.vata,
+            'Pitta': faceData.scores.pitta,
+            'Kapha': faceData.scores.kapha
+        };
+        const faceDominant = Object.keys(faceDoshas).reduce((a, b) => faceDoshas[a] > faceDoshas[b] ? a : b);
+
+        // Determine dominant dosha from body
+        const bodyDoshas = {
+            'Vata': bodyVataPercent,
+            'Pitta': bodyPittaPercent,
+            'Kapha': bodyKaphaPercent
+        };
+        const bodyDominant = Object.keys(bodyDoshas).reduce((a, b) => bodyDoshas[a] > bodyDoshas[b] ? a : b);
+
+        // Voting logic: Check if both agree
+        let finalDominant;
+        let votingExplanation;
+        
+        if (faceDominant === bodyDominant) {
+            // Both agree - unanimous decision
+            finalDominant = faceDominant;
+            votingExplanation = `✅ Unanimous: Both Face and Body analysis agree on ${finalDominant} dominance`;
+        } else {
+            // Disagreement - use highest percentage
+            const combinedScores = {
+                'Vata': (faceData.scores.vata + bodyVataPercent) / 2,
+                'Pitta': (faceData.scores.pitta + bodyPittaPercent) / 2,
+                'Kapha': (faceData.scores.kapha + bodyKaphaPercent) / 2
+            };
+            finalDominant = Object.keys(combinedScores).reduce((a, b) => combinedScores[a] > combinedScores[b] ? a : b);
+            votingExplanation = `🛡️ Split Decision: Face suggests ${faceDominant}, Body suggests ${bodyDominant}. Final: ${finalDominant} (highest combined score)`;
+        }
+
+        // Calculate final percentages (average of face and body)
+        const finalVata = (faceData.scores.vata + bodyVataPercent) / 2;
+        const finalPitta = (faceData.scores.pitta + bodyPittaPercent) / 2;
+        const finalKapha = (faceData.scores.kapha + bodyKaphaPercent) / 2;
+
+        // Display final results
+        document.getElementById('fusionDominant').textContent = finalDominant;
+        document.getElementById('fusionVata').textContent = finalVata.toFixed(1) + '%';
+        document.getElementById('fusionPitta').textContent = finalPitta.toFixed(1) + '%';
+        document.getElementById('fusionKapha').textContent = finalKapha.toFixed(1) + '%';
+        document.getElementById('votingLogic').textContent = votingExplanation;
+
+        if (fusionData.result_image) {
+            const detectionCard = document.getElementById('detectionCard');
+            detectionCard.style.display = 'block';
+            document.getElementById('resultImage').src = fusionData.result_image;
+            document.getElementById('resultImage').style.display = 'block';
+        }
+
+        displayRecommendations(fusionData.recommendations);
+
+        results.style.display = 'block';
+        results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function updateMeter(prefix, percent) {
+        document.getElementById(prefix + 'Percent').textContent = percent.toFixed(1) + '%';
+        document.getElementById(prefix + 'Bar').style.width = percent + '%';
+    }
+
+    function displayRecommendations(recommendations) {
+        const container = document.getElementById('recommendationsList');
+        container.innerHTML = '';
+        
+        recommendations.forEach((rec, index) => {
+            const item = document.createElement('div');
+            item.className = 'recommendation-item';
+            item.innerHTML = `<strong>${index + 1}.</strong> ${rec}`;
+            container.appendChild(item);
+        });
+    }
+
+    function toggleDetails() {
+        const details = document.getElementById('detailedAnalysis');
+        const icon = document.getElementById('toggleIcon');
+        
+        if (details.style.display === 'none') {
+            details.style.display = 'block';
+            icon.textContent = '▲';
+        } else {
+            details.style.display = 'none';
+            icon.textContent = '▼';
+        }
+    }
+
+    // Store fusion result globally for PDF download
+    let fusionResult = null;
+
+    async function downloadFusionReport() {
+        if (!fusionResult) {
+            alert('No analysis data available. Please complete the analysis first.');
+            return;
+        }
+
+        try {
+            // Prepare comprehensive report data
+            const reportData = {
+                dominant: fusionResult.dominant,
+                scores: fusionResult.scores,
+                risk: fusionResult.risk || 'Moderate',
+                recommendations: fusionResult.recommendations,
+                diet_suggestions: fusionResult.diet_suggestions,
+                lifestyle_tips: fusionResult.lifestyle_tips,
+                justification: `Face & Body Fusion Analysis: ${fusionResult.dominant} dominance detected through combined analysis. ` +
+                              `Face Analysis: ${fusionResult.fusion_details.face_scores.vata.toFixed(1)}% Vata, ${fusionResult.fusion_details.face_scores.pitta.toFixed(1)}% Pitta, ${fusionResult.fusion_details.face_scores.kapha.toFixed(1)}% Kapha. ` +
+                              `Body Analysis: Width ${fusionResult.fusion_details.body_measurements.width}px, Height ${fusionResult.fusion_details.body_measurements.height}px, Ratio ${fusionResult.fusion_details.body_measurements.ratio.toFixed(3)}. ` +
+                              `Final scores calculated using weighted fusion (Face: 60%, Body: 40%) with voting logic for dominant dosha determination.`
+            };
+
+            const response = await fetch('/download-report', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(reportData)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to generate PDF');
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'AyurAI_Fusion_Analysis_' + new Date().getTime() + '.pdf';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
+
+            alert('✅ Comprehensive report downloaded successfully!');
+
+        } catch (error) {
+            alert('Error downloading report: ' + error.message);
+        }
+    }
+</script>
+{% endblock %}

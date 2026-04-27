@@ -79,6 +79,14 @@
           <span class="sidebar-nav-badge">59-pt</span>
         </a>
 
+        <a href="/face-analysis"
+           class="sidebar-nav-item {% if request.path == '/face-analysis' %}active{% endif %}"
+           aria-current="{% if request.path == '/face-analysis' %}page{% endif %}">
+          <svg class="sidebar-nav-icon" data-lucide="scan-face" aria-hidden="true"></svg>
+          Face Analysis
+          <span class="sidebar-nav-badge">AI</span>
+        </a>
+
         <a href="/chatbot"
            class="sidebar-nav-item {% if request.path == '/chatbot' %}active{% endif %}"
            aria-current="{% if request.path == '/chatbot' %}page{% endif %}">
