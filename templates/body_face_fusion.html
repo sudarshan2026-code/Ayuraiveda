@@ -617,6 +617,12 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ image: selectedImage })
             });
+            
+            if (!faceResponse.ok) {
+                const errorText = await faceResponse.text();
+                throw new Error(`Face analysis failed (${faceResponse.status}): ${errorText.substring(0, 200)}`);
+            }
+            
             const faceData = await faceResponse.json();
 
             if (!faceData.success) {
@@ -635,6 +641,12 @@
                     face_scores: faceData.scores
                 })
             });
+            
+            if (!fusionResponse.ok) {
+                const errorText = await fusionResponse.text();
+                throw new Error(`Fusion analysis failed (${fusionResponse.status}): ${errorText.substring(0, 200)}`);
+            }
+            
             const fusionData = await fusionResponse.json();
 
             if (fusionData.success) {
