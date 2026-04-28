@@ -248,9 +248,22 @@
 
 {% block content %}
 <div style="text-align: center; margin-bottom: 3rem; animation: fadeInDown 1s ease;">
-    <h2 style="font-size: 3rem; font-weight: 700; margin-bottom: 1rem;">🏥 Clinical Body Assessment</h2>
-    <p style="font-size: 1.2rem; opacity: 0.9; max-width: 800px; margin: 0 auto;">
-        Upload or capture a full body image for AI-powered Tridosha analysis using authentic Ayurvedic clinical reasoning
+    <h2 style="font-size: 3rem; font-weight: 700; margin-bottom: 1rem;">🏥 Advanced Clinical Prakriti Assessment</h2>
+    <p style="font-size: 1.2rem; opacity: 0.9; max-width: 900px; margin: 0 auto; line-height: 1.6;">
+        Upload or capture a full body image for comprehensive Ayurvedic Prakriti analysis using advanced clinical reasoning<br>
+        <span style="font-size: 1rem; opacity: 0.8;">
+            • Structural Features (50%) • Surface Features (30%) • Dynamic Features (20%)
+        </span>
+    </p>
+</div>
+
+<div class="glass-card" style="background: rgba(255, 152, 0, 0.15); border-left: 4px solid #ff9800; margin-bottom: 30px; animation: fadeInUp 1s ease 0.2s both;">
+    <strong style="color: #ff9800; font-size: 18px;">⚠️ Educational Purpose Only</strong>
+    <p style="margin-top: 10px; line-height: 1.8;">
+        This body analysis tool is designed for <strong>educational and wellness exploration purposes only</strong>. 
+        For accurate and comprehensive Prakriti assessment, please use our 
+        <a href="/clinical-assessment" style="color: #00D9FF; font-weight: bold; text-decoration: underline;">🏥 Clinical Assessment</a> 
+        which includes 59 detailed questions based on traditional Ayurvedic principles and provides clinically validated results.
     </p>
 </div>
 
@@ -312,15 +325,20 @@
 </style>
 
 <div class="glass-card" style="animation: fadeInUp 1s ease 0.6s both;">
-    <strong style="font-size: 18px;">📌 Tips for Best Results:</strong>
-    <ul style="margin: 15px 0 0 25px;">
+    <strong style="font-size: 18px;">📌 Advanced Clinical Assessment Guidelines:</strong>
+    <ul style="margin: 15px 0 0 25px; line-height: 1.8;">
+        <li>✅ <strong>Structural Features (50% weight):</strong> Body build, frame, fat distribution, face shape</li>
+        <li>✅ <strong>Surface Features (30% weight):</strong> Skin texture, tone, oiliness, pigmentation</li>
+        <li>✅ <strong>Dynamic Features (20% weight):</strong> Posture, expression, body proportions</li>
         <li>✅ Full body should be clearly visible (face not required)</li>
-        <li>✅ Stand straight with arms at sides</li>
+        <li>✅ Stand straight with arms at sides for accurate structural analysis</li>
         <li>✅ Use good lighting (natural light preferred)</li>
         <li>✅ Avoid baggy clothing for accurate body measurements</li>
         <li>✅ Plain background works best</li>
-        <li>✅ No face detection needed - body analysis only</li>
     </ul>
+    <div style="margin-top: 15px; padding: 15px; background: rgba(255, 152, 0, 0.1); border-radius: 8px; border-left: 4px solid #FF9800;">
+        <strong>📚 Clinical Approach:</strong> This assessment uses multi-layered Ayurvedic reasoning based on classical texts (Charaka Samhita, Sushruta Samhita), prioritizing structural features over superficial observations.
+    </div>
 </div>
 
 <div class="loading" id="loading">
@@ -678,14 +696,17 @@
 
         loading.style.display = 'block';
         results.style.display = 'none';
-        document.querySelector('#loading h2').textContent = 'Running Clinical Assessment...';
-        document.querySelector('#loading p').textContent = 'Lakshana → Guna → Dosha reasoning pipeline';
+        document.querySelector('#loading h2').textContent = 'Running Advanced Clinical Assessment...';
+        document.querySelector('#loading p').textContent = 'Analyzing structural, surface, and dynamic features using Ayurvedic clinical logic';
 
         try {
             const response = await fetch('/analyze-clinical-image', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ image: selectedImage })
+                body: JSON.stringify({ 
+                    image: selectedImage,
+                    analysis_mode: 'advanced_clinical'
+                })
             });
             
             if (!response.ok) {
@@ -971,28 +992,100 @@
         const resultsDiv = document.getElementById('results');
         resultsDiv.innerHTML = '';
         
-        // Clinical Assessment Header
+        // Clinical Assessment Header with Analysis Type
         const headerCard = document.createElement('div');
         headerCard.className = 'glass-card';
         headerCard.style.cssText = 'margin-bottom: 30px; background: rgba(76, 175, 80, 0.1); border-color: rgba(76, 175, 80, 0.3);';
         headerCard.innerHTML = `
-            <h2 style="margin-bottom: 15px;">🏥 Clinical Assessment Method</h2>
+            <h2 style="margin-bottom: 15px;">🏥 Advanced Clinical Assessment</h2>
             <p style="font-size: 1.1rem; line-height: 1.8; opacity: 0.95;">
-                <strong>Analysis Type:</strong> ${clinicalData.analysis_type}<br>
-                <strong>Method:</strong> 3-Layer Ayurvedic Reasoning (Lakshana → Guna → Dosha)<br>
+                <strong>Analysis Method:</strong> ${clinicalData.analysis_type}<br>
+                <strong>Clinical Approach:</strong> Multi-layered Ayurvedic reasoning (Structural → Surface → Dynamic)<br>
                 <strong>Confidence:</strong> ${clinicalData.confidence}%<br>
                 <strong>✅ ${clinicalData.note}</strong>
             </p>
         `;
         resultsDiv.appendChild(headerCard);
         
+        // Feature Analysis Breakdown
+        if (clinicalData.features) {
+            const featureCard = document.createElement('div');
+            featureCard.className = 'glass-card';
+            featureCard.style.cssText = 'margin-bottom: 30px; background: rgba(33, 150, 243, 0.1); border-color: rgba(33, 150, 243, 0.3);';
+            
+            let featureHTML = '<h2 style="margin-bottom: 20px;">📊 Feature Analysis (3-Layer Assessment)</h2>';
+            
+            // Structural Features (50% weight)
+            featureHTML += '<div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; margin-bottom: 15px; border-left: 4px solid #2196F3;">';
+            featureHTML += '<h3 style="margin-bottom: 15px; color: #64B5F6;">🏗️ Structural Features (Weight: 50%)</h3>';
+            featureHTML += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">';
+            
+            const structuralFeatures = ['body_frame', 'body_width', 'body_ratio', 'shoulder_width', 'hip_width'];
+            structuralFeatures.forEach(feature => {
+                if (clinicalData.features[feature] !== undefined) {
+                    const value = (clinicalData.features[feature] * 100).toFixed(1);
+                    const name = feature.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    featureHTML += `
+                        <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px;">
+                            <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 5px;">${name}</div>
+                            <div style="font-size: 1.3rem; font-weight: bold; color: #2196F3;">${value}%</div>
+                        </div>
+                    `;
+                }
+            });
+            featureHTML += '</div></div>';
+            
+            // Surface Features (30% weight)
+            featureHTML += '<div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; margin-bottom: 15px; border-left: 4px solid #FF9800;">';
+            featureHTML += '<h3 style="margin-bottom: 15px; color: #FFB74D;">🎨 Surface Features (Weight: 30%)</h3>';
+            featureHTML += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">';
+            
+            const surfaceFeatures = ['skin_texture', 'oiliness', 'pigmentation', 'redness', 'brightness'];
+            surfaceFeatures.forEach(feature => {
+                if (clinicalData.features[feature] !== undefined) {
+                    const value = (clinicalData.features[feature] * 100).toFixed(1);
+                    const name = feature.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    featureHTML += `
+                        <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px;">
+                            <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 5px;">${name}</div>
+                            <div style="font-size: 1.3rem; font-weight: bold; color: #FF9800;">${value}%</div>
+                        </div>
+                    `;
+                }
+            });
+            featureHTML += '</div></div>';
+            
+            // Dynamic Features (20% weight)
+            featureHTML += '<div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; border-left: 4px solid #9C27B0;">';
+            featureHTML += '<h3 style="margin-bottom: 15px; color: #BA68C8;">⚡ Dynamic Features (Weight: 20%)</h3>';
+            featureHTML += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">';
+            
+            const dynamicFeatures = ['posture', 'limb_thickness', 'torso_length'];
+            dynamicFeatures.forEach(feature => {
+                if (clinicalData.features[feature] !== undefined) {
+                    const value = (clinicalData.features[feature] * 100).toFixed(1);
+                    const name = feature.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    featureHTML += `
+                        <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px;">
+                            <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 5px;">${name}</div>
+                            <div style="font-size: 1.3rem; font-weight: bold; color: #9C27B0;">${value}%</div>
+                        </div>
+                    `;
+                }
+            });
+            featureHTML += '</div></div>';
+            
+            featureCard.innerHTML = featureHTML;
+            resultsDiv.appendChild(featureCard);
+        }
+        
         // Guna Analysis Card
         const gunaCard = document.createElement('div');
         gunaCard.className = 'glass-card';
         gunaCard.style.cssText = 'margin-bottom: 30px; background: rgba(255, 152, 0, 0.1); border-color: rgba(255, 152, 0, 0.3);';
         
-        let gunaHTML = '<h2 style="margin-bottom: 20px;">🔬 Ayurvedic Qualities (Gunas) Analysis</h2>';
-        gunaHTML += '<p style="opacity: 0.9; margin-bottom: 20px;">Traditional Ayurvedic qualities detected in your body constitution:</p>';
+        let gunaHTML = '<h2 style="margin-bottom: 20px;">🔬 Guna Interpretation (Non-Linear Mapping)</h2>';
+        gunaHTML += '<p style="opacity: 0.9; margin-bottom: 20px;">Ayurvedic qualities derived from combined feature analysis:</p>';
         gunaHTML += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">';
         
         // Sort gunas by value
@@ -1003,9 +1096,27 @@
         sortedGunas.forEach(([guna, value]) => {
             const percentage = (value * 100).toFixed(1);
             const gunaName = guna.charAt(0).toUpperCase() + guna.slice(1);
+            
+            // Guna descriptions
+            const gunaDescriptions = {
+                'Ruksha': 'Dry/Rough',
+                'Snigdha': 'Oily/Unctuous',
+                'Ushna': 'Hot',
+                'Tikshna': 'Sharp/Angular',
+                'Mridu': 'Soft/Rounded',
+                'Guru': 'Heavy',
+                'Laghu': 'Light',
+                'Sthira': 'Stable',
+                'Chala': 'Mobile',
+                'Sukshma': 'Subtle',
+                'Drava': 'Liquid/Flowing',
+                'Sara': 'Flowing'
+            };
+            
             gunaHTML += `
                 <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
-                    <div style="font-size: 1.1rem; font-weight: bold; margin-bottom: 10px;">${gunaName}</div>
+                    <div style="font-size: 1.1rem; font-weight: bold; margin-bottom: 5px;">${gunaName}</div>
+                    <div style="font-size: 0.85rem; opacity: 0.8; margin-bottom: 10px;">${gunaDescriptions[gunaName] || ''}</div>
                     <div style="font-size: 1.8rem; font-weight: bold; color: #FF9800; margin-bottom: 8px;">${percentage}%</div>
                     <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
                         <div style="height: 100%; width: ${percentage}%; background: linear-gradient(90deg, #FF9800, #FFC107);"></div>
@@ -1018,14 +1129,14 @@
         gunaCard.innerHTML = gunaHTML;
         resultsDiv.appendChild(gunaCard);
         
-        // Dosha Results Card
+        // Dosha Results Card with Clinical Justification
         const doshaCard = document.createElement('div');
         doshaCard.className = 'fusion-card';
         doshaCard.innerHTML = `
-            <div class="fusion-title">🎯 Clinical Assessment Result</div>
+            <div class="fusion-title">🎯 Clinical Prakriti Assessment</div>
             <div class="fusion-dominant">${clinicalData.dominant}</div>
             <div class="fusion-details">
-                <p style="font-size: 18px; margin-bottom: 10px;">Body-Based Clinical Analysis</p>
+                <p style="font-size: 18px; margin-bottom: 10px;">Advanced Multi-Layer Clinical Analysis</p>
                 <div style="display: flex; justify-content: space-around; margin-top: 20px;">
                     <div>
                         <div style="font-size: 14px; opacity: 0.9;">Vata</div>
@@ -1041,11 +1152,27 @@
                     </div>
                 </div>
                 <div style="margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 8px;">
-                    <p style="font-size: 14px; margin: 0; opacity: 0.9;"><strong>Clinical Explanation:</strong> ${clinicalData.explanation}</p>
+                    <p style="font-size: 14px; margin: 0 0 10px 0; opacity: 0.9;"><strong>📋 Clinical Explanation:</strong></p>
+                    <p style="font-size: 14px; margin: 0; opacity: 0.9;">${clinicalData.explanation}</p>
                 </div>
             </div>
         `;
         resultsDiv.appendChild(doshaCard);
+        
+        // Safety Disclaimer
+        const disclaimerCard = document.createElement('div');
+        disclaimerCard.className = 'glass-card';
+        disclaimerCard.style.cssText = 'margin-bottom: 30px; background: rgba(244, 67, 54, 0.1); border-color: rgba(244, 67, 54, 0.3);';
+        disclaimerCard.innerHTML = `
+            <h3 style="margin-bottom: 15px; color: #EF5350;">⚠️ Important Medical Disclaimer</h3>
+            <p style="line-height: 1.8; opacity: 0.95;">
+                This is an <strong>AI-based visual estimation</strong> using Ayurvedic principles, not a medical diagnosis. 
+                The assessment is based on structural, surface, and dynamic features visible in the image. 
+                For accurate Prakriti determination, consult a qualified Ayurvedic practitioner who can perform 
+                comprehensive pulse diagnosis (Nadi Pariksha), detailed questioning, and physical examination.
+            </p>
+        `;
+        resultsDiv.appendChild(disclaimerCard);
         
         // Recommendations
         const recCard = document.createElement('div');

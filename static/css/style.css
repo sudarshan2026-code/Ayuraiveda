@@ -20,7 +20,7 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    color: var(--light-text);
+    color: #FFFFFF;
     background: var(--dark-bg);
     letter-spacing: 0.3px;
 }
@@ -28,7 +28,7 @@ body {
 /* Top Bar */
 .top-bar {
     background: var(--darker);
-    color: var(--light-text);
+    color: #FFFFFF;
     padding: 0.5rem 0;
     font-size: 0.85rem;
     border-bottom: 2px solid var(--primary);
@@ -182,7 +182,7 @@ nav a:hover {
 
 .hero p {
     font-size: 1.2rem;
-    color: var(--light-text);
+    color: #FFFFFF;
     max-width: 800px;
     margin: 0 auto;
     opacity: 0.9;
@@ -196,7 +196,7 @@ nav a:hover {
     margin-bottom: 2rem;
     border: 1px solid var(--border);
     border-left: 4px solid var(--primary);
-    color: var(--light-text);
+    color: #FFFFFF;
 }
 
 .section p,
@@ -234,7 +234,7 @@ nav a:hover {
     display: block;
     font-weight: 600;
     margin-bottom: 0.5rem;
-    color: var(--light-text);
+    color: #FFFFFF;
 }
 
 .form-group input,
@@ -246,7 +246,7 @@ nav a:hover {
     font-size: 1rem;
     transition: all 0.3s;
     background: var(--darker);
-    color: var(--light-text);
+    color: #FFFFFF;
 }
 
 .form-group input:focus,
@@ -317,12 +317,12 @@ nav a:hover {
 .meter h4 {
     font-size: 1.2rem;
     margin-bottom: 0.5rem;
-    color: var(--light-text);
+    color: #FFFFFF;
 }
 
 .meter p,
 .meter span {
-    color: var(--light-text);
+    color: #FFFFFF;
 }
 
 .meter-bar {
@@ -384,7 +384,7 @@ nav a:hover {
     background: var(--card-bg);
     border-left: 4px solid var(--primary);
     border-radius: 5px;
-    color: var(--light-text);
+    color: #FFFFFF;
 }
 
 /* Disease Predictions */
@@ -395,7 +395,7 @@ nav a:hover {
     border-left: 4px solid var(--accent);
     border-radius: 5px;
     font-size: 1rem;
-    color: var(--light-text);
+    color: #FFFFFF;
 }
 
 .primary-risk {
@@ -410,13 +410,13 @@ nav a:hover {
 #risk-factors-list li {
     padding: 0.5rem 0;
     border-bottom: 1px solid var(--border);
-    color: var(--light-text);
+    color: #FFFFFF;
 }
 
 /* Footer */
 footer {
     background: linear-gradient(135deg, var(--darker), var(--card-bg));
-    color: var(--light-text);
+    color: #FFFFFF;
     text-align: center;
     padding: 2rem 0;
     margin-top: 3rem;
@@ -425,7 +425,7 @@ footer {
 }
 
 footer p {
-    color: var(--light-text);
+    color: #FFFFFF;
 }
 
 footer strong {
@@ -439,7 +439,7 @@ footer strong {
     padding: 1rem;
     border-radius: 4px;
     margin: 1rem 0;
-    color: var(--light-text);
+    color: #FFFFFF;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
 
@@ -875,7 +875,7 @@ img {
 }
 
 .security-popup p {
-    color: var(--light-text);
+    color: #FFFFFF;
     margin-bottom: 1.5rem;
     opacity: 0.9;
 }
@@ -916,9 +916,30 @@ input, textarea {
     flex-wrap: wrap;
 }
 
-/* Ensure all text elements are visible */
-p, span, div, li, td, th, label, a {
-    color: inherit;
+/* Ensure all text elements are white by default */
+p, span, div, li, td, th, label, a, h1, h2, h3, h4, h5, h6 {
+    color: #FFFFFF;
+}
+
+.section p,
+.section ul,
+.section ol,
+.section li,
+.section span,
+.section div,
+.section label,
+.section td,
+.section th {
+    color: #FFFFFF;
+}
+
+.form-group input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.form-group select option {
+    background: var(--darker);
+    color: #FFFFFF;
 }
 
 strong, b {
@@ -926,15 +947,6 @@ strong, b {
 }
 
 em, i {
-    color: var(--light-text);
+    color: #FFFFFF;
     opacity: 0.9;
-}
-
-.form-group input::placeholder {
-    color: rgba(224, 230, 240, 0.5);
-}
-
-.form-group select option {
-    background: var(--darker);
-    color: var(--light-text);
 }

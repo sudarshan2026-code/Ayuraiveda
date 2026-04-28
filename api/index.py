@@ -487,10 +487,12 @@ def analyze_face_enhanced():
 
 @app.route('/analyze-body', methods=['POST'])
 def analyze_body():
-    """Analyze body from uploaded image with automatic quality enhancement"""
+    """Analyze body from uploaded image with automatic quality enhancement and structure validation"""
     try:
         from face_body_detection_extended import FaceBodyDetector
         from image_quality_enhancer import ImageQualityEnhancer
+        from confidence_calibrator import ConfidenceCalibrator
+        from body_validator import BodyStructureValidator
         import numpy as np
         import base64
         from io import BytesIO
@@ -539,26 +541,71 @@ def analyze_body():
         # Get first body analysis
         body_result = body_analyses[0]
         
+        # Step 2: Calibrate confidence scores
+        print("📊 Calibrating confidence scores...")
+        calibrator = ConfidenceCalibrator()
+        
+        # Prepare features for calibration
+        body_features = {
+            'body_ratio': body_result['ratio'],
+            'body_frame': body_result['width'] / image.shape[1],
+            'limb_thickness': body_result['ratio'] * 0.8,
+            'shoulder_width': body_result['width'] / image.shape[1]
+        }
+        
+        calibrated_features = calibrator.calibrate(body_features)
+        print(f"✅ Calibration complete - Confidence: {calibrated_features['body_confidence']}")
+        
+        # Step 3: Validate and correct body structure
+        print("🔧 Validating body structure...")
+        validator = BodyStructureValidator()
+        
+        # Prepare detected data for validation
+        detected_data = {
+            'body_build': 'lean' if body_result['ratio'] < 0.35 else 'medium' if body_result['ratio'] < 0.45 else 'heavy',
+            'body_width': body_result['width'],
+            'body_height': body_result['height'],
+            'body_ratio': body_result['ratio']
+        }
+        
+        corrected_data = validator.validate_and_correct(detected_data)
+        print(f"✅ Structure validated - Vata eligible: {corrected_data.get('vata_eligible', True)}")
+        
         # Encode result image with bounding boxes
         result_image = detector.draw_detections(image, faces, bodies)
         _, buffer = cv2.imencode('.jpg', result_image)
         result_image_base64 = f"data:image/jpeg;base64,{base64.b64encode(buffer).decode('utf-8')}"
         
-        # Determine dominant dosha
-        max_score = max(body_result['vata'], body_result['pitta'], body_result['kapha'])
-        if body_result['vata'] == max_score:
+        # Apply validation corrections to dosha scores
+        raw_vata = body_result['vata']
+        raw_pitta = body_result['pitta']
+        raw_kapha = body_result['kapha']
+        
+        # Apply Vata safety rule
+        if not corrected_data.get('vata_eligible', True):
+            raw_vata *= 0.5  # Reduce Vata if not structurally eligible
+            print("⚠️ Vata reduced - body structure not lean/angular")
+        
+        # Apply structure lock for medium/heavy builds
+        if corrected_data.get('base_dosha') == 'kapha-pitta':
+            raw_vata *= 0.3  # Further reduce Vata
+            print("🔒 Structure locked to Kapha-Pitta base")
+        
+        # Determine dominant dosha with corrections
+        max_score = max(raw_vata, raw_pitta, raw_kapha)
+        if raw_vata == max_score:
             dominant = 'Vata'
-        elif body_result['pitta'] == max_score:
+        elif raw_pitta == max_score:
             dominant = 'Pitta'
         else:
             dominant = 'Kapha'
         
-        # Calculate percentages
-        total = body_result['vata'] + body_result['pitta'] + body_result['kapha']
+        # Calculate percentages with corrected scores
+        total = raw_vata + raw_pitta + raw_kapha
         if total > 0:
-            vata_percent = round((body_result['vata'] / total) * 100, 1)
-            pitta_percent = round((body_result['pitta'] / total) * 100, 1)
-            kapha_percent = round((body_result['kapha'] / total) * 100, 1)
+            vata_percent = round((raw_vata / total) * 100, 1)
+            pitta_percent = round((raw_pitta / total) * 100, 1)
+            kapha_percent = round((raw_kapha / total) * 100, 1)
         else:
             vata_percent = pitta_percent = kapha_percent = 33.3
         
@@ -2429,6 +2476,8 @@ def analyze_clinical_image():
         
         from clinical_engine import ClinicalAssessmentEngine
         from simple_body_extractor import SimpleBodyExtractor
+        from confidence_calibrator import ConfidenceCalibrator
+        from body_validator import BodyStructureValidator
         import numpy as np
         
         data = request.json
@@ -2448,10 +2497,23 @@ def analyze_clinical_image():
         
         print("✅ Body features extracted successfully")
         
-        # Step 2: Use clinical engine for assessment
+        # Step 2: Calibrate confidence scores
+        print("📊 Calibrating confidence scores...")
+        calibrator = ConfidenceCalibrator()
+        calibrated_features = calibrator.calibrate(feature_result['features'])
+        calibration_report = calibrator.get_calibration_report(feature_result['features'], calibrated_features)
+        print(calibration_report)
+        
+        # Step 3: Validate and correct structural misclassifications
+        print("🔧 Validating body structure...")
+        validator = BodyStructureValidator()
+        corrected_features = validator.validate_and_correct(calibrated_features)
+        print(f"✅ Validation complete - Vata eligible: {corrected_features.get('vata_eligible', True)}")
+        
+        # Step 4: Use clinical engine for assessment with corrected features
         print("🧠 Running clinical assessment...")
         clinical_engine = ClinicalAssessmentEngine()
-        clinical_result = clinical_engine.assess(feature_result['features'])
+        clinical_result = clinical_engine.assess(corrected_features)
         
         print("✅ Clinical assessment completed")
         
@@ -2499,4 +2561,53 @@ def analyze_clinical_image():
         return jsonify({
             'success': False,
             'error': f'Clinical analysis failed: {str(e)}'
+        }), 500
+
+@app.route('/analyze-ayurvedic-body', methods=['POST'])
+def analyze_ayurvedic_body():
+    """Ayurvedic Clinical Intelligence Engine - 10-Step Hierarchical Framework"""
+    try:
+        import sys
+        import os
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)) + '/..')
+        
+        from ayurvedic_body_analyzer import AyurvedicBodyAnalyzer
+        
+        data = request.json
+        image_data = data.get('image')
+        user_data = data.get('user_data', {})
+        
+        if not image_data:
+            return jsonify({'success': False, 'error': 'No image provided'})
+        
+        print("🧠 Starting Ayurvedic Clinical Intelligence Analysis...")
+        
+        # Initialize analyzer
+        analyzer = AyurvedicBodyAnalyzer()
+        
+        # Perform 10-step analysis
+        result = analyzer.analyze_image(image_data, input_type='base64')
+        
+        if not result.get('success'):
+            return jsonify(result)
+        
+        print(f"✅ Analysis complete - Prakriti: {result['final_prakriti']}")
+        
+        # Add recommendations
+        dominant_lower = result['final_prakriti'].split('-')[0].lower()
+        result['recommendations'] = get_recommendations(dominant_lower)
+        result['diet_suggestions'] = get_diet_suggestions(dominant_lower)
+        result['lifestyle_tips'] = get_lifestyle_tips(dominant_lower)
+        result['user_data'] = user_data
+        result['analysis_method'] = 'Ayurvedic Clinical Intelligence Engine (10-Step Framework)'
+        
+        return jsonify(result)
+        
+    except Exception as e:
+        print(f"Ayurvedic body analysis error: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'success': False,
+            'error': f'Analysis failed: {str(e)}'
         }), 500

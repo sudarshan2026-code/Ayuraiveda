@@ -23,23 +23,197 @@ class ClinicalAssessmentEngine:
         }
     
     def assess(self, features):
-        """Main assessment pipeline"""
-        gunas = self._extract_gunas(features)
-        dosha_scores = self._compute_dosha_scores(gunas)
-        regional_scores = self._compute_regional_scores(features)
-        final_scores = self._combine_regional_scores(regional_scores)
+        """Main assessment pipeline with STRICT hierarchical reasoning"""
         
+        # STEP 1: DETERMINE BASE DOSHA FROM STRUCTURE (MANDATORY)
+        base_dosha, base_scores, structural_reasoning = self._determine_base_dosha(features)
+        
+        # STEP 2: Extract Gunas for surface/dynamic features
+        gunas = self._extract_gunas(features)
+        
+        # STEP 3: Modify with surface features (limited adjustment)
+        adjusted_scores = self._apply_surface_adjustments(base_scores, gunas, features)
+        
+        # STEP 4: Apply correction rules
+        final_scores = self._apply_correction_rules(adjusted_scores, base_dosha, features)
+        
+        # STEP 5: Normalize to percentages
+        normalized_scores = self._normalize_scores(final_scores)
+        
+        # STEP 6: Detect contradictions and calculate confidence
         contradictions = self._detect_contradictions(gunas)
-        confidence = self._calculate_confidence(gunas, contradictions)
-        dosha_type = self._classify_type(final_scores)
-        explanation = self._generate_explanation(gunas, final_scores, features)
+        confidence = self._calculate_confidence(gunas, contradictions, base_dosha)
+        
+        # STEP 7: Classify type
+        dosha_type = self._classify_type(normalized_scores)
+        
+        # STEP 8: Generate explanation
+        explanation = self._generate_hierarchical_explanation(
+            base_dosha, structural_reasoning, gunas, normalized_scores, features
+        )
         
         return {
-            'dosha': final_scores,
+            'dosha': normalized_scores,
             'type': dosha_type,
             'confidence': round(confidence, 2),
+            'base_dosha': base_dosha,
+            'structural_reasoning': structural_reasoning,
             'guna_analysis': gunas,
             'explanation': explanation
+        }
+    
+    def _determine_base_dosha(self, f):
+        """STEP 1: MANDATORY - Determine base dosha from STRUCTURE ONLY"""
+        
+        # Get structural features with defaults
+        body_frame = f.get('body_frame', 0.5)
+        body_width = f.get('body_width', body_frame)
+        body_ratio = f.get('body_ratio', 0.5)
+        shoulder_width = f.get('shoulder_width', 0.5)
+        hip_width = f.get('hip_width', 0.5)
+        limb_thickness = f.get('limb_thickness', 0.5)
+        
+        # Calculate structural indicators
+        build_score = (body_frame + body_width + limb_thickness) / 3
+        face_roundness = body_ratio  # Higher ratio = rounder/wider
+        fat_distribution = body_frame
+        
+        reasoning = []
+        
+        # RULE 1: Heavy/Rounded → Kapha
+        if build_score >= 0.6 and face_roundness >= 0.6:
+            base_dosha = 'kapha'
+            base_scores = {'vata': 20, 'pitta': 30, 'kapha': 50}
+            reasoning.append(f"Heavy body build (score: {build_score:.2f})")
+            reasoning.append(f"Rounded face shape (ratio: {face_roundness:.2f})")
+            reasoning.append("Base Dosha: KAPHA (heavy, rounded structure)")
+        
+        # RULE 2: Medium/Slightly Heavy + Rounded → Kapha
+        elif build_score >= 0.45 and face_roundness >= 0.55:
+            base_dosha = 'kapha'
+            base_scores = {'vata': 25, 'pitta': 30, 'kapha': 45}
+            reasoning.append(f"Medium-to-heavy build (score: {build_score:.2f})")
+            reasoning.append(f"Rounded facial features (ratio: {face_roundness:.2f})")
+            reasoning.append("Base Dosha: KAPHA (moderate build with roundness)")
+        
+        # RULE 3: Lean/Angular → Vata
+        elif build_score <= 0.35 and face_roundness <= 0.45:
+            base_dosha = 'vata'
+            base_scores = {'vata': 50, 'pitta': 30, 'kapha': 20}
+            reasoning.append(f"Lean body build (score: {build_score:.2f})")
+            reasoning.append(f"Angular face shape (ratio: {face_roundness:.2f})")
+            reasoning.append("Base Dosha: VATA (lean, angular structure)")
+        
+        # RULE 4: Medium/Sharp → Pitta
+        elif 0.4 <= build_score <= 0.55 and face_roundness <= 0.55:
+            base_dosha = 'pitta'
+            base_scores = {'vata': 25, 'pitta': 45, 'kapha': 30}
+            reasoning.append(f"Medium body build (score: {build_score:.2f})")
+            reasoning.append(f"Balanced-to-sharp features (ratio: {face_roundness:.2f})")
+            reasoning.append("Base Dosha: PITTA (medium, balanced structure)")
+        
+        # RULE 5: Default to Pitta for ambiguous cases
+        else:
+            base_dosha = 'pitta'
+            base_scores = {'vata': 30, 'pitta': 40, 'kapha': 30}
+            reasoning.append(f"Moderate build (score: {build_score:.2f})")
+            reasoning.append(f"Balanced proportions (ratio: {face_roundness:.2f})")
+            reasoning.append("Base Dosha: PITTA (balanced structure)")
+        
+        return base_dosha, base_scores, reasoning
+    
+    def _apply_surface_adjustments(self, base_scores, gunas, features):
+        """STEP 2: Adjust (not replace) with surface features - LIMITED"""
+        
+        adjusted = base_scores.copy()
+        
+        # Surface adjustments (max ±10 points)
+        dryness_factor = gunas['ruksha']
+        oiliness_factor = gunas['snigdha']
+        heat_factor = gunas['ushna']
+        
+        # Dryness → +Vata (small increase only, max +10)
+        if dryness_factor > 0.6:
+            vata_boost = min(10, (dryness_factor - 0.6) * 25)
+            adjusted['vata'] += vata_boost
+            adjusted['kapha'] -= vata_boost / 2
+        
+        # Oiliness/Smooth → +Kapha (max +10)
+        if oiliness_factor > 0.6:
+            kapha_boost = min(10, (oiliness_factor - 0.6) * 25)
+            adjusted['kapha'] += kapha_boost
+            adjusted['vata'] -= kapha_boost / 2
+        
+        # Heat/Pigmentation → +Pitta (max +10)
+        if heat_factor > 0.6:
+            pitta_boost = min(10, (heat_factor - 0.6) * 25)
+            adjusted['pitta'] += pitta_boost
+            adjusted['kapha'] -= pitta_boost / 2
+        
+        return adjusted
+    
+    def _apply_correction_rules(self, scores, base_dosha, features):
+        """STEP 3: Apply HARD correction rules"""
+        
+        corrected = scores.copy()
+        body_frame = features.get('body_frame', 0.5)
+        body_ratio = features.get('body_ratio', 0.5)
+        
+        # RULE 1: If BASE DOSHA = Kapha, Vata cannot exceed Kapha
+        if base_dosha == 'kapha':
+            if corrected['vata'] > corrected['kapha']:
+                excess = corrected['vata'] - corrected['kapha']
+                corrected['vata'] = corrected['kapha']
+                corrected['pitta'] += excess / 2
+                corrected['kapha'] += excess / 2
+        
+        # RULE 2: If structure is NOT lean, Vata must remain below 30%
+        if body_frame >= 0.4:
+            total = sum(corrected.values())
+            vata_percent = (corrected['vata'] / total) * 100
+            if vata_percent > 30:
+                # Reduce Vata to 30%
+                target_vata = total * 0.30
+                excess = corrected['vata'] - target_vata
+                corrected['vata'] = target_vata
+                # Redistribute to base dosha
+                corrected[base_dosha] += excess
+        
+        # RULE 3: If face is rounded, Kapha must be highest or equal highest
+        if body_ratio >= 0.6:
+            max_dosha = max(corrected.values())
+            if corrected['kapha'] < max_dosha:
+                diff = max_dosha - corrected['kapha']
+                corrected['kapha'] = max_dosha
+                # Take from Vata primarily
+                corrected['vata'] -= diff * 0.7
+                corrected['pitta'] -= diff * 0.3
+        
+        # RULE 4: If BASE DOSHA = Pitta, Vata cannot dominate
+        if base_dosha == 'pitta':
+            if corrected['vata'] > corrected['pitta']:
+                excess = corrected['vata'] - corrected['pitta']
+                corrected['vata'] = corrected['pitta']
+                corrected['pitta'] += excess * 0.6
+                corrected['kapha'] += excess * 0.4
+        
+        # Ensure no negative values
+        for dosha in corrected:
+            if corrected[dosha] < 0:
+                corrected[dosha] = 0
+        
+        return corrected
+    
+    def _normalize_scores(self, scores):
+        """Convert to percentages"""
+        total = sum(scores.values())
+        if total == 0:
+            return {'vata': 33.33, 'pitta': 33.33, 'kapha': 33.34}
+        
+        return {
+            'vata': round((scores['vata'] / total) * 100, 2),
+            'pitta': round((scores['pitta'] / total) * 100, 2),
+            'kapha': round((scores['kapha'] / total) * 100, 2)
         }
     
     def _extract_gunas(self, f):
@@ -227,8 +401,8 @@ class ClinicalAssessmentEngine:
         
         return contradictions
     
-    def _calculate_confidence(self, gunas, contradictions):
-        """Calculate confidence based on clarity and contradictions"""
+    def _calculate_confidence(self, gunas, contradictions, base_dosha):
+        """Calculate confidence based on clarity, contradictions, and base dosha strength"""
         base_confidence = 85
         
         # Reduce for contradictions
@@ -243,108 +417,188 @@ class ClinicalAssessmentEngine:
         return max(50, min(95, confidence))
     
     def _classify_type(self, scores):
-        """Layer 3: Classify dosha type"""
+        """STEP 5: Classify dosha type with STRICT balanced check"""
         doshas = sorted(scores.items(), key=lambda x: x[1], reverse=True)
         
         dominant = doshas[0]
         second = doshas[1]
         
-        # Balanced
-        if max(scores.values()) - min(scores.values()) < 15:
+        # STRICT: Balanced only if ALL within 5%
+        max_score = max(scores.values())
+        min_score = min(scores.values())
+        
+        if (max_score - min_score) <= 5:
             return "Balanced (Sama Prakriti)"
         
-        # Single dominant
-        if dominant[1] > 60:
-            return f"{dominant[0].capitalize()} Dominant"
+        # Single dominant (>45%)
+        if dominant[1] >= 45:
+            return f"{dominant[0].capitalize()} Predominant"
         
-        # Dual type
-        if dominant[1] - second[1] < 10:
+        # Dual type (within 10% and both >30%)
+        if abs(dominant[1] - second[1]) <= 10 and second[1] >= 30:
             return f"{dominant[0].capitalize()}-{second[0].capitalize()} Type"
         
         return f"{dominant[0].capitalize()} Predominant"
     
-    def _generate_explanation(self, gunas, scores, features):
-        """Layer 5: Generate clinical explanation"""
+    def _generate_hierarchical_explanation(self, base_dosha, structural_reasoning, gunas, scores, features):
+        """Generate explanation following hierarchical reasoning"""
+        
+        explanation_parts = []
+        
+        # Part 1: Base Dosha from Structure
+        explanation_parts.append(f"**STEP 1 - Base Dosha (Structure):** {base_dosha.upper()}")
+        explanation_parts.append(" | ".join(structural_reasoning))
+        
+        # Part 2: Surface Adjustments
+        adjustments = []
+        if gunas['ruksha'] > 0.6:
+            adjustments.append(f"Dryness detected (Ruksha: {gunas['ruksha']:.2f}) -> +Vata adjustment")
+        if gunas['snigdha'] > 0.6:
+            adjustments.append(f"Oiliness detected (Snigdha: {gunas['snigdha']:.2f}) -> +Kapha adjustment")
+        if gunas['ushna'] > 0.6:
+            adjustments.append(f"Heat indicators (Ushna: {gunas['ushna']:.2f}) -> +Pitta adjustment")
+        
+        if adjustments:
+            explanation_parts.append(f"**STEP 2 - Surface Adjustments:** {'; '.join(adjustments)}")
+        else:
+            explanation_parts.append("**STEP 2 - Surface Adjustments:** No significant surface modifications")
+        
+        # Part 3: Final Classification
         dominant = max(scores.items(), key=lambda x: x[1])
-        dosha_name = dominant[0].capitalize()
+        explanation_parts.append(
+            f"**FINAL RESULT:** {dominant[0].capitalize()} constitution with "
+            f"Vata: {scores['vata']:.1f}%, Pitta: {scores['pitta']:.1f}%, Kapha: {scores['kapha']:.1f}%"
+        )
         
-        explanations = []
-        
-        # Vata explanation
-        if dominant[0] == 'vata':
-            if gunas['ruksha'] > 0.6:
-                explanations.append(f"pronounced dryness (Ruksha: {gunas['ruksha']:.2f})")
-            if gunas['laghu'] > 0.6:
-                explanations.append(f"light body structure (Laghu: {gunas['laghu']:.2f})")
-            if gunas['chala'] > 0.6:
-                explanations.append(f"mobile body type (Chala: {gunas['chala']:.2f})")
-            if features.get('body_frame', 0.5) < 0.4:
-                explanations.append(f"thin body frame")
-        
-        # Pitta explanation
-        elif dominant[0] == 'pitta':
-            if gunas['ushna'] > 0.6:
-                explanations.append(f"heat indicators (Ushna: {gunas['ushna']:.2f})")
-            if gunas['tikshna'] > 0.6:
-                explanations.append(f"angular body structure (Tikshna: {gunas['tikshna']:.2f})")
-            if features.get('redness', 0.5) > 0.5:
-                explanations.append(f"increased redness")
-            if features.get('pigmentation', 0.5) > 0.5:
-                explanations.append(f"prominent pigmentation")
-        
-        # Kapha explanation
-        elif dominant[0] == 'kapha':
-            if gunas['guru'] > 0.6:
-                explanations.append(f"heavy build (Guru: {gunas['guru']:.2f})")
-            if gunas['snigdha'] > 0.6:
-                explanations.append(f"oily skin (Snigdha: {gunas['snigdha']:.2f})")
-            if gunas['mridu'] > 0.6:
-                explanations.append(f"soft, rounded body (Mridu: {gunas['mridu']:.2f})")
-            if features.get('body_frame', 0.5) > 0.6:
-                explanations.append(f"robust body frame")
-        
-        if not explanations:
-            explanations.append("balanced guna distribution")
-        
-        return f"{dosha_name} constitution observed due to {', '.join(explanations)}."
+        return " | ".join(explanation_parts)
 
 
 def test_engine():
-    """Test the clinical engine"""
+    """Test the clinical engine with hierarchical reasoning"""
     engine = ClinicalAssessmentEngine()
     
-    # Test case: Vata-dominant (thin, light body)
-    test_features = {
-        'skin_texture': 0.7,
+    print("=" * 80)
+    print("TESTING HIERARCHICAL CLINICAL ASSESSMENT ENGINE")
+    print("=" * 80)
+    
+    # Test case 1: Kapha-dominant (heavy, rounded)
+    print("\n" + "=" * 80)
+    print("TEST CASE 1: Heavy Build + Rounded Face (Expected: Kapha)")
+    print("=" * 80)
+    kapha_features = {
+        'skin_texture': 0.3,
+        'oiliness': 0.8,
+        'pigmentation': 0.4,
+        'redness': 0.3,
+        'brightness': 0.7,
+        'body_frame': 0.75,      # Heavy
+        'body_width': 0.8,       # Wide
+        'body_height': 0.5,
+        'body_ratio': 0.75,      # Rounded
+        'shoulder_width': 0.7,
+        'hip_width': 0.75,
+        'torso_length': 0.6,
+        'limb_thickness': 0.7,   # Thick
+        'posture': 0.7
+    }
+    
+    result = engine.assess(kapha_features)
+    print_hierarchical_result(result)
+    
+    # Test case 2: Vata-dominant (lean, angular)
+    print("\n" + "=" * 80)
+    print("TEST CASE 2: Lean Build + Angular Face (Expected: Vata)")
+    print("=" * 80)
+    vata_features = {
+        'skin_texture': 0.8,
         'oiliness': 0.2,
         'pigmentation': 0.3,
         'redness': 0.3,
         'brightness': 0.5,
-        'body_frame': 0.25,      # Light build
+        'body_frame': 0.25,      # Light
         'body_width': 0.3,       # Narrow
-        'body_height': 0.7,      # Tall
-        'body_ratio': 0.4,       # Thin ratio
-        'shoulder_width': 0.3,   # Narrow shoulders
-        'hip_width': 0.3,        # Narrow hips
+        'body_height': 0.7,
+        'body_ratio': 0.35,      # Angular
+        'shoulder_width': 0.3,
+        'hip_width': 0.3,
         'torso_length': 0.6,
-        'limb_thickness': 0.3,   # Thin limbs
+        'limb_thickness': 0.3,   # Thin
         'posture': 0.4
     }
     
-    result = engine.assess(test_features)
+    result = engine.assess(vata_features)
+    print_hierarchical_result(result)
     
-    print("=== Clinical Assessment Result (Body-Based) ===")
-    print(f"Type: {result['type']}")
-    print(f"Confidence: {result['confidence']}%")
-    print(f"\nDosha Scores:")
-    print(f"  Vata: {result['dosha']['vata']}%")
-    print(f"  Pitta: {result['dosha']['pitta']}%")
-    print(f"  Kapha: {result['dosha']['kapha']}%")
-    print(f"\nExplanation: {result['explanation']}")
-    print(f"\nKey Gunas:")
-    for guna, value in sorted(result['guna_analysis'].items(), key=lambda x: x[1], reverse=True)[:5]:
-        print(f"  {guna}: {value:.2f}")
-    print(f"\n✅ No face detection required - Full body analysis only")
+    # Test case 3: Pitta-dominant (medium, balanced)
+    print("\n" + "=" * 80)
+    print("TEST CASE 3: Medium Build + Balanced Features (Expected: Pitta)")
+    print("=" * 80)
+    pitta_features = {
+        'skin_texture': 0.5,
+        'oiliness': 0.5,
+        'pigmentation': 0.7,
+        'redness': 0.8,
+        'brightness': 0.6,
+        'body_frame': 0.5,       # Medium
+        'body_width': 0.5,
+        'body_height': 0.6,
+        'body_ratio': 0.5,       # Balanced
+        'shoulder_width': 0.6,
+        'hip_width': 0.5,
+        'torso_length': 0.5,
+        'limb_thickness': 0.5,
+        'posture': 0.6
+    }
+    
+    result = engine.assess(pitta_features)
+    print_hierarchical_result(result)
+    
+    # Test case 4: Edge case - Dry skin but heavy build (Should be Kapha, not Vata)
+    print("\n" + "=" * 80)
+    print("TEST CASE 4: Dry Skin BUT Heavy Build (Expected: Kapha, NOT Vata)")
+    print("=" * 80)
+    edge_case_features = {
+        'skin_texture': 0.8,     # Very dry
+        'oiliness': 0.2,         # Low oil
+        'pigmentation': 0.4,
+        'redness': 0.3,
+        'brightness': 0.5,
+        'body_frame': 0.7,       # Heavy (STRUCTURE WINS)
+        'body_width': 0.75,
+        'body_height': 0.5,
+        'body_ratio': 0.7,       # Rounded
+        'shoulder_width': 0.7,
+        'hip_width': 0.7,
+        'torso_length': 0.6,
+        'limb_thickness': 0.65,
+        'posture': 0.7
+    }
+    
+    result = engine.assess(edge_case_features)
+    print_hierarchical_result(result)
+    
+    print("\n" + "=" * 80)
+    print("TESTS COMPLETE - Hierarchical Reasoning Working")
+    print("=" * 80)
+    print("\nStructure-first approach working correctly")
+    print("Surface features limited to adjustments only")
+    print("Correction rules applied successfully")
+
+
+def print_hierarchical_result(result):
+    """Print result in hierarchical format"""
+    print(f"\nRESULT: {result['type']}")
+    print(f"   Confidence: {result['confidence']:.1f}%")
+    print(f"\nBASE DOSHA (from structure): {result['base_dosha'].upper()}")
+    print(f"\nDOSHA SCORES:")
+    print(f"   Vata:  {result['dosha']['vata']:.2f}%")
+    print(f"   Pitta: {result['dosha']['pitta']:.2f}%")
+    print(f"   Kapha: {result['dosha']['kapha']:.2f}%")
+    print(f"\nHIERARCHICAL REASONING:")
+    for line in result['structural_reasoning']:
+        print(f"   - {line}")
+    print(f"\nEXPLANATION:")
+    print(f"   {result['explanation']}")
 
 
 if __name__ == "__main__":

@@ -10,6 +10,7 @@
             max-width: 1200px;
             margin: 40px auto;
             padding: 20px;
+            color: #FFFFFF;
         }
 
         .upload-section {
@@ -38,6 +39,11 @@
             font-size: 64px;
             color: #FF9933;
             margin-bottom: 20px;
+        }
+
+        .upload-area h3,
+        .upload-area p {
+            color: #333;
         }
 
         #imagePreview {
@@ -78,6 +84,11 @@
             margin-bottom: 20px;
         }
 
+        .result-card h2,
+        .result-card h3 {
+            color: #1a237e;
+        }
+
         .dosha-meters {
             margin: 30px 0;
         }
@@ -91,6 +102,7 @@
             justify-content: space-between;
             margin-bottom: 8px;
             font-weight: bold;
+            color: #333;
         }
 
         .meter-bar {
@@ -176,6 +188,12 @@
             border-radius: 4px;
         }
 
+        .info-box strong,
+        .info-box ul,
+        .info-box li {
+            color: #333;
+        }
+
         .recommendations {
             margin-top: 30px;
         }
@@ -186,15 +204,46 @@
             margin: 10px 0;
             border-left: 4px solid #138808;
             border-radius: 4px;
+            color: #333;
+        }
+
+        .recommendation-item strong {
+            color: #1a237e;
+        }
+
+        .loading p {
+            color: #FFFFFF;
+        }
+
+        h1, h2, h3, p {
+            color: #FFFFFF;
+        }
+
+        .body-analysis-container > h1,
+        .body-analysis-container > p {
+            color: #FFFFFF;
         }
     </style>
 </head>
 <body>
     <div class="body-analysis-container">
-        <h1 style="text-align: center; color: #FF9933; margin-bottom: 10px;">🧍 Body Structure Analysis</h1>
-        <p style="text-align: center; color: #666; margin-bottom: 40px;">
-            Upload a full-body image for Tridosha analysis based on body structure
+        <h1 style="text-align: center; color: #FFFFFF; margin-bottom: 10px;">🧘 Ayurvedic Body Analysis</h1>
+        <p style="text-align: center; color: #FFFFFF; margin-bottom: 10px;">
+            AI-Powered Prakriti Estimation using Clinical Intelligence Engine
         </p>
+        <p style="text-align: center; color: #FFFFFF; font-size: 14px; margin-bottom: 40px;">
+            10-Step Hierarchical Framework | Structure-Based Analysis
+        </p>
+
+        <div class="info-box" style="background: #fff3e0; border-left: 4px solid #ff9800; margin-bottom: 30px;">
+            <strong style="color: #e65100;">⚠️ Educational Purpose Only</strong>
+            <p style="color: #333; margin-top: 10px;">
+                This body analysis tool is designed for educational and wellness exploration purposes only. 
+                For accurate and comprehensive Prakriti assessment, please use our 
+                <a href="/clinical-assessment" style="color: #1976d2; font-weight: bold; text-decoration: underline;">Clinical Assessment</a> 
+                which includes 59 detailed questions based on traditional Ayurvedic principles.
+            </p>
+        </div>
 
         <div class="upload-section">
             <div class="upload-area" id="uploadArea">
@@ -228,19 +277,16 @@
                 
                 <div class="body-measurements">
                     <div class="measurement-card">
-                        <div class="measurement-label">Body Width</div>
-                        <div class="measurement-value" id="bodyWidth">-</div>
-                        <div class="measurement-label">pixels</div>
+                        <div class="measurement-label">Body Build</div>
+                        <div class="measurement-value" id="bodyWidth" style="font-size: 20px;">-</div>
                     </div>
                     <div class="measurement-card">
-                        <div class="measurement-label">Body Height</div>
-                        <div class="measurement-value" id="bodyHeight">-</div>
-                        <div class="measurement-label">pixels</div>
+                        <div class="measurement-label">Frame Width</div>
+                        <div class="measurement-value" id="bodyHeight" style="font-size: 20px;">-</div>
                     </div>
                     <div class="measurement-card">
                         <div class="measurement-label">Body Ratio</div>
                         <div class="measurement-value" id="bodyRatio">-</div>
-                        <div class="measurement-label">width/height</div>
                     </div>
                 </div>
 
@@ -344,7 +390,7 @@
             results.style.display = 'none';
 
             try {
-                const response = await fetch('/analyze-body', {
+                const response = await fetch('/analyze-ayurvedic-body', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ image: selectedImage })
@@ -365,28 +411,80 @@
         });
 
         function displayResults(data) {
-            // Body measurements
-            document.getElementById('bodyWidth').textContent = data.body_measurements.width;
-            document.getElementById('bodyHeight').textContent = data.body_measurements.height;
-            document.getElementById('bodyRatio').textContent = data.body_measurements.ratio.toFixed(3);
+            // Display structural analysis
+            const structural = data.structural_analysis || {};
+            document.getElementById('bodyWidth').textContent = structural.body_build || '-';
+            document.getElementById('bodyHeight').textContent = structural.frame_width || '-';
+            document.getElementById('bodyRatio').textContent = structural.body_ratio ? structural.body_ratio.toFixed(3) : '-';
 
-            // Result image
-            if (data.result_image) {
-                document.getElementById('resultImage').src = data.result_image;
-                document.getElementById('resultImage').style.display = 'block';
-            }
-
-            // Dominant dosha
-            document.getElementById('dominantDosha').textContent = data.dominant;
+            // Dominant prakriti
+            document.getElementById('dominantDosha').textContent = data.final_prakriti || data.dominant || '-';
 
             // Dosha meters
-            const scores = data.scores;
-            updateMeter('vata', scores.vata);
-            updateMeter('pitta', scores.pitta);
-            updateMeter('kapha', scores.kapha);
+            const scores = data.final_scores || data.scores || {};
+            updateMeter('vata', scores.vata || 0);
+            updateMeter('pitta', scores.pitta || 0);
+            updateMeter('kapha', scores.kapha || 0);
 
+            // Display detailed analysis
+            const container = document.getElementById('recommendations');
+            container.innerHTML = '<h3 style="color: #138808;">🧠 Clinical Analysis Report</h3>';
+            
+            // Base Dosha
+            if (data.base_dosha) {
+                const section = document.createElement('div');
+                section.className = 'recommendation-item';
+                section.innerHTML = `<strong>Base Dosha:</strong> ${data.base_dosha}<br><small>${data.base_dosha_justification || ''}</small>`;
+                container.appendChild(section);
+            }
+            
+            // Structural Analysis
+            if (structural.body_build) {
+                const section = document.createElement('div');
+                section.className = 'recommendation-item';
+                section.innerHTML = `<strong>Structural Analysis:</strong><br>
+                    • Body Build: ${structural.body_build}<br>
+                    • Frame: ${structural.frame_width}<br>
+                    • Face Shape: ${structural.face_shape}<br>
+                    • Fat Distribution: ${structural.fat_distribution}`;
+                container.appendChild(section);
+            }
+            
+            // Surface Observations
+            if (data.surface_observations) {
+                const surface = data.surface_observations;
+                const section = document.createElement('div');
+                section.className = 'recommendation-item';
+                section.innerHTML = `<strong>Surface Analysis:</strong><br>
+                    • Skin Texture: ${surface.texture}<br>
+                    • Skin Tone: ${surface.tone}`;
+                container.appendChild(section);
+            }
+            
+            // Confidence
+            if (data.confidence_level) {
+                const section = document.createElement('div');
+                section.className = 'recommendation-item';
+                section.style.background = data.confidence_level === 'High' ? '#e8f5e9' : data.confidence_level === 'Medium' ? '#fff3e0' : '#ffebee';
+                section.innerHTML = `<strong>Confidence Level:</strong> ${data.confidence_level} (${(data.confidence_score * 100).toFixed(0)}%)`;
+                container.appendChild(section);
+            }
+            
             // Recommendations
-            displayRecommendations(data.recommendations);
+            container.innerHTML += '<h3 style="color: #138808; margin-top: 20px;">🌿 Personalized Recommendations</h3>';
+            const recommendations = data.recommendations || [];
+            recommendations.forEach(rec => {
+                const item = document.createElement('div');
+                item.className = 'recommendation-item';
+                item.textContent = rec;
+                container.appendChild(item);
+            });
+            
+            // Disclaimer
+            const disclaimer = document.createElement('div');
+            disclaimer.style.cssText = 'background: #ffebee; padding: 15px; margin-top: 20px; border-left: 4px solid #d32f2f; border-radius: 4px; font-size: 12px;';
+            disclaimer.innerHTML = `<strong>⚠️ Medical Disclaimer:</strong> ${data.disclaimer || 'This is an AI-based estimation for wellness purposes only, not a medical diagnosis.'}`;
+            container.appendChild(disclaimer);
 
             results.style.display = 'block';
             results.scrollIntoView({ behavior: 'smooth' });
@@ -395,18 +493,6 @@
         function updateMeter(dosha, percent) {
             document.getElementById(dosha + 'Percent').textContent = percent.toFixed(1) + '%';
             document.getElementById(dosha + 'Bar').style.width = percent + '%';
-        }
-
-        function displayRecommendations(recommendations) {
-            const container = document.getElementById('recommendations');
-            container.innerHTML = '<h3 style="color: #138808;">🌿 Personalized Recommendations</h3>';
-            
-            recommendations.forEach(rec => {
-                const item = document.createElement('div');
-                item.className = 'recommendation-item';
-                item.textContent = rec;
-                container.appendChild(item);
-            });
         }
     </script>
 </body>

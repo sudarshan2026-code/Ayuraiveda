@@ -388,6 +388,11 @@
             margin: 0.5rem 0;
             font-size: 0.9rem;
             opacity: 0.9;
+            color: #FFFFFF !important;
+        }
+
+        footer strong {
+            color: #FFFFFF !important;
         }
 
         /* Theme Toggle */
@@ -446,14 +451,14 @@
         body.vata footer,
         body.vata .theme-toggle,
         body.vata .ayur-status {
-            color: var(--text);
+            color: #FFFFFF !important;
             font-weight: 600;
         }
 
         body.vata .glass-card strong,
         body.vata .glass-card h2,
         body.vata .glass-card h3 {
-            color: var(--text-bold);
+            color: #FFFFFF !important;
             font-weight: 700;
         }
 
@@ -470,14 +475,14 @@
         body.pitta footer,
         body.pitta .theme-toggle,
         body.pitta .ayur-status {
-            color: var(--text);
+            color: #FFFFFF !important;
             font-weight: 600;
         }
 
         body.pitta .glass-card strong,
         body.pitta .glass-card h2,
         body.pitta .glass-card h3 {
-            color: var(--text-bold);
+            color: #FFFFFF !important;
             font-weight: 700;
         }
 
@@ -494,15 +499,37 @@
         body.kapha footer,
         body.kapha .theme-toggle,
         body.kapha .ayur-status {
-            color: var(--text);
+            color: #FFFFFF !important;
             font-weight: 600;
         }
 
         body.kapha .glass-card strong,
         body.kapha .glass-card h2,
         body.kapha .glass-card h3 {
-            color: var(--text-bold);
+            color: #FFFFFF !important;
             font-weight: 700;
+        }
+
+        /* Global white text override */
+        body, p, span, div, li, td, th, label, a, h1, h2, h3, h4, h5, h6 {
+            color: #FFFFFF !important;
+        }
+
+        .glass-card * {
+            color: #FFFFFF !important;
+        }
+
+        .logo-text h1,
+        .logo-text p {
+            color: #FFFFFF !important;
+        }
+
+        nav a {
+            color: #FFFFFF !important;
+        }
+
+        .msme-badge {
+            color: #FFFFFF !important;
         }
 
         /* Responsive Breakpoints */
@@ -843,12 +870,7 @@
 <body>
     <!-- Background System -->
     <div class="bg-container">
-        <div class="bg-image" id="bg-vata-1" style="background-image: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.15)), url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1920&q=80');"></div>
-        <div class="bg-image" id="bg-vata-2" style="background-image: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.15)), url('https://images.unsplash.com/photo-1505576399279-565b52d4ac71?w=1920&q=80');"></div>
-        <div class="bg-image" id="bg-pitta-1" style="background-image: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.15)), url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1920&q=80');"></div>
-        <div class="bg-image" id="bg-pitta-2" style="background-image: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.15)), url('https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=1920&q=80');"></div>
-        <div class="bg-image" id="bg-kapha-1" style="background-image: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.15)), url('https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1920&q=80');"></div>
-        <div class="bg-image" id="bg-kapha-2" style="background-image: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.15)), url('https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=1920&q=80');"></div>
+        <div class="bg-image active" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.2)), url('{{ url_for('static', filename='images/bg.png') }}');"></div>
     </div>
     <div class="bg-overlay"></div>
 
@@ -857,7 +879,7 @@
     <div class="glow-effect" id="pitta-glow"></div>
 
     <!-- Ayurvedic Status Badge -->
-    <div class="ayur-status" id="ayur-status">Loading...</div>
+    <div class="ayur-status" id="ayur-status" style="display: none;">Loading...</div>
 
     <!-- Header -->
     <header class="header">
@@ -905,90 +927,8 @@
 
 <!-- Dynamic Theme Script -->
     <script>
-        function getAyurvedaPhase(hour) {
-            if (hour >= 4 && hour < 10) return "VATA";
-            if (hour >= 10 && hour < 14) return "PITTA";
-            if (hour >= 18 && hour < 22) return "KAPHA";
-            return "KAPHA";
-        }
-
-        function getPhaseDetails(phase) {
-            const details = {
-                VATA: {
-                    name: "Vata Time",
-                    time: "4:00 AM - 10:00 AM",
-                    backgrounds: ['bg-vata-1', 'bg-vata-2'],
-                    class: 'vata'
-                },
-                PITTA: {
-                    name: "Pitta Time",
-                    time: "10:00 AM - 2:00 PM",
-                    backgrounds: ['bg-pitta-1', 'bg-pitta-2'],
-                    class: 'pitta'
-                },
-                KAPHA: {
-                    name: "Kapha Time",
-                    time: "6:00 PM - 10:00 PM",
-                    backgrounds: ['bg-kapha-1', 'bg-kapha-2'],
-                    class: 'kapha'
-                }
-            };
-            return details[phase];
-        }
-
-        function createVataParticles() {
-            const container = document.getElementById('vata-particles');
-            container.innerHTML = '';
-            for (let i = 0; i < 30; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 8 + 's';
-                particle.style.animationDuration = (8 + Math.random() * 4) + 's';
-                container.appendChild(particle);
-            }
-        }
-
-        function applyTheme(phase) {
-            const details = getPhaseDetails(phase);
-            const body = document.body;
-
-            body.classList.remove('vata', 'pitta', 'kapha');
-            body.classList.add(details.class);
-
-            document.getElementById('ayur-status').textContent = `${details.name} (${details.time})`;
-
-            document.querySelectorAll('.bg-image').forEach(bg => bg.classList.remove('active'));
-            const randomBg = details.backgrounds[Math.floor(Math.random() * details.backgrounds.length)];
-            document.getElementById(randomBg).classList.add('active');
-
-            document.getElementById('vata-particles').classList.remove('active');
-            document.getElementById('pitta-glow').classList.remove('active');
-
-            if (phase === 'VATA') {
-                createVataParticles();
-                document.getElementById('vata-particles').classList.add('active');
-            } else if (phase === 'PITTA') {
-                document.getElementById('pitta-glow').classList.add('active');
-            }
-        }
-
-        function updateThemeBasedOnTime() {
-            const now = new Date();
-            const hour = now.getHours();
-            const phase = getAyurvedaPhase(hour);
-            applyTheme(phase);
-        }
-
-        function init() {
-            updateThemeBasedOnTime();
-        }
-
-        // Auto-update every 60 seconds
-        setInterval(updateThemeBasedOnTime, 60000);
-
-        init();
+        // Static background - no dynamic theme changes
+        document.body.classList.add('vata');
     </script>
 
     <!-- Mobile Menu Toggle Script -->

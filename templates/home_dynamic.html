@@ -77,13 +77,13 @@
 </div>
 
 <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-top: 3rem; animation: fadeInUp 1s ease 1.5s both;">
-    <a href="/clinical-assessment" class="btn btn-primary">Start Clinical Assessment</a>
-    <a href="/body-analysis" class="btn btn-primary" style="background: linear-gradient(135deg, #9C27B0, #673AB7);">Face & Body Analysis</a>
-    <a href="/chatbot" class="btn btn-secondary">Chat with AyurVaani</a>
+    <a href="/clinical-assessment" class="btn btn-primary" style="min-width: 200px; padding: 1.2rem 2rem; font-size: 1.1rem;">Start Clinical Assessment</a>
+    <a href="/body-analysis" class="btn btn-primary" style="background: linear-gradient(135deg, #9C27B0, #673AB7); min-width: 200px; padding: 1.2rem 2rem; font-size: 1.1rem;">Face &amp; Body Analysis</a>
+    <a href="/chatbot" class="btn btn-secondary" style="min-width: 200px; padding: 1.2rem 2rem; font-size: 1.1rem;">Chat with AyurVaani</a>
 </div>
 
-<div class="glass-card" style="background: rgba(255, 243, 224, 0.15); border-left: 4px solid var(--accent); margin-top: 3rem; animation: fadeInUp 1s ease 1.8s both;">
-    <p style="margin: 0; font-size: 0.9rem;"><strong>⚠️ Important Disclaimer:</strong> This system provides educational and preventive insights only. It is NOT a medical diagnosis platform. Always consult qualified healthcare professionals for medical advice.</p>
+<div class="glass-card" style="background: rgba(255, 243, 224, 0.2); border-left: 4px solid #FF9800; margin-top: 3rem; animation: fadeInUp 1s ease 1.8s both; padding: 1.5rem;">
+    <p style="margin: 0; font-size: 1rem; line-height: 1.8; color: #FFFFFF !important;"><strong style="color: #FFD54F !important;">⚠️ Important Disclaimer:</strong> This system provides educational and preventive insights only. It is NOT a medical diagnosis platform. Always consult qualified healthcare professionals for medical advice.</p>
 </div>
 
 <style>
@@ -106,6 +106,33 @@
         to {
             opacity: 1;
             transform: translateY(0);
+        }
+    }
+
+    /* Mobile optimizations */
+    @media (max-width: 768px) {
+        .btn {
+            width: 100%;
+            max-width: 100%;
+            padding: 1.2rem 1.5rem !important;
+            font-size: 1rem !important;
+            margin: 0.5rem 0;
+        }
+
+        .glass-card {
+            padding: 1.5rem !important;
+        }
+
+        .glass-card p {
+            font-size: 1rem !important;
+            line-height: 1.8 !important;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .btn {
+            padding: 1rem 1.25rem !important;
+            font-size: 0.95rem !important;
         }
     }
 </style>

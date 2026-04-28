@@ -1,3 +1,5 @@
+from body_validator import BodyStructureValidator
+
 class TridoshaIntelligenceEngine:
     """
     Tridosha Intelligence Engine™ (TIE)
@@ -10,13 +12,24 @@ class TridoshaIntelligenceEngine:
             'pitta': 0,
             'kapha': 0
         }
+        self.validator = BodyStructureValidator()
     
     def analyze(self, user_data):
-        self._reset_scores()
-        self._calculate_dosha_scores(user_data)
+        # STEP 0: Validate and correct structural misclassifications
+        corrected_data = self.validator.validate_and_correct(user_data)
         
-        # Voting logic: max raw score determines dominant dosha
+        self._reset_scores()
+        self._calculate_dosha_scores(corrected_data)
+        
+        # Apply Vata safety rule
         raw_scores = self.dosha_weights.copy()
+        if not corrected_data.get('vata_eligible', True):
+            raw_scores['vata'] *= 0.5  # Reduce Vata weight if not eligible
+        
+        # Structure lock: enforce base dosha if medium/medium-heavy
+        if corrected_data.get('base_dosha') == 'kapha-pitta':
+            raw_scores['vata'] *= 0.3  # Further reduce Vata
+        
         dominant = max(raw_scores, key=raw_scores.get)
         
         # Calculate percentages for display
