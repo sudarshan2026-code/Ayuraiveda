@@ -1,430 +1,351 @@
-class ClinicalTridoshaEngine:
-    """20-Parameter Clinical Diagnostic Engine - Classical Ayurveda"""
+"""
+Clinical Assessment Engine for AyurAI Veda™
+Implements: Lakshana (Features) → Guna (Qualities) → Dosha (Assessment)
+"""
+
+import math
+
+class ClinicalAssessmentEngine:
     
     def __init__(self):
-        # Try to initialize ML model API client
-        try:
-            from model_api_client import ModelAPIClient
-            self.ml_client = ModelAPIClient()
-            print("✓ ML Model API client initialized")
-        except:
-            self.ml_client = None
-            print("⚠ ML Model API not available, using rule-based only")
+        self.guna_weights = {
+            'vata': {'ruksha': 0.3, 'laghu': 0.3, 'chala': 0.2, 'sukshma': 0.2},
+            'pitta': {'ushna': 0.4, 'tikshna': 0.3, 'drava': 0.2, 'sara': 0.1},
+            'kapha': {'guru': 0.4, 'snigdha': 0.3, 'mridu': 0.2, 'sthira': 0.1}
+        }
+        
+        # Body-focused weights (no face required)
+        self.region_weights = {
+            'body': 0.50,        # Body structure is primary
+            'skin': 0.30,        # Skin characteristics
+            'proportions': 0.15, # Body proportions
+            'overall': 0.05      # Overall appearance
+        }
     
-    def analyze(self, data):
-        # Initialize scores
-        vata = pitta = kapha = 0
+    def assess(self, features):
+        """Main assessment pipeline"""
+        gunas = self._extract_gunas(features)
+        dosha_scores = self._compute_dosha_scores(gunas)
+        regional_scores = self._compute_regional_scores(features)
+        final_scores = self._combine_regional_scores(regional_scores)
         
-        # Convert numeric strings to integers
-        for key in ['mala', 'mutra_frequency', 'tongue_coating', 'bloating']:
-            if key in data and isinstance(data[key], str):
-                data[key] = int(data[key]) if data[key].isdigit() else 0
+        contradictions = self._detect_contradictions(gunas)
+        confidence = self._calculate_confidence(gunas, contradictions)
+        dosha_type = self._classify_type(final_scores)
+        explanation = self._generate_explanation(gunas, final_scores, features)
         
-        # Map text values to numeric scores
-        stress_map = {'low': 0, 'moderate': 1, 'high': 2}
-        anxiety_map = {'none': 0, 'moderate': 1, 'high': 2}
+        return {
+            'dosha': final_scores,
+            'type': dosha_type,
+            'confidence': round(confidence, 2),
+            'guna_analysis': gunas,
+            'explanation': explanation
+        }
+    
+    def _extract_gunas(self, f):
+        """Layer 1: Feature → Guna mapping (Body-focused)"""
         
-        stress_score = stress_map.get(data.get('stress', 'low'), 0)
-        anxiety_score = anxiety_map.get(data.get('anxiety', 'none'), 0)
+        # Get features with defaults
+        skin_texture = f.get('skin_texture', 0.5)
+        oiliness = f.get('oiliness', 0.5)
+        pigmentation = f.get('pigmentation', 0.5)
+        redness = f.get('redness', 0.5)
+        brightness = f.get('brightness', 0.5)
+        body_frame = f.get('body_frame', 0.5)
+        body_width = f.get('body_width', body_frame)
+        body_height = f.get('body_height', 0.5)
+        body_ratio = f.get('body_ratio', 0.5)
+        shoulder_width = f.get('shoulder_width', 0.5)
+        hip_width = f.get('hip_width', 0.5)
+        torso_length = f.get('torso_length', 0.5)
+        limb_thickness = f.get('limb_thickness', 0.5)
+        posture = f.get('posture', 0.5)
         
-        # FOUNDATION LAYER
-        agni_state = self._assess_agni(data)
-        ama_status = self._assess_ama(data)
+        # Ruksha (Dry/Rough) - from skin and body leanness
+        ruksha = (1 - oiliness) * 0.4 + skin_texture * 0.3 + (1 - body_frame) * 0.3
         
-        # 1-10: Personal Info
-        age = int(data.get('age', 25))
-        if age < 18: kapha += 2
-        elif age > 50: vata += 3
-        elif 18 <= age <= 50: pitta += 2
-        if data.get('gender') == 'male': pitta += 1
-        elif data.get('gender') == 'female': kapha += 1
+        # Snigdha (Unctuous/Oily) - from skin and body fullness
+        snigdha = oiliness * 0.5 + body_frame * 0.3 + brightness * 0.2
         
-        # 11-12: Body Measurements
-        bmi = float(data.get('bmi', 22))
-        if bmi < 18.5: vata += 4
-        elif 18.5 <= bmi < 25: pitta += 2
-        elif bmi >= 25: kapha += 4
+        # Ushna (Heat) - from skin tone and pigmentation
+        ushna = redness * 0.5 + pigmentation * 0.3 + (1 - brightness) * 0.2
         
-        # 13-15: Body Structure
-        if data.get('body_frame') == 'thin': vata += 4
-        elif data.get('body_frame') == 'medium': pitta += 3
-        elif data.get('body_frame') == 'heavy': kapha += 4
-        if data.get('body_build') == 'lean': vata += 3
-        elif data.get('body_build') == 'muscular': pitta += 3
-        elif data.get('body_build') == 'stocky': kapha += 3
-        if data.get('muscle_tone') == 'low': vata += 2
-        elif data.get('muscle_tone') == 'medium': pitta += 2
-        elif data.get('muscle_tone') == 'high': kapha += 2
+        # Tikshna (Sharp) - from angular body structure
+        tikshna = (1 - body_frame) * 0.4 + (1 - limb_thickness) * 0.3 + body_ratio * 0.3
         
-        # 16-19: Physical Characteristics
-        if data.get('weight_tendency') == 'hard_to_gain': vata += 4
-        elif data.get('weight_tendency') == 'stable': pitta += 2
-        elif data.get('weight_tendency') == 'easy_to_gain': kapha += 4
-        if data.get('joints') == 'prominent': vata += 3
-        elif data.get('joints') == 'normal': pitta += 1
-        elif data.get('joints') == 'well_covered': kapha += 2
-        if data.get('veins') == 'prominent': vata += 2
-        elif data.get('veins') == 'visible': pitta += 1
-        elif data.get('veins') == 'hidden': kapha += 2
-        if data.get('bone_structure') == 'light': vata += 3
-        elif data.get('bone_structure') == 'medium': pitta += 2
-        elif data.get('bone_structure') == 'heavy': kapha += 3
+        # Mridu (Soft) - from rounded body structure
+        mridu = body_frame * 0.4 + (1 - skin_texture) * 0.3 + limb_thickness * 0.3
         
-        # 20-24: Skin
-        if data.get('skin_type') == 'dry': vata += 4
-        elif data.get('skin_type') == 'sensitive': pitta += 4
-        elif data.get('skin_type') == 'oily': kapha += 4
-        if data.get('skin_texture') == 'rough': vata += 3
-        elif data.get('skin_texture') == 'soft': pitta += 2
-        elif data.get('skin_texture') == 'smooth': kapha += 3
-        if data.get('skin_temperature') == 'cold': vata += 3; kapha += 1
-        elif data.get('skin_temperature') == 'warm': pitta += 4
-        if data.get('complexion') == 'dark': vata += 2
-        elif data.get('complexion') == 'fair': pitta += 2
-        elif data.get('complexion') == 'pale': kapha += 2
-        if data.get('skin_luster') == 'dull': vata += 2
-        elif data.get('skin_luster') == 'radiant': pitta += 2
-        elif data.get('skin_luster') == 'glowing': kapha += 2
+        # Guru (Heavy) - from body mass and structure
+        guru = body_frame * 0.5 + body_width * 0.3 + limb_thickness * 0.2
         
-        # 25-27: Hair & Nails
-        if data.get('hair_type') == 'dry': vata += 3
-        elif data.get('hair_type') == 'thin': pitta += 3
-        elif data.get('hair_type') == 'thick': kapha += 3
-        if data.get('hair_texture') == 'rough': vata += 2
-        elif data.get('hair_texture') == 'fine': pitta += 2
-        elif data.get('hair_texture') == 'smooth': kapha += 2
-        if data.get('nails') == 'brittle': vata += 2
-        elif data.get('nails') == 'soft': pitta += 2
-        elif data.get('nails') == 'strong': kapha += 2
+        # Laghu (Light) - opposite of heavy
+        laghu = (1 - body_frame) * 0.5 + (1 - body_width) * 0.3 + body_height * 0.2
         
-        # 28-33: Appetite & Digestion
-        if data.get('appetite') == 'irregular': vata += 4
-        elif data.get('appetite') == 'strong': pitta += 4
-        elif data.get('appetite') == 'low': kapha += 3
-        if data.get('hunger') == 'variable': vata += 3
-        elif data.get('hunger') == 'intense': pitta += 3
-        elif data.get('hunger') == 'mild': kapha += 2
-        if data.get('thirst') == 'variable': vata += 2
-        elif data.get('thirst') == 'high': pitta += 3
-        elif data.get('thirst') == 'low': kapha += 2
-        if data.get('digestion') == 'irregular': vata += 4
-        elif data.get('digestion') == 'fast': pitta += 4
-        elif data.get('digestion') == 'slow': kapha += 4
-        if data.get('bowel') == 'constipation': vata += 5
-        elif data.get('bowel') == 'loose': pitta += 4
-        elif data.get('bowel') == 'heavy': kapha += 3
-        if data.get('gas') == 'frequent': vata += 3
+        # Sthira (Stable) - from body stability and structure
+        sthira = body_frame * 0.4 + posture * 0.3 + shoulder_width * 0.3
         
-        # 34-35: Food & Metabolism
-        if data.get('food_preference') == 'warm': vata += 2
-        elif data.get('food_preference') == 'cold': pitta += 2
-        elif data.get('food_preference') == 'spicy': kapha += 2
-        if data.get('metabolism') == 'fast': vata += 2; pitta += 2
-        elif data.get('metabolism') == 'slow': kapha += 3
+        # Chala (Mobile/Variable) - from body lightness
+        chala = (1 - body_frame) * 0.5 + (1 - posture) * 0.3 + (1 - limb_thickness) * 0.2
         
-        # 36-42: Lifestyle & Physiology
-        if data.get('sleep_pattern') == 'light': vata += 4
-        elif data.get('sleep_pattern') == 'moderate': pitta += 2
-        elif data.get('sleep_pattern') == 'deep': kapha += 4
-        if data.get('sleep_duration') == 'less_6': vata += 3; pitta += 2
-        elif data.get('sleep_duration') == 'more_8': kapha += 3
-        if data.get('dreams') == 'active': vata += 3
-        elif data.get('dreams') == 'colorful': pitta += 2
-        elif data.get('dreams') == 'few': kapha += 2
-        if data.get('energy_level') == 'variable': vata += 3
-        elif data.get('energy_level') == 'moderate': pitta += 2
-        elif data.get('energy_level') == 'steady': kapha += 3
-        if data.get('stamina') == 'low': vata += 3
-        elif data.get('stamina') == 'medium': pitta += 2
-        elif data.get('stamina') == 'high': kapha += 3
-        if data.get('physical_activity') == 'restless': vata += 4
-        elif data.get('physical_activity') == 'moderate': pitta += 2
-        elif data.get('physical_activity') == 'slow': kapha += 3
-        if data.get('exercise_tolerance') == 'low': vata += 2
-        elif data.get('exercise_tolerance') == 'high': pitta += 3
+        # Sukshma (Subtle) - from delicate structure
+        sukshma = (1 - body_frame) * 0.4 + (1 - limb_thickness) * 0.3 + skin_texture * 0.3
         
-        # 43-44: Body Response
-        if data.get('sweat') == 'minimal': vata += 3
-        elif data.get('sweat') == 'profuse': pitta += 4
-        elif data.get('sweat') == 'moderate': kapha += 2
-        if data.get('body_odor') == 'strong': pitta += 2
+        # Drava (Liquid/Flowing) - from skin and body softness
+        drava = oiliness * 0.5 + (1 - body_ratio) * 0.3 + brightness * 0.2
         
-        # 45-46: Climate
-        if data.get('weather_preference') == 'warm': vata += 3; kapha += 2
-        elif data.get('weather_preference') == 'cool': pitta += 3
-        if data.get('season_discomfort') == 'winter': vata += 2
-        elif data.get('season_discomfort') == 'summer': pitta += 3
-        elif data.get('season_discomfort') == 'spring': kapha += 2
+        # Sara (Flowing/Mobile) - from body fluidity
+        sara = oiliness * 0.4 + (1 - skin_texture) * 0.3 + (1 - body_frame) * 0.3
         
-        # 47-48: General Health
-        if data.get('immunity') == 'weak': vata += 3
-        elif data.get('immunity') == 'moderate': pitta += 2
-        elif data.get('immunity') == 'strong': kapha += 3
-        if data.get('disease_tendency') == 'nervous': vata += 4
-        elif data.get('disease_tendency') == 'inflammatory': pitta += 4
-        elif data.get('disease_tendency') == 'congestion': kapha += 4
+        return {
+            'ruksha': ruksha,
+            'snigdha': snigdha,
+            'ushna': ushna,
+            'tikshna': tikshna,
+            'mridu': mridu,
+            'guru': guru,
+            'laghu': laghu,
+            'sthira': sthira,
+            'chala': chala,
+            'sukshma': sukshma,
+            'drava': drava,
+            'sara': sara
+        }
+    
+    def _compute_dosha_scores(self, gunas):
+        """Layer 2: Guna → Dosha scoring"""
+        vata = (gunas['ruksha'] * 0.3 + gunas['laghu'] * 0.3 + 
+                gunas['chala'] * 0.2 + gunas['sukshma'] * 0.2)
         
-        # 49-51: Speech
-        if data.get('speech_pace') == 'fast': vata += 3
-        elif data.get('speech_pace') == 'moderate': pitta += 2
-        elif data.get('speech_pace') == 'slow': kapha += 3
-        if data.get('voice_quality') == 'weak': vata += 2
-        elif data.get('voice_quality') == 'sharp': pitta += 2
-        elif data.get('voice_quality') == 'deep': kapha += 2
-        if data.get('communication') == 'talkative': vata += 2
-        elif data.get('communication') == 'precise': pitta += 2
-        elif data.get('communication') == 'reserved': kapha += 2
+        pitta = (gunas['ushna'] * 0.4 + gunas['tikshna'] * 0.3 + 
+                 gunas['drava'] * 0.2 + gunas['sara'] * 0.1)
         
-        # 52: Movements
-        if data.get('movements') == 'quick': vata += 3
-        elif data.get('movements') == 'purposeful': pitta += 2
-        elif data.get('movements') == 'slow': kapha += 3
+        kapha = (gunas['guru'] * 0.4 + gunas['snigdha'] * 0.3 + 
+                 gunas['mridu'] * 0.2 + gunas['sthira'] * 0.1)
         
-        # 53: Mental State
-        if data.get('mental_state') == 'anxious': vata += 5
-        elif data.get('mental_state') == 'focused': pitta += 3
-        elif data.get('mental_state') == 'calm': kapha += 3
-        
-        # 54-57: Memory & Mind
-        if data.get('memory') == 'quick_forget': vata += 3
-        elif data.get('memory') == 'sharp': pitta += 3
-        elif data.get('memory') == 'slow_retain': kapha += 3
-        if data.get('learning') == 'quick': vata += 2; pitta += 2
-        elif data.get('learning') == 'slow': kapha += 2
-        if data.get('concentration') == 'poor': vata += 3
-        elif data.get('concentration') == 'good': pitta += 3
-        elif data.get('concentration') == 'excellent': kapha += 2
-        if data.get('decision_making') == 'quick': vata += 2
-        elif data.get('decision_making') == 'analytical': pitta += 3
-        elif data.get('decision_making') == 'slow': kapha += 2
-        
-        # 58-59: Behavior
-        if data.get('emotional_response') == 'fearful': vata += 4
-        elif data.get('emotional_response') == 'angry': pitta += 4
-        elif data.get('emotional_response') == 'attached': kapha += 3
-        if data.get('stress_response') == 'anxious': vata += 4
-        elif data.get('stress_response') == 'irritable': pitta += 3
-        elif data.get('stress_response') == 'withdrawn': kapha += 3
-        
-        # 54-59: Additional Characteristics
-        if data.get('teeth_gums') == 'weak': vata += 2
-        elif data.get('teeth_gums') == 'strong': kapha += 2
-        
-        if data.get('eyes_appearance') == 'small': vata += 2
-        elif data.get('eyes_appearance') == 'medium': pitta += 2
-        elif data.get('eyes_appearance') == 'large': kapha += 2
-        
-        if data.get('lips_condition') == 'dry': vata += 2
-        elif data.get('lips_condition') == 'moist': kapha += 2
-        
-        if data.get('temp_regulation') == 'poor': vata += 2
-        elif data.get('temp_regulation') == 'good': pitta += 1
-        
-        if data.get('pain_tolerance') == 'low': vata += 2
-        elif data.get('pain_tolerance') == 'high': kapha += 2
-        
-        if data.get('healing_speed') == 'slow': vata += 2; kapha += 1
-        elif data.get('healing_speed') == 'fast': pitta += 2
-        
-        # Agni modifier (±10%)
-        agni_modifier = {'sama': 1.0, 'vishama': 1.1, 'tikshna': 0.95, 'manda': 1.15}
-        vata *= agni_modifier.get(agni_state, 1.0)
-        
-        # Calculate percentages
         total = vata + pitta + kapha
-        if total == 0:
-            return self._sama_dosha_output()
-        
-        vata_pct = round((vata / total) * 100)
-        pitta_pct = round((pitta / total) * 100)
-        kapha_pct = round((kapha / total) * 100)
-        
-        # Determine dominant dosha
-        scores = {'Vata': vata_pct, 'Pitta': pitta_pct, 'Kapha': kapha_pct}
-        dominant = max(scores, key=scores.get)
-        dominant_score = scores[dominant]
-        
-        # STRICT DIAGNOSTIC RULES
-        
-        # Rule 1: Sama Dosha Check
-        has_symptoms = self._check_symptoms(data)
-        is_balanced = abs(vata_pct - pitta_pct) <= 10 and abs(pitta_pct - kapha_pct) <= 10
-        
-        if not has_symptoms and agni_state == 'sama' and ama_status == 'absent' and is_balanced:
-            return self._sama_dosha_output()
-        
-        # Rule 2: Dosha State Classification
-        if dominant_score >= 65:
-            dosha_state = "Severe Prakopa"
-        elif dominant_score >= 45:
-            dosha_state = "Prakopa"
-        else:
-            dosha_state = "Mild Imbalance"
-        
-        # Rule 3: Risk Level Calculation
-        risk_level, primary_risk = self._calculate_risk(data, dominant, dominant_score, agni_state, ama_status)
-        
-        # Rule 4: Contradiction Prevention
-        if risk_level == 'Low' and primary_risk:
-            risk_level = 'Moderate'
-        
-        # Generate recommendations
-        recommendations = self._generate_recommendations(dominant, agni_state, ama_status, data)
-        
-        # Clinical justification
-        justification = self._generate_justification(dominant, dosha_state, agni_state, ama_status, primary_risk)
         
         return {
-            'dominant': dominant,
-            'dosha_state': dosha_state,
-            'agni_state': agni_state.title(),
-            'ama_status': ama_status.title(),
-            'risk': risk_level,
-            'primary_risk': primary_risk,
-            'scores': {'vata': vata_pct, 'pitta': pitta_pct, 'kapha': kapha_pct},
-            'recommendations': recommendations,
-            'justification': justification
+            'vata': round((vata / total) * 100, 2),
+            'pitta': round((pitta / total) * 100, 2),
+            'kapha': round((kapha / total) * 100, 2)
         }
     
-    def _assess_agni(self, data):
-        """Assess digestive fire type"""
-        appetite = data.get('appetite', 'regular')
-        digestion = data.get('digestion', 'normal')
+    def _compute_regional_scores(self, f):
+        """Layer 4: Region-based analysis (Body-focused)"""
         
-        if appetite == 'irregular' or digestion == 'gas':
-            return 'vishama'  # Vata-type
-        elif appetite == 'excessive' or digestion == 'acidity':
-            return 'tikshna'  # Pitta-type
-        elif appetite == 'low' or digestion == 'slow':
-            return 'manda'  # Kapha-type
-        return 'sama'  # Balanced
-    
-    def _assess_ama(self, data):
-        """Assess toxin presence"""
-        tongue_coating = data.get('tongue_coating', 0)
-        bloating = data.get('bloating', 0)
-        fatigue = data.get('energy') == 'heavy'
+        # Get features with defaults
+        skin_texture = f.get('skin_texture', 0.5)
+        oiliness = f.get('oiliness', 0.5)
+        redness = f.get('redness', 0.5)
+        pigmentation = f.get('pigmentation', 0.5)
+        brightness = f.get('brightness', 0.5)
+        body_frame = f.get('body_frame', 0.5)
+        body_width = f.get('body_width', body_frame)
+        shoulder_width = f.get('shoulder_width', 0.5)
+        hip_width = f.get('hip_width', 0.5)
+        limb_thickness = f.get('limb_thickness', 0.5)
         
-        if tongue_coating > 2 or bloating > 2 or fatigue:
-            return 'present'
-        return 'absent'
-    
-    def _assess_prakriti(self, data):
-        """Assess constitutional baseline"""
-        body = data.get('body_structure', 'moderate')
-        return {'lean': 'Vata', 'moderate': 'Pitta', 'heavy': 'Kapha'}.get(body, 'Balanced')
-    
-    def _check_symptoms(self, data):
-        """Check if any active symptoms present"""
-        symptom_keys = ['stress', 'anxiety', 'acidity', 'bloating', 'mala', 'sleep']
-        return any(data.get(key) in ['high', 'poor', 'very_poor', 'constipation', 'acidity'] for key in symptom_keys)
-    
-    def _calculate_risk(self, data, dominant, score, agni, ama):
-        """Calculate risk level and primary risk"""
-        symptom_count = sum([
-            data.get('stress') == 'high',
-            data.get('anxiety') == 'high',
-            data.get('sleep') in ['poor', 'very_poor'],
-            data.get('digestion') in ['acidity', 'constipation', 'gas'],
-            ama == 'present',
-            agni in ['vishama', 'manda']
-        ])
+        # Skin region (30%)
+        skin_gunas = {
+            'ruksha': (1 - oiliness) * 0.5 + skin_texture * 0.5,
+            'snigdha': oiliness,
+            'ushna': redness * 0.7 + pigmentation * 0.3,
+            'mridu': (1 - skin_texture)
+        }
+        skin_vata = skin_gunas['ruksha'] * 0.6 + (1 - skin_gunas['snigdha']) * 0.4
+        skin_pitta = skin_gunas['ushna']
+        skin_kapha = skin_gunas['snigdha'] * 0.6 + skin_gunas['mridu'] * 0.4
         
-        # Disease mapping
-        primary_risk = None
-        if score >= 45:
-            if dominant == 'Vata':
-                if data.get('anxiety') == 'high':
-                    primary_risk = "Anxiety Disorders"
-                elif data.get('sleep') in ['poor', 'very_poor']:
-                    primary_risk = "Insomnia"
-                elif data.get('digestion') == 'constipation':
-                    primary_risk = "Chronic Constipation"
-                else:
-                    primary_risk = "Nervous System Imbalance"
-            
-            elif dominant == 'Pitta':
-                if data.get('digestion') == 'acidity':
-                    primary_risk = "Acid Reflux / GERD"
-                elif data.get('skin') == 'sensitive':
-                    primary_risk = "Inflammatory Skin Conditions"
-                elif data.get('stress') == 'high':
-                    primary_risk = "Stress-Induced Inflammation"
-                else:
-                    primary_risk = "Metabolic Imbalance"
-            
-            elif dominant == 'Kapha':
-                if data.get('body_structure') == 'heavy':
-                    primary_risk = "Obesity / Weight Gain"
-                elif data.get('energy') == 'heavy':
-                    primary_risk = "Chronic Fatigue"
-                elif data.get('digestion') == 'slow':
-                    primary_risk = "Slow Metabolism"
-                else:
-                    primary_risk = "Congestion Disorders"
+        # Body structure (50%) - PRIMARY INDICATOR
+        body_vata = (1 - body_frame) * 0.4 + (1 - limb_thickness) * 0.3 + (1 - body_width) * 0.3
+        body_pitta = 0.5  # Neutral for body structure
+        body_kapha = body_frame * 0.4 + limb_thickness * 0.3 + body_width * 0.3
         
-        # Risk level
-        if symptom_count == 0 and ama == 'absent' and agni == 'sama':
-            return 'Low', None
-        elif symptom_count >= 3 or (ama == 'present' and agni in ['vishama', 'manda']):
-            return 'High', primary_risk
-        else:
-            return 'Moderate', primary_risk
-    
-    def _sama_dosha_output(self):
-        """Output for balanced state"""
+        # Proportions (15%)
+        prop_vata = (1 - shoulder_width) * 0.5 + (1 - hip_width) * 0.5
+        prop_pitta = (shoulder_width + hip_width) / 2
+        prop_kapha = shoulder_width * 0.5 + hip_width * 0.5
+        
+        # Overall appearance (5%)
+        overall_vata = skin_texture * 0.5 + (1 - body_frame) * 0.5
+        overall_pitta = pigmentation * 0.5 + redness * 0.5
+        overall_kapha = brightness * 0.5 + body_frame * 0.5
+        
         return {
-            'dominant': 'Balanced (Sama Dosha)',
-            'dosha_state': 'Sama',
-            'agni_state': 'Sama',
-            'ama_status': 'Absent',
-            'risk': 'Low',
-            'primary_risk': None,
-            'scores': {'vata': 33, 'pitta': 33, 'kapha': 34},
-            'recommendations': [
-                'Maintain current healthy lifestyle',
-                'Continue balanced diet and regular routine',
-                'Practice preventive yoga and pranayama',
-                'Follow seasonal routines (Ritucharya)'
-            ],
-            'justification': 'All parameters indicate balanced Tridosha state with no active symptoms, balanced Agni, and absence of Ama. Continue preventive practices.'
+            'skin': {'vata': skin_vata, 'pitta': skin_pitta, 'kapha': skin_kapha},
+            'body': {'vata': body_vata, 'pitta': body_pitta, 'kapha': body_kapha},
+            'proportions': {'vata': prop_vata, 'pitta': prop_pitta, 'kapha': prop_kapha},
+            'overall': {'vata': overall_vata, 'pitta': overall_pitta, 'kapha': overall_kapha}
         }
     
-    def _generate_recommendations(self, dominant, agni, ama, data):
-        """Generate clinical recommendations"""
-        recs = []
+    def _combine_regional_scores(self, regional):
+        """Combine regional scores with weights (Body-focused)"""
+        # Updated weights: Body is primary indicator
+        weights = {
+            'body': 0.50,        # Body structure is most important
+            'skin': 0.30,        # Skin characteristics
+            'proportions': 0.15, # Body proportions
+            'overall': 0.05      # Overall appearance
+        }
         
-        if ama == 'present':
-            recs.append('Detoxification: Warm water with ginger, avoid heavy foods')
+        vata = (regional['body']['vata'] * weights['body'] +
+                regional['skin']['vata'] * weights['skin'] +
+                regional['proportions']['vata'] * weights['proportions'] +
+                regional['overall']['vata'] * weights['overall'])
         
-        if agni == 'manda':
-            recs.append('Strengthen Agni: Ginger tea, digestive spices (cumin, fennel)')
-        elif agni == 'tikshna':
-            recs.append('Cool Agni: Avoid spicy foods, eat cooling herbs (coriander, fennel)')
+        pitta = (regional['body']['pitta'] * weights['body'] +
+                 regional['skin']['pitta'] * weights['skin'] +
+                 regional['proportions']['pitta'] * weights['proportions'] +
+                 regional['overall']['pitta'] * weights['overall'])
         
-        if dominant == 'Vata':
-            recs.extend([
-                'Warm, cooked, oily foods (ghee, sesame oil)',
-                'Regular routine and adequate rest',
-                'Grounding yoga poses and oil massage (Abhyanga)'
-            ])
-        elif dominant == 'Pitta':
-            recs.extend([
-                'Cooling foods (cucumber, coconut, mint)',
-                'Avoid spicy, fried, acidic foods',
-                'Meditation and cooling pranayama (Sheetali)'
-            ])
-        elif dominant == 'Kapha':
-            recs.extend([
-                'Light, warm, spicy foods',
-                'Regular vigorous exercise',
-                'Avoid dairy, sweets, and heavy foods'
-            ])
+        kapha = (regional['body']['kapha'] * weights['body'] +
+                 regional['skin']['kapha'] * weights['skin'] +
+                 regional['proportions']['kapha'] * weights['proportions'] +
+                 regional['overall']['kapha'] * weights['overall'])
         
-        return recs[:5]
+        total = vata + pitta + kapha
+        
+        return {
+            'vata': round((vata / total) * 100, 2),
+            'pitta': round((pitta / total) * 100, 2),
+            'kapha': round((kapha / total) * 100, 2)
+        }
     
-    def _generate_justification(self, dominant, state, agni, ama, risk):
-        """Generate clinical justification"""
-        return f"Clinical Assessment: {dominant} {state} detected with {agni} Agni and {ama} Ama. " + \
-               (f"Primary risk identified: {risk}. " if risk else "No immediate disease risk. ") + \
-               "Recommendations follow classical Ayurvedic protocols for dosha pacification and Agni restoration."
+    def _detect_contradictions(self, gunas):
+        """Layer 3: Detect opposing Gunas"""
+        contradictions = []
+        
+        if abs(gunas['ruksha'] - gunas['snigdha']) < 0.2:
+            contradictions.append(('ruksha', 'snigdha'))
+        
+        if abs(gunas['laghu'] - gunas['guru']) < 0.2:
+            contradictions.append(('laghu', 'guru'))
+        
+        if abs(gunas['chala'] - gunas['sthira']) < 0.2:
+            contradictions.append(('chala', 'sthira'))
+        
+        return contradictions
+    
+    def _calculate_confidence(self, gunas, contradictions):
+        """Calculate confidence based on clarity and contradictions"""
+        base_confidence = 85
+        
+        # Reduce for contradictions
+        contradiction_penalty = len(contradictions) * 10
+        
+        # Check feature clarity (variance in gunas)
+        guna_values = list(gunas.values())
+        variance = sum((x - 0.5) ** 2 for x in guna_values) / len(guna_values)
+        clarity_bonus = variance * 20
+        
+        confidence = base_confidence - contradiction_penalty + clarity_bonus
+        return max(50, min(95, confidence))
+    
+    def _classify_type(self, scores):
+        """Layer 3: Classify dosha type"""
+        doshas = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+        
+        dominant = doshas[0]
+        second = doshas[1]
+        
+        # Balanced
+        if max(scores.values()) - min(scores.values()) < 15:
+            return "Balanced (Sama Prakriti)"
+        
+        # Single dominant
+        if dominant[1] > 60:
+            return f"{dominant[0].capitalize()} Dominant"
+        
+        # Dual type
+        if dominant[1] - second[1] < 10:
+            return f"{dominant[0].capitalize()}-{second[0].capitalize()} Type"
+        
+        return f"{dominant[0].capitalize()} Predominant"
+    
+    def _generate_explanation(self, gunas, scores, features):
+        """Layer 5: Generate clinical explanation"""
+        dominant = max(scores.items(), key=lambda x: x[1])
+        dosha_name = dominant[0].capitalize()
+        
+        explanations = []
+        
+        # Vata explanation
+        if dominant[0] == 'vata':
+            if gunas['ruksha'] > 0.6:
+                explanations.append(f"pronounced dryness (Ruksha: {gunas['ruksha']:.2f})")
+            if gunas['laghu'] > 0.6:
+                explanations.append(f"light body structure (Laghu: {gunas['laghu']:.2f})")
+            if gunas['chala'] > 0.6:
+                explanations.append(f"mobile body type (Chala: {gunas['chala']:.2f})")
+            if features.get('body_frame', 0.5) < 0.4:
+                explanations.append(f"thin body frame")
+        
+        # Pitta explanation
+        elif dominant[0] == 'pitta':
+            if gunas['ushna'] > 0.6:
+                explanations.append(f"heat indicators (Ushna: {gunas['ushna']:.2f})")
+            if gunas['tikshna'] > 0.6:
+                explanations.append(f"angular body structure (Tikshna: {gunas['tikshna']:.2f})")
+            if features.get('redness', 0.5) > 0.5:
+                explanations.append(f"increased redness")
+            if features.get('pigmentation', 0.5) > 0.5:
+                explanations.append(f"prominent pigmentation")
+        
+        # Kapha explanation
+        elif dominant[0] == 'kapha':
+            if gunas['guru'] > 0.6:
+                explanations.append(f"heavy build (Guru: {gunas['guru']:.2f})")
+            if gunas['snigdha'] > 0.6:
+                explanations.append(f"oily skin (Snigdha: {gunas['snigdha']:.2f})")
+            if gunas['mridu'] > 0.6:
+                explanations.append(f"soft, rounded body (Mridu: {gunas['mridu']:.2f})")
+            if features.get('body_frame', 0.5) > 0.6:
+                explanations.append(f"robust body frame")
+        
+        if not explanations:
+            explanations.append("balanced guna distribution")
+        
+        return f"{dosha_name} constitution observed due to {', '.join(explanations)}."
+
+
+def test_engine():
+    """Test the clinical engine"""
+    engine = ClinicalAssessmentEngine()
+    
+    # Test case: Vata-dominant (thin, light body)
+    test_features = {
+        'skin_texture': 0.7,
+        'oiliness': 0.2,
+        'pigmentation': 0.3,
+        'redness': 0.3,
+        'brightness': 0.5,
+        'body_frame': 0.25,      # Light build
+        'body_width': 0.3,       # Narrow
+        'body_height': 0.7,      # Tall
+        'body_ratio': 0.4,       # Thin ratio
+        'shoulder_width': 0.3,   # Narrow shoulders
+        'hip_width': 0.3,        # Narrow hips
+        'torso_length': 0.6,
+        'limb_thickness': 0.3,   # Thin limbs
+        'posture': 0.4
+    }
+    
+    result = engine.assess(test_features)
+    
+    print("=== Clinical Assessment Result (Body-Based) ===")
+    print(f"Type: {result['type']}")
+    print(f"Confidence: {result['confidence']}%")
+    print(f"\nDosha Scores:")
+    print(f"  Vata: {result['dosha']['vata']}%")
+    print(f"  Pitta: {result['dosha']['pitta']}%")
+    print(f"  Kapha: {result['dosha']['kapha']}%")
+    print(f"\nExplanation: {result['explanation']}")
+    print(f"\nKey Gunas:")
+    for guna, value in sorted(result['guna_analysis'].items(), key=lambda x: x[1], reverse=True)[:5]:
+        print(f"  {guna}: {value:.2f}")
+    print(f"\n✅ No face detection required - Full body analysis only")
+
+
+if __name__ == "__main__":
+    test_engine()

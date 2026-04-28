@@ -64,6 +64,10 @@ def face_analysis_advanced():
 def body_analysis():
     return render_template('body_face_fusion.html')
 
+@app.route('/ml-face-analysis')
+def ml_face_analysis():
+    return render_template('ml_face_analysis.html')
+
 @app.route('/analyze-face', methods=['POST'])
 def analyze_face():
     """Analyze face from uploaded image or camera capture with automatic quality enhancement"""
@@ -2330,3 +2334,169 @@ def log_feedback(data):
 
 # Vercel serverless handler
 handler = app
+
+
+@app.route('/analyze-ml-face', methods=['POST'])
+def analyze_ml_face():
+    """ML-based face analysis using feature extraction pipeline"""
+    try:
+        import sys
+        import os
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)) + '/..')
+        
+        from dosha_pipeline import DoshaAnalysisPipeline
+        import numpy as np
+        
+        data = request.json
+        image_data = data.get('image')
+        user_data = data.get('user_data', {})
+        
+        if not image_data:
+            return jsonify({'success': False, 'error': 'No image provided'})
+        
+        # Initialize pipeline
+        pipeline = DoshaAnalysisPipeline()
+        
+        # Analyze image
+        result = pipeline.analyze_image(image_data, input_type='base64', include_metadata=True)
+        
+        if not result['success']:
+            return jsonify(result)
+        
+        # Convert numpy types to Python native types
+        def convert_to_native(obj):
+            if isinstance(obj, np.integer):
+                return int(obj)
+            elif isinstance(obj, np.floating):
+                return float(obj)
+            elif isinstance(obj, np.ndarray):
+                return obj.tolist()
+            elif isinstance(obj, dict):
+                return {key: convert_to_native(value) for key, value in obj.items()}
+            elif isinstance(obj, list):
+                return [convert_to_native(item) for item in obj]
+            return obj
+        
+        result = convert_to_native(result)
+        result['user_data'] = user_data
+        result['analysis_type'] = 'ML-Based Feature Extraction Pipeline'
+        
+        # Format for compatibility with existing UI
+        formatted_result = {
+            'success': True,
+            'dominant': result['dominant_dosha'],
+            'scores': {
+                'vata': result['dosha_percentages']['vata'],
+                'pitta': result['dosha_percentages']['pitta'],
+                'kapha': result['dosha_percentages']['kapha']
+            },
+            'explanation': result['explanation']['summary'],
+            'features': result.get('features', {}),
+            'metadata': result.get('metadata', {}),
+            'recommendations': result['recommendations']['diet'][:3] + result['recommendations']['lifestyle'][:2],
+            'diet_suggestions': {
+                'foods_to_favor': result['recommendations']['diet'][:4],
+                'foods_to_avoid': [],
+                'meal_timing': []
+            },
+            'lifestyle_tips': {
+                'daily_routine': result['recommendations']['lifestyle'][:3],
+                'exercise': result['recommendations']['exercise'][:3],
+                'seasonal_care': []
+            },
+            'processing_time': result.get('processing_time', 0),
+            'prediction_method': result.get('prediction_method', 'ml_model')
+        }
+        
+        return jsonify(formatted_result)
+        
+    except Exception as e:
+        print(f"ML face analysis error: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'success': False,
+            'error': f'ML analysis failed: {str(e)}'
+        }), 500
+
+@app.route('/analyze-clinical-image', methods=['POST'])
+def analyze_clinical_image():
+    """Clinical assessment using Lakshana → Guna → Dosha pipeline (Body-based, no face detection)"""
+    try:
+        import sys
+        import os
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)) + '/..')
+        
+        from clinical_engine import ClinicalAssessmentEngine
+        from simple_body_extractor import SimpleBodyExtractor
+        import numpy as np
+        
+        data = request.json
+        image_data = data.get('image')
+        user_data = data.get('user_data', {})
+        
+        if not image_data:
+            return jsonify({'success': False, 'error': 'No image provided'})
+        
+        # Step 1: Extract body features (no face detection required)
+        print("🔍 Extracting body features...")
+        extractor = SimpleBodyExtractor()
+        feature_result = extractor.extract_features(image_data, input_type='base64')
+        
+        if not feature_result['success']:
+            return jsonify(feature_result)
+        
+        print("✅ Body features extracted successfully")
+        
+        # Step 2: Use clinical engine for assessment
+        print("🧠 Running clinical assessment...")
+        clinical_engine = ClinicalAssessmentEngine()
+        clinical_result = clinical_engine.assess(feature_result['features'])
+        
+        print("✅ Clinical assessment completed")
+        
+        # Convert numpy types
+        def convert_to_native(obj):
+            if isinstance(obj, np.integer):
+                return int(obj)
+            elif isinstance(obj, np.floating):
+                return float(obj)
+            elif isinstance(obj, np.ndarray):
+                return obj.tolist()
+            elif isinstance(obj, dict):
+                return {key: convert_to_native(value) for key, value in obj.items()}
+            elif isinstance(obj, list):
+                return [convert_to_native(item) for item in obj]
+            return obj
+        
+        clinical_result = convert_to_native(clinical_result)
+        
+        # Format response
+        dominant_lower = clinical_result['type'].split()[0].lower()
+        
+        formatted_result = {
+            'success': True,
+            'analysis_type': 'Clinical Assessment (Lakshana → Guna → Dosha) - Body-Based',
+            'dominant': clinical_result['type'],
+            'scores': clinical_result['dosha'],
+            'confidence': clinical_result['confidence'],
+            'explanation': clinical_result['explanation'],
+            'guna_analysis': clinical_result['guna_analysis'],
+            'features': feature_result.get('features', {}),
+            'recommendations': get_recommendations(dominant_lower),
+            'diet_suggestions': get_diet_suggestions(dominant_lower),
+            'lifestyle_tips': get_lifestyle_tips(dominant_lower),
+            'user_data': user_data,
+            'note': 'No face detection required - Full body analysis'
+        }
+        
+        return jsonify(formatted_result)
+        
+    except Exception as e:
+        print(f"Clinical image analysis error: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'success': False,
+            'error': f'Clinical analysis failed: {str(e)}'
+        }), 500

@@ -248,9 +248,9 @@
 
 {% block content %}
 <div style="text-align: center; margin-bottom: 3rem; animation: fadeInDown 1s ease;">
-    <h2 style="font-size: 3rem; font-weight: 700; margin-bottom: 1rem;">🧘 Face & Body Fusion Analysis</h2>
+    <h2 style="font-size: 3rem; font-weight: 700; margin-bottom: 1rem;">🏥 Clinical Body Assessment</h2>
     <p style="font-size: 1.2rem; opacity: 0.9; max-width: 800px; margin: 0 auto;">
-        Upload ONE full-body image for complete Tridosha analysis combining facial features and body structure
+        Upload or capture a full body image for AI-powered Tridosha analysis using authentic Ayurvedic clinical reasoning
     </p>
 </div>
 
@@ -268,7 +268,7 @@
         <!-- Click Image Option -->
         <div class="upload-option" onclick="openCamera()" style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); padding: 40px; border-radius: 20px; text-align: center; cursor: pointer; transition: all 0.3s; border: 2px solid rgba(255, 255, 255, 0.2);">
             <div style="font-size: 80px; margin-bottom: 20px;">📷</div>
-            <h3 style="font-size: 1.5rem; margin-bottom: 15px;">Click Image</h3>
+            <h3 style="font-size: 1.5rem; margin-bottom: 15px;">Capture Photo</h3>
             <p style="opacity: 0.8; font-size: 1rem;">Take photo with camera</p>
         </div>
     </div>
@@ -277,7 +277,10 @@
     <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;">
     
     <img id="imagePreview" alt="Preview">
-    <button class="analyze-btn" id="analyzeBtn">🔍 Analyze Face & Body</button>
+    <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 20px;">
+        <button class="analyze-btn" id="retakeBtn" style="display: none; background: linear-gradient(135deg, #FF5722, #FF9800);" onclick="retakePhoto()">🔄 Retake Photo</button>
+        <button class="analyze-btn" id="analyzeClinicalBtn" style="display: none; background: linear-gradient(135deg, #4CAF50, #8BC34A);">🏥 Analyze with Clinical Assessment</button>
+    </div>
 </div>
 
 <style>
@@ -287,23 +290,43 @@
         border-color: var(--primary) !important;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     }
+    
+    .upload-option:active {
+        transform: translateY(-2px);
+    }
+    
+    .camera-opening {
+        animation: pulse 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.8;
+            transform: scale(1.05);
+        }
+    }
 </style>
 
 <div class="glass-card" style="animation: fadeInUp 1s ease 0.6s both;">
     <strong style="font-size: 18px;">📌 Tips for Best Results:</strong>
     <ul style="margin: 15px 0 0 25px;">
-        <li>✅ Ensure full body AND face are clearly visible</li>
+        <li>✅ Full body should be clearly visible (face not required)</li>
         <li>✅ Stand straight with arms at sides</li>
         <li>✅ Use good lighting (natural light preferred)</li>
         <li>✅ Avoid baggy clothing for accurate body measurements</li>
-        <li>✅ Face should be clearly visible (no sunglasses/masks)</li>
+        <li>✅ Plain background works best</li>
+        <li>✅ No face detection needed - body analysis only</li>
     </ul>
 </div>
 
 <div class="loading" id="loading">
     <div class="spinner"></div>
-    <h2 style="margin-bottom: 10px;">Analyzing...</h2>
-    <p style="opacity: 0.8;">Processing face and body structure</p>
+    <h2 style="margin-bottom: 10px;">Running Clinical Assessment...</h2>
+    <p style="opacity: 0.8;">Analyzing body structure using Ayurvedic reasoning</p>
 </div>
 
 <div class="results-section" id="results">
@@ -545,7 +568,6 @@
     const imageInput = document.getElementById('imageInput');
     const cameraInput = document.getElementById('cameraInput');
     const imagePreview = document.getElementById('imagePreview');
-    const analyzeBtn = document.getElementById('analyzeBtn');
     const loading = document.getElementById('loading');
     const results = document.getElementById('results');
 
@@ -565,12 +587,34 @@
             // Auto-scroll to preview after capture
             setTimeout(() => {
                 imagePreview.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 300);
+            }, 500);
         }
     });
 
     function openCamera() {
+        // Show visual feedback
+        const cameraOption = event.currentTarget;
+        const originalHTML = cameraOption.innerHTML;
+        
+        // Add pulsing animation
+        cameraOption.classList.add('camera-opening');
+        
+        cameraOption.innerHTML = `
+            <div style="font-size: 80px; margin-bottom: 20px;">📸</div>
+            <h3 style="font-size: 1.5rem; margin-bottom: 15px;">Opening Camera...</h3>
+            <p style="opacity: 0.8; font-size: 1rem;">Please allow camera access</p>
+        `;
+        
+        // Trigger camera input
         cameraInput.click();
+        
+        // Reset after 3 seconds if no image captured
+        setTimeout(() => {
+            if (!selectedImage) {
+                cameraOption.classList.remove('camera-opening');
+                cameraOption.innerHTML = originalHTML;
+            }
+        }, 3000);
     }
 
     function handleImageUpload(file) {
@@ -579,9 +623,32 @@
             selectedImage = e.target.result;
             imagePreview.src = selectedImage;
             imagePreview.style.display = 'block';
-            analyzeBtn.style.display = 'inline-block';
+            document.getElementById('analyzeClinicalBtn').style.display = 'inline-block';
+            document.getElementById('retakeBtn').style.display = 'inline-block';
+            
+            // Scroll to preview
+            setTimeout(() => {
+                imagePreview.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 300);
         };
         reader.readAsDataURL(file);
+    }
+    
+    function retakePhoto() {
+        // Clear current image
+        selectedImage = null;
+        imagePreview.src = '';
+        imagePreview.style.display = 'none';
+        document.getElementById('analyzeClinicalBtn').style.display = 'none';
+        document.getElementById('retakeBtn').style.display = 'none';
+        results.style.display = 'none';
+        
+        // Reset file inputs
+        imageInput.value = '';
+        cameraInput.value = '';
+        
+        // Scroll back to upload section
+        document.querySelector('.upload-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function displayFaceVisuals(faceData) {
@@ -605,58 +672,38 @@
         }
     }
 
-    analyzeBtn.addEventListener('click', async () => {
+    // Clinical Assessment Button Handler
+    document.getElementById('analyzeClinicalBtn').addEventListener('click', async () => {
         if (!selectedImage) return;
 
         loading.style.display = 'block';
         results.style.display = 'none';
+        document.querySelector('#loading h2').textContent = 'Running Clinical Assessment...';
+        document.querySelector('#loading p').textContent = 'Lakshana → Guna → Dosha reasoning pipeline';
 
         try {
-            const faceResponse = await fetch('/analyze-face-enhanced', {
+            const response = await fetch('/analyze-clinical-image', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ image: selectedImage })
             });
             
-            if (!faceResponse.ok) {
-                const errorText = await faceResponse.text();
-                throw new Error(`Face analysis failed (${faceResponse.status}): ${errorText.substring(0, 200)}`);
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Clinical analysis failed (${response.status}): ${errorText.substring(0, 200)}`);
             }
             
-            const faceData = await faceResponse.json();
+            const clinicalData = await response.json();
 
-            if (!faceData.success) {
-                alert('❌ Face analysis failed: ' + faceData.error);
+            if (!clinicalData.success) {
+                alert('❌ Clinical analysis failed: ' + clinicalData.error);
                 loading.style.display = 'none';
                 return;
             }
 
-            displayFaceVisuals(faceData);
-
-            const fusionResponse = await fetch('/analyze-face-body-fusion', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    image: selectedImage,
-                    face_scores: faceData.scores
-                })
-            });
-            
-            if (!fusionResponse.ok) {
-                const errorText = await fusionResponse.text();
-                throw new Error(`Fusion analysis failed (${fusionResponse.status}): ${errorText.substring(0, 200)}`);
-            }
-            
-            const fusionData = await fusionResponse.json();
-
-            if (fusionData.success) {
-                fusionResult = fusionData; // Store for PDF download
-                displayResults(faceData, fusionData);
-            } else {
-                alert('❌ Body/Fusion analysis failed: ' + fusionData.error);
-            }
+            displayClinicalResults(clinicalData);
         } catch (error) {
-            alert('❌ Analysis failed: ' + error.message);
+            alert('❌ Clinical Analysis failed: ' + error.message);
         } finally {
             loading.style.display = 'none';
         }
@@ -812,8 +859,210 @@
         }
     }
 
-    // Store fusion result globally for PDF download
+    // Store result globally for PDF download
     let fusionResult = null;
+
+    function displayMLResults(mlData) {
+        // Display extracted features dashboard
+        const featuresCard = document.createElement('div');
+        featuresCard.className = 'glass-card';
+        featuresCard.style.cssText = 'margin-bottom: 30px; background: rgba(156, 39, 176, 0.1); border-color: rgba(156, 39, 176, 0.3);';
+        
+        let featuresHTML = '<h2 style="margin-bottom: 20px;">🧠 Extracted Features Dashboard</h2>';
+        featuresHTML += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">';
+        
+        if (mlData.features) {
+            const featureGroups = {
+                'Skin Features': ['skin_texture', 'oiliness', 'pigmentation', 'wrinkles'],
+                'Facial Structure': ['face_ratio', 'jaw_width', 'eye_spacing', 'nose_ratio'],
+                'Color Analysis': ['skin_tone_hue', 'redness', 'brightness'],
+                'Body Analysis': ['body_frame', 'shoulder_ratio', 'posture']
+            };
+            
+            for (const [groupName, features] of Object.entries(featureGroups)) {
+                featuresHTML += `<div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">`;
+                featuresHTML += `<h3 style="margin-bottom: 15px; font-size: 1.1rem; color: #E1BEE7;">${groupName}</h3>`;
+                
+                features.forEach(feature => {
+                    const value = mlData.features[feature] || 0;
+                    const percentage = (value * 100).toFixed(1);
+                    const featureName = feature.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    
+                    featuresHTML += `
+                        <div style="margin-bottom: 12px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9rem;">
+                                <span>${featureName}</span>
+                                <span style="font-weight: bold;">${percentage}%</span>
+                            </div>
+                            <div style="height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+                                <div style="height: 100%; width: ${percentage}%; background: linear-gradient(90deg, #9C27B0, #E91E63); transition: width 1s ease;"></div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                featuresHTML += '</div>';
+            }
+        }
+        
+        featuresHTML += '</div>';
+        
+        // Add processing info
+        if (mlData.processing_time) {
+            featuresHTML += `<div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 8px; text-align: center;">`;
+            featuresHTML += `<strong>⏱️ Processing Time:</strong> ${mlData.processing_time}s | `;
+            featuresHTML += `<strong>🤖 Method:</strong> ${mlData.prediction_method || 'ML Model'}`;
+            featuresHTML += `</div>`;
+        }
+        
+        featuresCard.innerHTML = featuresHTML;
+        
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = '';
+        resultsDiv.appendChild(featuresCard);
+        
+        // Display dosha results
+        const doshaCard = document.createElement('div');
+        doshaCard.className = 'fusion-card';
+        doshaCard.innerHTML = `
+            <div class="fusion-title">🎯 ML Prediction Result</div>
+            <div class="fusion-dominant">${mlData.dominant}</div>
+            <div class="fusion-details">
+                <p style="font-size: 18px; margin-bottom: 10px;">Feature-Based ML Analysis</p>
+                <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                    <div>
+                        <div style="font-size: 14px; opacity: 0.9;">Vata</div>
+                        <div style="font-size: 28px; font-weight: bold;">${mlData.scores.vata.toFixed(1)}%</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 14px; opacity: 0.9;">Pitta</div>
+                        <div style="font-size: 28px; font-weight: bold;">${mlData.scores.pitta.toFixed(1)}%</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 14px; opacity: 0.9;">Kapha</div>
+                        <div style="font-size: 28px; font-weight: bold;">${mlData.scores.kapha.toFixed(1)}%</div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 8px;">
+                    <p style="font-size: 14px; margin: 0; opacity: 0.9;">${mlData.explanation}</p>
+                </div>
+            </div>
+        `;
+        resultsDiv.appendChild(doshaCard);
+        
+        // Display recommendations
+        const recCard = document.createElement('div');
+        recCard.className = 'glass-card';
+        recCard.innerHTML = '<h2 style="margin-bottom: 20px;">🌿 Personalized Recommendations</h2>';
+        
+        if (mlData.recommendations) {
+            mlData.recommendations.forEach((rec, index) => {
+                recCard.innerHTML += `<div class="recommendation-item"><strong>${index + 1}.</strong> ${rec}</div>`;
+            });
+        }
+        
+        resultsDiv.appendChild(recCard);
+        
+        results.style.display = 'block';
+        results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function displayClinicalResults(clinicalData) {
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = '';
+        
+        // Clinical Assessment Header
+        const headerCard = document.createElement('div');
+        headerCard.className = 'glass-card';
+        headerCard.style.cssText = 'margin-bottom: 30px; background: rgba(76, 175, 80, 0.1); border-color: rgba(76, 175, 80, 0.3);';
+        headerCard.innerHTML = `
+            <h2 style="margin-bottom: 15px;">🏥 Clinical Assessment Method</h2>
+            <p style="font-size: 1.1rem; line-height: 1.8; opacity: 0.95;">
+                <strong>Analysis Type:</strong> ${clinicalData.analysis_type}<br>
+                <strong>Method:</strong> 3-Layer Ayurvedic Reasoning (Lakshana → Guna → Dosha)<br>
+                <strong>Confidence:</strong> ${clinicalData.confidence}%<br>
+                <strong>✅ ${clinicalData.note}</strong>
+            </p>
+        `;
+        resultsDiv.appendChild(headerCard);
+        
+        // Guna Analysis Card
+        const gunaCard = document.createElement('div');
+        gunaCard.className = 'glass-card';
+        gunaCard.style.cssText = 'margin-bottom: 30px; background: rgba(255, 152, 0, 0.1); border-color: rgba(255, 152, 0, 0.3);';
+        
+        let gunaHTML = '<h2 style="margin-bottom: 20px;">🔬 Ayurvedic Qualities (Gunas) Analysis</h2>';
+        gunaHTML += '<p style="opacity: 0.9; margin-bottom: 20px;">Traditional Ayurvedic qualities detected in your body constitution:</p>';
+        gunaHTML += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">';
+        
+        // Sort gunas by value
+        const sortedGunas = Object.entries(clinicalData.guna_analysis)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 8); // Top 8 gunas
+        
+        sortedGunas.forEach(([guna, value]) => {
+            const percentage = (value * 100).toFixed(1);
+            const gunaName = guna.charAt(0).toUpperCase() + guna.slice(1);
+            gunaHTML += `
+                <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+                    <div style="font-size: 1.1rem; font-weight: bold; margin-bottom: 10px;">${gunaName}</div>
+                    <div style="font-size: 1.8rem; font-weight: bold; color: #FF9800; margin-bottom: 8px;">${percentage}%</div>
+                    <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+                        <div style="height: 100%; width: ${percentage}%; background: linear-gradient(90deg, #FF9800, #FFC107);"></div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        gunaHTML += '</div>';
+        gunaCard.innerHTML = gunaHTML;
+        resultsDiv.appendChild(gunaCard);
+        
+        // Dosha Results Card
+        const doshaCard = document.createElement('div');
+        doshaCard.className = 'fusion-card';
+        doshaCard.innerHTML = `
+            <div class="fusion-title">🎯 Clinical Assessment Result</div>
+            <div class="fusion-dominant">${clinicalData.dominant}</div>
+            <div class="fusion-details">
+                <p style="font-size: 18px; margin-bottom: 10px;">Body-Based Clinical Analysis</p>
+                <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                    <div>
+                        <div style="font-size: 14px; opacity: 0.9;">Vata</div>
+                        <div style="font-size: 28px; font-weight: bold;">${clinicalData.scores.vata.toFixed(1)}%</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 14px; opacity: 0.9;">Pitta</div>
+                        <div style="font-size: 28px; font-weight: bold;">${clinicalData.scores.pitta.toFixed(1)}%</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 14px; opacity: 0.9;">Kapha</div>
+                        <div style="font-size: 28px; font-weight: bold;">${clinicalData.scores.kapha.toFixed(1)}%</div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 8px;">
+                    <p style="font-size: 14px; margin: 0; opacity: 0.9;"><strong>Clinical Explanation:</strong> ${clinicalData.explanation}</p>
+                </div>
+            </div>
+        `;
+        resultsDiv.appendChild(doshaCard);
+        
+        // Recommendations
+        const recCard = document.createElement('div');
+        recCard.className = 'glass-card';
+        recCard.innerHTML = '<h2 style="margin-bottom: 20px;">🌿 Personalized Recommendations</h2>';
+        
+        if (clinicalData.recommendations) {
+            clinicalData.recommendations.forEach((rec, index) => {
+                recCard.innerHTML += `<div class="recommendation-item"><strong>${index + 1}.</strong> ${rec}</div>`;
+            });
+        }
+        
+        resultsDiv.appendChild(recCard);
+        
+        results.style.display = 'block';
+        results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 
     async function downloadFusionReport() {
         if (!fusionResult) {
