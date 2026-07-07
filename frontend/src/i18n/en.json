@@ -1,0 +1,573 @@
+{
+  "nav": {
+    "home": "Home",
+    "assessment": "Assessment",
+    "chat": "AI Chat",
+    "simulator": "Simulator",
+    "about": "About",
+    "contact": "Contact",
+    "login": "Login",
+    "logout": "Logout",
+    "notifications": "Notifications"
+  },
+  "home": {
+    "badge": "MSME Registered · NEP 2020 Aligned",
+    "hero_title_1": "Ancient Wisdom.",
+    "hero_title_2": "Intelligent Health.",
+    "hero_desc": "AyurAI Veda™ combines 5,000 years of Ayurvedic science with modern AI to deliver personalized preventive healthcare insights — free, private, and instant.",
+    "cta_primary": "Start Free Assessment →",
+    "cta_secondary": "Learn About Tridosha",
+    "engine_active": "Tridosha Intelligence Engine™ Active",
+    "how_title": "How It Works",
+    "how_subtitle": "Three Steps to Wellness",
+    "step1_title": "Answer Questions",
+    "step1_desc": "Simple health questionnaire about your body and lifestyle.",
+    "step2_title": "AI Analyzes",
+    "step2_desc": "Tridosha Engine™ calculates your dosha balance and risk level.",
+    "step3_title": "Get Your Report",
+    "step3_desc": "Receive personalized wellness recommendations instantly.",
+    "features_label": "Platform Features",
+    "features_title": "Clinical AI Highlights",
+    "feat1_title": "AI-Powered Analysis",
+    "feat1_desc": "Tridosha Intelligence Engine™ processes your health patterns with precision.",
+    "feat2_title": "Preventive Wellness",
+    "feat2_desc": "Personalized diet, yoga, and lifestyle guidance before illness strikes.",
+    "feat3_title": "Clinical Reports",
+    "feat3_desc": "Downloadable PDF reports with dosha scores and risk indicators.",
+    "feat4_title": "Privacy First",
+    "feat4_desc": "Zero data storage. Session-based processing. Your health stays yours.",
+    "cta_banner_title": "Discover Your Dosha Today",
+    "cta_banner_desc": "Take the 2-minute AI assessment and receive your personalized Ayurvedic wellness report.",
+    "cta_banner_btn": "Begin Assessment →",
+    "tag_nep": "NEP 2020 Aligned",
+    "tag_iks": "IKS Integrated",
+    "tag_ai": "AI Powered",
+    "tag_msme": "MSME Registered",
+    "tag_privacy": "Privacy First",
+    "footer_copy": "© {{year}} Ananta Labs India · AyurAI Veda™ · Educational & Preventive Use Only"
+  },
+  "dosha": {
+    "vata_desc": "Air + Space · Movement & Creativity",
+    "pitta_desc": "Fire + Water · Metabolism & Digestion",
+    "kapha_desc": "Water + Earth · Stability & Immunity"
+  },
+  "assessment": {
+    "title": "Clinical Prakriti Assessment",
+    "subtitle": "Answer {{count}} clinical questions across 8 domains. Our Tridosha Intelligence Engine™ will determine your Prakriti constitution.",
+    "feature_1": "59-point clinical assessment",
+    "feature_2": "ML-powered Tridosha analysis",
+    "feature_3": "Agni & Ama detection",
+    "feature_4": "Personalized diet, yoga & lifestyle plan",
+    "feature_5": "No data stored — fully private",
+    "begin_btn": "Begin Clinical Assessment →",
+    "personal_info": "Personal Information",
+    "continue_btn": "Continue to Assessment →",
+    "next_btn": "Next Section →",
+    "analyze_btn": "Analyze with AI Engine →",
+    "back_btn": "← Back",
+    "answer_all": "Please answer all questions in this section to continue.",
+    "section_label": "Section {{current}} of {{total}}: {{name}}",
+    "personal_label": "Personal Information",
+    "progress_label": "{{percent}}% complete",
+    "processing_title": "Analyzing Your Prakriti",
+    "processing_desc": "Tridosha Intelligence Engine™ is processing your responses…",
+    "result_prakriti": "Prakriti:",
+    "result_risk": "{{level}} Imbalance Risk",
+    "agni_label": "Agni",
+    "ama_label": "Ama",
+    "vikriti_label": "Vikriti",
+    "reasoning_label": "🔬 Clinical Reasoning",
+    "recs_label": "🌱 Recommendations",
+    "diet_label": "🥗 Diet Guidelines",
+    "favor_label": "✅ Favor",
+    "avoid_label": "❌ Avoid",
+    "retake_btn": "Retake Assessment",
+    "download_btn": "Download Report",
+    "disclaimer": "⚠️ Educational insights only. Consult a qualified healthcare professional for medical advice.",
+    "error": "Analysis failed. Please try again.",
+    "field_name": "Full Name",
+    "field_age": "Age",
+    "field_gender": "Gender",
+    "field_weight": "Weight (kg)",
+    "field_height": "Height (cm)",
+    "gender_male": "Male",
+    "gender_female": "Female",
+    "gender_other": "Other",
+    "placeholder_name": "Your full name",
+    "placeholder_age": "Your age",
+    "placeholder_weight": "e.g. 65",
+    "placeholder_height": "e.g. 170",
+    "desc_22": "Discover your unique Ayurvedic constitution (Prakriti) using this authoritative 22-question Prakriti Parikshan questionnaire.",
+    "details_title": "The Prakriti Parikshan details:",
+    "bullet_1": "Evaluates body structure and body parts",
+    "bullet_2": "Analyzes metabolic indicators (hunger, thirst, sleep, nails, hair)",
+    "bullet_3": "Assesses physical activity, speech, tolerance, and memory traits",
+    "bullet_4": "Analyzes behavioral, social, and emotional characteristics",
+    "bullet_5": "Identifies dominant Vata, Pitta, or Kapha ratios and Dual/Balanced states",
+    "gender_placeholder": "Select gender...",
+    "q_step_label": "Question {{step}} of {{total}}: {{name}}",
+    "q_progress": "{{percent}}% Completed",
+    "q_select_statement": "Select the statement that describes you best:",
+    "q_select_at_least_one": "Please select at least one option to continue.",
+    "start_questionnaire": "Start Questionnaire →",
+    "locked_download": "🔒 Download (Members Only)",
+    "locked_download_desc": "Activate membership to download report PDF",
+    "back_to_home": "← Back to Home",
+    "membership_required": "Membership Required",
+    "free_trial_used": "You have used your 1 free trial assessment.",
+    "contact_admin_membership": "Please contact the admin to activate your 3-month membership to continue.",
+    "membership_includes": "Membership includes:",
+    "unlimited_assessments": "Unlimited assessments",
+    "full_pdf_download": "Full PDF report download",
+    "complete_ai_analysis": "Complete AI analysis",
+    "diet_lifestyle_plan": "Diet & lifestyle plan"
+  },
+  "about": {
+    "title": "About AyurAI Veda™",
+    "subtitle": "We are building the bridge between 5,000 years of Ayurvedic wisdom and the precision of modern artificial intelligence — making preventive healthcare accessible to everyone.",
+    "mission_label": "Our Mission",
+    "mission_quote": "\"Democratize preventive healthcare by making ancient Ayurvedic wisdom intelligent, accessible, and personalized.\"",
+    "mission_desc": "Ananta Labs India is an MSME-registered health-tech startup committed to reviving Indian Knowledge Systems through ethical AI — with zero data storage, full privacy, and open educational access.",
+    "pillars_title": "Our Core Pillars",
+    "pillar1_title": "Tridosha Intelligence Engine™",
+    "pillar1_desc": "A rule-based AI expert system that maps your health patterns to Vata, Pitta, and Kapha doshas using weighted scoring algorithms — ML-ready for future clinical expansion.",
+    "pillar2_title": "Indian Knowledge Systems",
+    "pillar2_desc": "Rooted in Charaka Samhita, Sushruta Samhita, and Ashtanga Hridaya — the foundational texts of Ayurveda, digitized and made accessible through AI.",
+    "pillar3_title": "NEP 2020 Aligned",
+    "pillar3_desc": "Designed as an interdisciplinary learning platform bridging traditional IKS with modern STEM education, fully aligned with India's National Education Policy 2020.",
+    "pillar4_title": "Preventive Healthcare",
+    "pillar4_desc": "Focused on prevention over cure — providing personalized lifestyle, diet, and wellness guidance before health issues escalate.",
+    "engine_title": "🧠 Tridosha Intelligence Engine™",
+    "engine_desc": "The core AI engine uses a weighted scoring algorithm to analyze 9 health dimensions — sleep, digestion, skin, energy, stress, appetite, body frame, mind type, and weather sensitivity.",
+    "journey_title": "Our Journey",
+    "timeline_1": "AyurAI Veda™ founded by Ananta Labs India",
+    "timeline_2": "MSME registration & Tridosha Engine v1 launch",
+    "timeline_3": "Clinical Assessment AI with PDF reports",
+    "timeline_4": "ML model training, IoT integration, mobile app",
+    "future_title": "🚀 Future Vision",
+    "future_1": "ML models trained on clinical Ayurvedic data",
+    "future_2": "IoT wearable device integration",
+    "future_3": "iOS & Android mobile applications",
+    "future_4": "Regional language support (Hindi, Tamil, Telugu)",
+    "future_5": "Telemedicine with certified Ayurvedic doctors",
+    "future_6": "IKS research database contribution",
+    "footer": "AyurAI Veda™ · Ananta Labs India · MSME Registered · NEP 2020 Aligned"
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "subtitle": "Have questions about AyurAI Veda™, partnership opportunities, or research collaboration? We'd love to hear from you.",
+    "form_title": "Send a Message",
+    "field_name": "Full Name",
+    "field_email": "Email Address",
+    "field_subject": "Subject",
+    "field_message": "Message",
+    "placeholder_name": "Your name",
+    "placeholder_email": "you@example.com",
+    "placeholder_subject": "How can we help?",
+    "placeholder_message": "Tell us more…",
+    "send_btn": "Send Message →",
+    "sending": "Sending…",
+    "success_title": "Message Sent!",
+    "success_desc": "We'll get back to you within 24 hours.",
+    "send_another": "Send Another",
+    "info_title": "Contact Info",
+    "company_title": "🏛️ Ananta Labs India",
+    "company_desc": "MSME-registered health-tech startup building AI-powered Ayurvedic wellness solutions. NEP 2020 aligned. Privacy-first. Open for research collaboration.",
+    "disclaimer_label": "⚠️ Disclaimer",
+    "disclaimer_text": "AyurAI Veda™ provides educational and preventive insights only. Not a substitute for professional medical advice."
+  },
+  "auth": {
+    "welcome_back": "Welcome Back",
+    "sign_in_subtitle": "Sign in to your wellness account",
+    "create_account": "Create Account",
+    "register_subtitle": "Join the Ayurvedic wellness community",
+    "email": "Email Address",
+    "password": "Password",
+    "confirm_password": "Confirm Password",
+    "full_name": "Full Name",
+    "institution_name": "Institution Name",
+    "forgot_password": "Forgot password?",
+    "sign_in_btn": "Sign in as {{role}} →",
+    "create_btn": "Create Account →",
+    "signing_in": "Signing in…",
+    "creating": "Creating account…",
+    "no_account": "Don't have an account?",
+    "create_link": "Create one",
+    "have_account": "Already have an account?",
+    "sign_in_link": "Sign in",
+    "privacy_note": "By signing in, you agree to our privacy-first policy. No health data is stored.",
+    "register_privacy": "Privacy-first platform. No health data is stored or shared.",
+    "role_user": "User",
+    "role_doctor": "Doctor",
+    "role_college": "College",
+    "role_user_desc": "Personal wellness tracking",
+    "role_doctor_desc": "Clinical dashboard access",
+    "role_college_desc": "Institutional portal",
+    "error_invalid": "Invalid credentials. Please try again.",
+    "error_password_match": "Passwords do not match.",
+    "error_register": "Registration failed. Please try again.",
+    "placeholder_email": "you@example.com",
+    "placeholder_password": "••••••••",
+    "placeholder_name": "Your name"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No notifications yet",
+    "assessment_complete": "Assessment Complete",
+    "mark_read": "Mark all read"
+  },
+  "common": {
+    "loading": "Loading…",
+    "error": "Something went wrong",
+    "retry": "Try Again",
+    "select": "Select…"
+  },
+  "sections": {
+    "personal": "Personal Information",
+    "body_structure": "Body Structure",
+    "skin_hair": "Skin & Hair",
+    "digestion": "Appetite & Digestion",
+    "lifestyle": "Sleep & Energy",
+    "body_response": "Body Response & Climate",
+    "speech_mind": "Speech & Mind",
+    "behavior": "Behavior & Emotions",
+    "additional": "Additional Characteristics"
+  },
+  "q": {
+    "body_frame": "Body Frame",
+    "body_build": "Body Build",
+    "muscle_tone": "Muscle Tone",
+    "weight_tendency": "Weight Tendency",
+    "joints": "Joints Appearance",
+    "veins": "Veins Visibility",
+    "bone_structure": "Bone Structure",
+    "skin_type": "Skin Type",
+    "skin_texture": "Skin Texture",
+    "skin_temperature": "Skin Temperature",
+    "complexion": "Complexion",
+    "skin_luster": "Skin Luster",
+    "hair_type": "Hair Type",
+    "hair_texture": "Hair Texture",
+    "nails": "Nails",
+    "appetite": "Appetite",
+    "hunger": "Hunger Pattern",
+    "thirst": "Thirst Level",
+    "digestion": "Digestion Speed",
+    "bowel": "Bowel Movement",
+    "gas": "Gas / Bloating",
+    "food_preference": "Food Preference",
+    "metabolism": "Metabolism",
+    "sleep_pattern": "Sleep Pattern",
+    "sleep_duration": "Sleep Duration",
+    "dreams": "Dreams",
+    "energy_level": "Energy Level",
+    "stamina": "Stamina",
+    "physical_activity": "Physical Activity Style",
+    "exercise_tolerance": "Exercise Tolerance",
+    "sweat": "Sweating",
+    "body_odor": "Body Odor",
+    "weather_preference": "Weather Preference",
+    "season_discomfort": "Season of Discomfort",
+    "immunity": "Immunity",
+    "disease_tendency": "Disease Tendency",
+    "speech_pace": "Speech Pace",
+    "voice_quality": "Voice Quality",
+    "communication": "Communication Style",
+    "movements": "Body Movements",
+    "mental_state": "Mental State",
+    "memory": "Memory",
+    "learning": "Learning Style",
+    "concentration": "Concentration",
+    "decision_making": "Decision Making",
+    "emotional_response": "Emotional Response",
+    "stress_response": "Stress Response",
+    "teeth_gums": "Teeth & Gums",
+    "eyes_appearance": "Eyes Appearance",
+    "lips_condition": "Lips Condition",
+    "temp_regulation": "Temperature Regulation",
+    "pain_tolerance": "Pain Tolerance",
+    "healing_speed": "Healing Speed"
+  },
+  "opt": {
+    "body_frame": {
+      "thin": "Thin / Narrow",
+      "medium": "Medium / Athletic",
+      "heavy": "Heavy / Wide"
+    },
+    "body_build": {
+      "lean": "Lean / Weakly developed",
+      "muscular": "Muscular / Moderate",
+      "stocky": "Stocky / Well developed"
+    },
+    "muscle_tone": {
+      "low": "Low / Thin musculature",
+      "medium": "Medium / Soft",
+      "high": "High / Firm"
+    },
+    "weight_tendency": {
+      "hard_to_gain": "Hard to gain weight",
+      "stable": "Stable weight",
+      "easy_to_gain": "Easy to gain weight"
+    },
+    "joints": {
+      "prominent": "Prominent / Visible",
+      "normal": "Normal",
+      "well_covered": "Well covered / Padded"
+    },
+    "veins": {
+      "prominent": "Prominent / Visible",
+      "visible": "Slightly visible",
+      "hidden": "Hidden / Not visible"
+    },
+    "bone_structure": {
+      "light": "Light / Delicate",
+      "medium": "Medium",
+      "heavy": "Heavy / Dense"
+    },
+    "skin_type": {
+      "dry": "Dry / Rough",
+      "sensitive": "Sensitive / Reddish",
+      "oily": "Oily / Smooth"
+    },
+    "skin_texture": {
+      "rough": "Rough / Cracked",
+      "soft": "Soft / Delicate",
+      "smooth": "Smooth / Thick"
+    },
+    "skin_temperature": {
+      "cold": "Usually cold",
+      "warm": "Usually warm / hot"
+    },
+    "complexion": {
+      "dark": "Dark / Dusky",
+      "fair": "Fair / Bright",
+      "pale": "Pale / Dull"
+    },
+    "skin_luster": {
+      "dull": "Dull / Dry",
+      "radiant": "Radiant / Glowing",
+      "glowing": "Naturally glowing"
+    },
+    "hair_type": {
+      "dry": "Dry / Frizzy",
+      "thin": "Thin / Fine",
+      "thick": "Thick / Lustrous"
+    },
+    "hair_texture": {
+      "rough": "Rough / Coarse",
+      "fine": "Fine / Silky",
+      "smooth": "Smooth / Wavy"
+    },
+    "nails": {
+      "brittle": "Brittle / Break easily",
+      "soft": "Soft / Pinkish",
+      "strong": "Strong / Thick"
+    },
+    "appetite": {
+      "irregular": "Irregular / Variable",
+      "strong": "Strong / Sharp",
+      "low": "Low / Mild"
+    },
+    "hunger": {
+      "variable": "Variable / Unpredictable",
+      "intense": "Intense / Cannot skip meals",
+      "mild": "Mild / Can skip meals"
+    },
+    "thirst": {
+      "variable": "Variable",
+      "high": "High / Always thirsty",
+      "low": "Low / Rarely thirsty"
+    },
+    "digestion": {
+      "irregular": "Irregular / Unpredictable",
+      "fast": "Fast / Quick",
+      "slow": "Slow / Heavy"
+    },
+    "bowel": {
+      "constipation": "Constipation / Hard stools",
+      "loose": "Loose / Frequent",
+      "regular": "Regular / Normal",
+      "heavy": "Heavy / Bulky"
+    },
+    "gas": {
+      "frequent": "Frequent / Excessive",
+      "occasional": "Occasional",
+      "none": "Rarely / None"
+    },
+    "food_preference": {
+      "warm": "Warm / Cooked foods",
+      "cold": "Cold / Raw foods",
+      "spicy": "Spicy / Pungent"
+    },
+    "metabolism": {
+      "fast": "Fast / High",
+      "moderate": "Moderate / Balanced",
+      "slow": "Slow / Low"
+    },
+    "sleep_pattern": {
+      "light": "Light / Disturbed",
+      "moderate": "Moderate / Normal",
+      "deep": "Deep / Heavy"
+    },
+    "sleep_duration": {
+      "less_6": "Less than 6 hours",
+      "6_8": "6–8 hours",
+      "more_8": "More than 8 hours"
+    },
+    "dreams": {
+      "active": "Active / Vivid / Fearful",
+      "colorful": "Colorful / Passionate",
+      "few": "Few / Calm / Watery"
+    },
+    "energy_level": {
+      "variable": "Variable / Bursts & crashes",
+      "moderate": "Moderate / Focused",
+      "steady": "Steady / Consistent"
+    },
+    "stamina": {
+      "low": "Low / Tires quickly",
+      "medium": "Medium / Average",
+      "high": "High / Enduring"
+    },
+    "physical_activity": {
+      "restless": "Restless / Always moving",
+      "moderate": "Moderate / Purposeful",
+      "slow": "Slow / Deliberate"
+    },
+    "exercise_tolerance": {
+      "low": "Low / Easily fatigued",
+      "high": "High / Intense preferred",
+      "moderate": "Moderate / Steady"
+    },
+    "sweat": {
+      "minimal": "Minimal / Rarely sweats",
+      "profuse": "Profuse / Excessive",
+      "moderate": "Moderate / Normal"
+    },
+    "body_odor": {
+      "minimal": "Minimal / Neutral",
+      "strong": "Strong / Pungent",
+      "mild": "Mild / Sweet"
+    },
+    "weather_preference": {
+      "warm": "Prefer warm weather",
+      "cool": "Prefer cool weather"
+    },
+    "season_discomfort": {
+      "winter": "Winter / Cold & dry",
+      "summer": "Summer / Hot & humid",
+      "spring": "Spring / Damp & cloudy"
+    },
+    "immunity": {
+      "weak": "Weak / Frequent illness",
+      "moderate": "Moderate / Average",
+      "strong": "Strong / Rarely ill"
+    },
+    "disease_tendency": {
+      "nervous": "Nervous / Anxiety disorders",
+      "inflammatory": "Inflammatory / Infections",
+      "congestion": "Congestion / Weight issues"
+    },
+    "speech_pace": {
+      "fast": "Fast / Rapid",
+      "moderate": "Moderate / Clear",
+      "slow": "Slow / Deliberate"
+    },
+    "voice_quality": {
+      "weak": "Weak / Hoarse",
+      "sharp": "Sharp / Penetrating",
+      "deep": "Deep / Resonant"
+    },
+    "communication": {
+      "talkative": "Talkative / Enthusiastic",
+      "precise": "Precise / Articulate",
+      "reserved": "Reserved / Thoughtful"
+    },
+    "movements": {
+      "quick": "Quick / Restless",
+      "purposeful": "Purposeful / Confident",
+      "slow": "Slow / Graceful"
+    },
+    "mental_state": {
+      "anxious": "Anxious / Worried",
+      "focused": "Focused / Intense",
+      "calm": "Calm / Relaxed"
+    },
+    "memory": {
+      "quick_forget": "Quick to learn, quick to forget",
+      "sharp": "Sharp / Precise",
+      "slow_retain": "Slow to learn, long retention"
+    },
+    "learning": {
+      "quick": "Quick / Grasps fast",
+      "moderate": "Moderate / Methodical",
+      "slow": "Slow / Thorough"
+    },
+    "concentration": {
+      "poor": "Poor / Easily distracted",
+      "good": "Good / Focused",
+      "excellent": "Excellent / Deep focus"
+    },
+    "decision_making": {
+      "quick": "Quick / Impulsive",
+      "analytical": "Analytical / Decisive",
+      "slow": "Slow / Careful"
+    },
+    "emotional_response": {
+      "fearful": "Fear / Anxiety / Worry",
+      "angry": "Anger / Irritation",
+      "attached": "Attachment / Possessiveness"
+    },
+    "stress_response": {
+      "anxious": "Anxious / Nervous",
+      "irritable": "Irritable / Aggressive",
+      "withdrawn": "Withdrawn / Lethargic"
+    },
+    "teeth_gums": {
+      "weak": "Weak / Sensitive / Receding",
+      "normal": "Normal / Average",
+      "strong": "Strong / Healthy"
+    },
+    "eyes_appearance": {
+      "small": "Small / Dry / Nervous",
+      "medium": "Medium / Sharp / Bright",
+      "large": "Large / Moist / Calm"
+    },
+    "lips_condition": {
+      "dry": "Dry / Cracked / Thin",
+      "normal": "Normal / Pinkish",
+      "moist": "Moist / Full / Smooth"
+    },
+    "temp_regulation": {
+      "poor": "Poor (always cold or hot)",
+      "moderate": "Moderate",
+      "good": "Good adaptation"
+    },
+    "pain_tolerance": {
+      "low": "Low / Sensitive",
+      "medium": "Medium / Average",
+      "high": "High / Tolerant"
+    },
+    "healing_speed": {
+      "slow": "Slow / Takes long",
+      "moderate": "Moderate / Average",
+      "fast": "Fast / Quick recovery"
+    }
+  },
+  "chat": {
+    "title": "AyurVaani™ AI Physician",
+    "welcome_msg": "Namaste! I am AyurVaani, your Ayurvedic AI physician. How can I help you today? Please tell me about any symptoms, food habits, sleep, or stress you are experiencing.",
+    "status_active": "● Connected to Tridosha Reasoning Engine",
+    "diagnostic_title": "🩺 Diagnostic State",
+    "prakriti_label": "Prakriti (Baseline)",
+    "vikriti_label": "Vikriti (Aggravated Dosha)",
+    "agni_label": "Digestive Agni",
+    "ama_label": "Ama (Toxin Load)",
+    "disclaimer": "*Values are calculated dynamically by the Tridosha Clinical Logic Engine based on current conversation symptoms.",
+    "placeholder": "Type your symptoms or questions (e.g. I have constipation)...",
+    "placeholder_listening": "Listening...",
+    "send": "Send 🚀",
+    "speak_tooltip": "Speak message",
+    "listen_tooltip": "Listen to response"
+  }
+}

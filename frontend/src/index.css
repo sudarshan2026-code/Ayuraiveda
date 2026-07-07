@@ -1,0 +1,249 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Multilingual font stacks ── */
+:lang(hi), [lang='hi'] {
+  font-family: 'Noto Sans Devanagari', 'Inter', sans-serif;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+:lang(gu), [lang='gu'] {
+  font-family: 'Noto Sans Gujarati', 'Inter', sans-serif;
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+}
+
+@layer base {
+  * { -webkit-tap-highlight-color: transparent; }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    @apply bg-cream-50 text-olive-900 font-sans;
+    overscroll-behavior: none;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/60 backdrop-blur-md border border-white/40;
+  }
+
+  .glass-dark {
+    @apply bg-olive-900/70 backdrop-blur-md border border-olive-700/40;
+  }
+
+  .btn-primary {
+    @apply bg-olive-600 hover:bg-olive-700 active:scale-95 text-white font-semibold
+           px-6 py-3 rounded-2xl transition-all duration-200 shadow-soft
+           focus:outline-none focus:ring-2 focus:ring-olive-400 focus:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply bg-cream-100 hover:bg-cream-200 active:scale-95 text-olive-800 font-semibold
+           px-6 py-3 rounded-2xl transition-all duration-200 border border-cream-300
+           focus:outline-none focus:ring-2 focus:ring-olive-300 focus:ring-offset-2;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl md:rounded-3xl shadow-card p-4 md:p-6 transition-all duration-300;
+  }
+
+  .card-hover {
+    @apply card hover:shadow-glow hover:-translate-y-1;
+  }
+
+  .input-field {
+    @apply w-full bg-cream-50 border border-cream-200 rounded-2xl px-4 py-3
+           text-olive-900 placeholder-olive-400 focus:outline-none
+           focus:ring-2 focus:ring-olive-400 focus:border-transparent
+           transition-all duration-200;
+  }
+
+  .section-title {
+    @apply font-serif text-2xl md:text-3xl lg:text-4xl font-bold text-olive-800;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold;
+  }
+}
+
+@layer utilities {
+  .safe-bottom { padding-bottom: max(env(safe-area-inset-bottom), 0.5rem); }
+  .safe-top    { padding-top:    env(safe-area-inset-top); }
+
+  .gradient-hero {
+    background: linear-gradient(135deg, #f4f7f2 0%, #faf7ee 50%, #eef0dc 100%);
+  }
+
+  .gradient-olive {
+    background: linear-gradient(135deg, #5f6b2a 0%, #7d8c3a 100%);
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #5f6b2a, #a0ad5a);
+  }
+
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   VIRTUAL CLINICAL PATIENT SIMULATOR — Design System
+   Medical dark theme: slate-900 base, cyan-400 accent
+   ═══════════════════════════════════════════════════════════ */
+
+/* Simulator background */
+.sim-bg {
+  background: linear-gradient(135deg, #0a0f1e 0%, #0d1526 50%, #0a1020 100%);
+  min-height: 100vh;
+}
+
+/* Sticky top bar for simulator pages */
+.sim-header {
+  background: rgba(10, 15, 30, 0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(34, 211, 238, 0.08);
+}
+
+/* Glassmorphism card for simulator */
+.sim-card {
+  background: rgba(15, 23, 42, 0.80);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(51, 65, 85, 0.60);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.sim-card:hover {
+  box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.08), 0 8px 32px rgba(0,0,0,0.3);
+}
+
+/* Primary CTA button */
+.sim-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #0891b2, #0e7490);
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 15px rgba(8, 145, 178, 0.3);
+}
+
+.sim-btn-primary:hover {
+  background: linear-gradient(135deg, #06b6d4, #0891b2);
+  box-shadow: 0 4px 20px rgba(8, 145, 178, 0.5);
+  transform: translateY(-1px);
+}
+
+.sim-btn-primary:active { transform: scale(0.97); }
+
+/* Secondary button */
+.sim-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: rgba(30, 41, 59, 0.8);
+  color: #94a3b8;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(71, 85, 105, 0.6);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sim-btn-secondary:hover {
+  background: rgba(30, 41, 59, 1);
+  color: white;
+  border-color: rgba(34, 211, 238, 0.4);
+}
+
+/* Input field for simulator */
+.sim-input {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(71, 85, 105, 0.6);
+  border-radius: 0.625rem;
+  padding: 0.5rem 0.75rem;
+  color: #e2e8f0;
+  font-size: 0.875rem;
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+.sim-input:focus {
+  border-color: #22d3ee;
+  box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.1);
+}
+
+.sim-input option {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+/* Typing bounce animation */
+@keyframes bounce-dot {
+  0%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-6px); }
+}
+
+.animate-bounce {
+  animation: bounce-dot 1.2s infinite;
+}
+
+/* Simulator page enter */
+.sim-enter {
+  animation: simFadeIn 0.3s ease forwards;
+}
+
+@keyframes simFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Page transition */
+.page-enter {
+  animation: fadeSlideUp 0.35s ease forwards;
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Dosha meter animation */
+@keyframes fillBar {
+  from { width: 0%; }
+  to   { width: var(--target-width); }
+}
+
+.dosha-bar {
+  animation: fillBar 1s ease-out forwards;
+}
+
+/* Language switcher dropdown */
+@keyframes dropdownIn {
+  from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-dropdown {
+  animation: dropdownIn 0.18s ease forwards;
+}

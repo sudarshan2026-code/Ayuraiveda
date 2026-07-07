@@ -1,0 +1,80 @@
+AYURVEDIC_CLASSICAL_DATABASE = [
+    {
+        "book": "Charaka Samhita",
+        "chapter": "Sutra Sthana Chapter 12",
+        "verse": "Verse 11",
+        "disease": "Vata Imbalance",
+        "dosha": "Vata",
+        "dhatu": "Rasa",
+        "agni": "Vishama",
+        "keywords": ["constipation", "dry", "cold", "vata", "roughness", "bloating", "gas"],
+        "sanskrit": "तत्र रूक्षलघुशीतदारुणखरविशदाः षडेते वातगुणाः भवन्ति।",
+        "translation": "The six qualities of Vata are dryness (Ruksha), lightness (Laghu), coldness (Sheeta), roughness (Khara), subtlety (Daruna), and mobility (Vishada).",
+        "clinical_notes": "An increase in dry and cold qualities leads to constipation and bloating by impairing the normal downwards movement (Apana Vayu) of stool."
+    },
+    {
+        "book": "Charaka Samhita",
+        "chapter": "Sutra Sthana Chapter 1",
+        "verse": "Verse 60",
+        "disease": "Pitta Imbalance",
+        "dosha": "Pitta",
+        "dhatu": "Rakta",
+        "agni": "Tikshna",
+        "keywords": ["acidity", "burning", "heartburn", "pitta", "ulcer", "inflammation", "heat"],
+        "sanskrit": "सस्नेहमुष्णं तीक्ष्णं च द्रवमम्लं सरं कटु। विपरीतेर्गुणैः पित्तं प्रशाम्यति॥",
+        "translation": "Pitta has slight oiliness (Sasneha), heat (Ushna), sharpness (Tikshna), liquidity (Drava), sourness (Amla), mobility (Sara), and pungency (Katu). It is pacified by opposite qualities.",
+        "clinical_notes": "Excessive intake of spicy and sour foods increases the hot and sharp gunas of Pitta, leading to hyperacidity, acid reflux, and inflammation."
+    },
+    {
+        "book": "Charaka Samhita",
+        "chapter": "Sutra Sthana Chapter 1",
+        "verse": "Verse 61",
+        "disease": "Kapha Imbalance",
+        "dosha": "Kapha",
+        "dhatu": "Meda",
+        "agni": "Manda",
+        "keywords": ["congestion", "weight gain", "heaviness", "kapha", "mucus", "lethargy", "slow"],
+        "sanskrit": "गुरुशीतमृदुस्निग्धमधुरस्थिरपिच्छिलाः। श्लेष्मणः शमनं कुर्वन्त्येते विपरीतगुणा हि ते॥",
+        "translation": "Kapha is heavy (Guru), cold (Sheeta), soft (Mridu), oily (Snigdha), sweet (Madhura), stable (Sthira), and slimy (Picchila). It is pacified by opposite qualities.",
+        "clinical_notes": "Lethargy, chest congestion, and weight gain arise due to an increase in the heavy, cold, and oily qualities of Kapha, sluggishly slowing down metabolism."
+    },
+    {
+        "book": "Ashtanga Hridaya",
+        "chapter": "Sutra Sthana Chapter 1",
+        "verse": "Verse 11",
+        "disease": "Tridosha Balance",
+        "dosha": "All",
+        "dhatu": "All",
+        "agni": "Sama",
+        "keywords": ["health", "balance", "tridosha", "disease", "preventive"],
+        "sanskrit": "वायुः पित्तं कफश्चेति त्रयो दोषाः समासतः। विकृताऽविकृता देहं घ्नन्ति ते वर्तयन्ति च॥",
+        "translation": "Vata, Pitta, and Kapha are the three doshas. When they are in an imbalanced state, they destroy the body; when they are in their natural balanced state, they sustain it.",
+        "clinical_notes": "Maintaining the equilibrium of all three doshas is the fundamental definition of health in Ayurveda."
+    },
+    {
+        "book": "Sushruta Samhita",
+        "chapter": "Sutra Sthana Chapter 15",
+        "verse": "Verse 48",
+        "disease": "Definition of Health",
+        "dosha": "All",
+        "dhatu": "All",
+        "agni": "Sama",
+        "keywords": ["health", "healthy", "balanced", "soul", "mind"],
+        "sanskrit": "समदोषः समाग्निश्च समधातुमलक्रियः। प्रसन्नात्मेन्द्रियमनाः स्वस्थ इत्यभिधीयते॥",
+        "translation": "One whose doshas are balanced, whose agni (digestive fire) is balanced, whose dhatus (tissues) and malas (waste products) are functioning normally, and whose soul, senses, and mind are happy, is called healthy.",
+        "clinical_notes": "Health in Ayurveda is not just the absence of disease, but a state of spiritual, mental, and physical happiness."
+    },
+    {
+        "book": "Ashtanga Hridaya",
+        "chapter": "Sutra Sthana Chapter 8",
+        "verse": "Verse 1-2",
+        "disease": "Agni & Digestion",
+        "dosha": "All",
+        "dhatu": "Rasa",
+        "agni": "Sama",
+        "keywords": ["digestion", "agni", "eat", "meal", "toxins", "ama"],
+        "sanskrit": "काले भोक्तुं हितं मितं शुचि च। अजीर्णे न तु भुञ्जीत॥",
+        "translation": "Eat warm, beneficial, clean, and moderate food at the right time. Never eat while the previous meal remains undigested.",
+        "clinical_notes": "Eating before the previous meal is fully digested creates Ama (undigested toxic waste), which blocks the channels (Srotas) and initiates disease."
+    }
+]

@@ -1,7 +1,12 @@
+if __import__('sys').platform == 'win32':
+    __import__('sys').stdout.reconfigure(encoding='utf-8', errors='replace')
+    __import__('sys').stderr.reconfigure(encoding='utf-8', errors='replace')
+
 from flask import Flask, request, jsonify, render_template, send_file, session
 import json
 import io
 import os
+import sys
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -9,6 +14,16 @@ from datetime import datetime
 
 app = Flask(__name__, template_folder='../templates', static_folder='../static')
 app.secret_key = os.getenv('SECRET_KEY', 'ayurveda_secret_key_2024')
+
+# Import authentication routes
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)) + '/..')
+
+try:
+    from auth_routes_sqlite import register_auth_routes
+    register_auth_routes(app)
+    print('[OK] Authentication routes registered')
+except Exception as e:
+    print('[WARN] Auth routes skipped: ' + str(e))
 
 # ============= ROUTES =============
 
@@ -23,6 +38,18 @@ def old_home():
 @app.route('/dynamic')
 def dynamic_home():
     return render_template('index_dynamic.html')
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/register')
+def register():
+    return render_template('register.html')
+
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
 
 @app.route('/about')
 def about():
@@ -51,22 +78,6 @@ def comprehensive_assessment():
 @app.route('/feedback')
 def feedback():
     return render_template('feedback_dynamic.html')
-
-@app.route('/face-analysis')
-def face_analysis():
-    return render_template('face_analysis.html')
-
-@app.route('/face-analysis-advanced')
-def face_analysis_advanced():
-    return render_template('face_analysis_advanced.html')
-
-@app.route('/body-analysis')
-def body_analysis():
-    return render_template('body_face_fusion.html')
-
-@app.route('/ml-face-analysis')
-def ml_face_analysis():
-    return render_template('ml_face_analysis.html')
 
 @app.route('/analyze-face', methods=['POST'])
 def analyze_face():
@@ -149,8 +160,6 @@ def analyze_face():
         
     except Exception as e:
         print(f"Face analysis error: {str(e)}")
-        import traceback
-        traceback.print_exc()
         return jsonify({
             'success': False,
             'error': f'Analysis failed: {str(e)}',
@@ -210,8 +219,6 @@ def analyze_face_structural():
         
     except Exception as e:
         print(f"Structural face analysis error: {str(e)}")
-        import traceback
-        traceback.print_exc()
         return jsonify({
             'success': False,
             'error': f'Structural analysis failed: {str(e)}'
@@ -269,8 +276,6 @@ def extract_facial_regions():
         
     except Exception as e:
         print(f"Facial region extraction error: {str(e)}")
-        import traceback
-        traceback.print_exc()
         return jsonify({
             'success': False,
             'error': f'Region extraction failed: {str(e)}'
@@ -478,8 +483,6 @@ def analyze_face_enhanced():
         
     except Exception as e:
         print(f"Enhanced face analysis error: {str(e)}")
-        import traceback
-        traceback.print_exc()
         return jsonify({
             'success': False,
             'error': f'Enhanced analysis failed: {str(e)}'
@@ -640,8 +643,6 @@ def analyze_body():
         
     except Exception as e:
         print(f"Body analysis error: {str(e)}")
-        import traceback
-        traceback.print_exc()
         return jsonify({
             'success': False,
             'error': f'Body analysis failed: {str(e)}'
@@ -756,8 +757,6 @@ def analyze_face_body_fusion():
         
     except Exception as e:
         print(f"Fusion analysis error: {str(e)}")
-        import traceback
-        traceback.print_exc()
         return jsonify({
             'success': False,
             'error': f'Fusion analysis failed: {str(e)}'
@@ -827,15 +826,45 @@ def comprehensive_analyze():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+# Initialize Ayurvedic Chat Service
+try:
+    from backend.chat.chat_service import AyurvedicChatService
+    chat_service = AyurvedicChatService()
+    print('[OK] Ayurvedic RAG Chat Service initialized')
+except Exception as e:
+    chat_service = None
+    print('[WARN] Chat service initialization warning: ' + str(e))
+
 @app.route('/chat', methods=['POST'])
+@app.route('/api/chat', methods=['POST'])
 def chat():
     try:
-        data = request.json
-        message = data.get('message', '').lower()
-        response = get_chatbot_response(message)
-        return jsonify({'response': response})
+        data = request.json or {}
+        message = data.get('message', '')
+        session_id = data.get('session_id', 'default_session')
+        user_profile = data.get('user_profile', {})
+        language = data.get('language', 'en')
+        
+        if not message:
+            return jsonify({'error': 'Message is required'}), 400
+            
+        if chat_service:
+            result = chat_service.process_chat_message(session_id, message, user_profile, language=language)
+            return jsonify(result)
+        else:
+            # Fallback patterns in case service is not fully initialized
+            resp_text = get_chatbot_response(message.lower())
+            return jsonify({
+                "response": resp_text,
+                "prakriti": "Unknown",
+                "vikriti": "Unknown",
+                "agni": "Unknown",
+                "ama": "Unknown",
+                "emergency": False
+            })
     except Exception as e:
-        return jsonify({'response': 'Sorry, I encountered an error. Please try again.'}), 500
+        print(f"Chat API error: {str(e)}")
+        return jsonify({'response': 'Sorry, I encountered an error in the Ayurvedic reasoning engine. Please try again.', 'error': str(e)}), 500
 
 @app.route('/submit-feedback', methods=['POST'])
 def submit_feedback():
@@ -921,8 +950,6 @@ def generate_clinical_report_endpoint():
         })
     except Exception as e:
         print(f"Report generation error: {str(e)}")
-        import traceback
-        traceback.print_exc()
         return jsonify({
             'success': False,
             'error': str(e)
@@ -1200,8 +1227,6 @@ def download_clinical_report():
         
     except Exception as e:
         print(f"PDF generation error: {str(e)}")
-        import traceback
-        traceback.print_exc()
         return jsonify({'error': f'Failed to generate PDF: {str(e)}'}), 500
 @app.route('/download-report', methods=['POST'])
 def download_report():
@@ -1517,8 +1542,6 @@ def download_report():
         
     except Exception as e:
         print(f"PDF generation error: {str(e)}")
-        import traceback
-        traceback.print_exc()
         return jsonify({'error': f'Failed to generate PDF: {str(e)}'}), 500
 
 # ============= ANALYSIS FUNCTIONS =============
@@ -1584,375 +1607,308 @@ def analyze_tridosha(data):
     }
 
 def analyze_clinical(data):
-    """Advanced Clinical Assessment with ML-Ready Logic Framework"""
+    """Advanced Clinical Assessment with 22-Question Ayurvedic Prakriti Parikshan Framework"""
+    
+    # 22-question bank definitions matching frontend and PDF
+    QUESTION_BANK = [
+        {
+            "id": 1,
+            "question": "Body Structure",
+            "options": {
+                "Under nourished": "Vata",
+                "Short stature": "Vata",
+                "Thin body": "Vata",
+                "Dry skin/body": "Vata",
+                "Tall & thin": "Vata",
+                "Radiant appearance": "Pitta",
+                "Well nourished body": "Kapha",
+                "Stout body": "Kapha",
+                "Stable body": "Kapha",
+                "Pleasant face": "Kapha",
+                "Handsome/Beautiful appearance": "Kapha"
+            }
+        },
+        {
+            "id": 2,
+            "question": "Body Parts",
+            "options": {
+                "Irregular body parts, eyebrows, chin, lips, tongue, head, shoulders, hands, legs, bones": "Vata",
+                "Flushed face, delicate features, fair complexion, acne, moles, warts": "Pitta",
+                "Oily body, delicate features, well nourished body, pleasant appearance, long hands": "Kapha"
+            }
+        },
+        {
+            "id": 3,
+            "question": "Sleep",
+            "options": {
+                "Disturbed sleep": "Vata",
+                "Sleeps less": "Vata",
+                "Long & sound sleep": "Kapha",
+                "Fond of sleeping": "Kapha"
+            }
+        },
+        {
+            "id": 4,
+            "question": "Dreams",
+            "options": {
+                "Mountains/Flying": "Vata",
+                "Fire/Lightning/Red flowers": "Pitta",
+                "Lakes/Lotus/Swans/Birds": "Kapha"
+            }
+        },
+        {
+            "id": 5,
+            "question": "Complexion",
+            "options": {
+                "Brown/Grey complexion": "Pitta",
+                "Lotus-like complexion": "Kapha",
+                "Golden complexion": "Kapha"
+            }
+        },
+        {
+            "id": 6,
+            "question": "Hair",
+            "options": {
+                "Rough/Split/Lustreless hair, Dry or less beard, Dry body hair": "Vata",
+                "Premature greying/baldness, Soft or brown beard/body hair": "Pitta",
+                "Thick, shiny black, dense, coloured hair, large body hair": "Kapha"
+            }
+        },
+        {
+            "id": 7,
+            "question": "Nails",
+            "options": {
+                "Dry & rough, small, fast-growing": "Vata",
+                "Pink nails": "Pitta",
+                "Large nails": "Kapha"
+            }
+        },
+        {
+            "id": 8,
+            "question": "Joints",
+            "options": {
+                "Cracking/unstable joints": "Vata",
+                "Flabby ligaments": "Pitta",
+                "Strong ligaments & muscles": "Kapha"
+            }
+        },
+        {
+            "id": 9,
+            "question": "Hunger",
+            "options": {
+                "Overeats": "Vata",
+                "Severe hunger": "Pitta",
+                "Less hunger": "Kapha"
+            }
+        },
+        {
+            "id": 10,
+            "question": "Thirst",
+            "options": {
+                "Strong hunger despite less eating": "Vata",
+                "Strong thirst/Drinks more water": "Pitta",
+                "Less thirst/Drinks little water": "Kapha"
+            }
+        },
+        {
+            "id": 11,
+            "question": "Activity",
+            "options": {
+                "Fast walking/activity/eating/talking": "Vata",
+                "Slow activity/eating/talking, steady gait, speaks less, long endurance": "Kapha"
+            }
+        },
+        {
+            "id": 12,
+            "question": "Voice",
+            "options": {
+                "Dry/Weak/Low/Stammering": "Vata",
+                "Loud/Aggressive": "Pitta",
+                "Soft/Melodious/Resonant": "Kapha"
+            }
+        },
+        {
+            "id": 13,
+            "question": "Exercise & Tolerance",
+            "options": {
+                "Likes exercise, intolerant to cold": "Vata",
+                "Intolerant to heat/stress/sun": "Pitta",
+                "Better heat tolerance": "Kapha"
+            }
+        },
+        {
+            "id": 14,
+            "question": "Intelligence & Memory",
+            "options": {
+                "Quick learning, poor memory": "Vata",
+                "Brilliant, excellent grasping": "Pitta",
+                "Stable long memory, knowledgeable": "Kapha"
+            }
+        },
+        {
+            "id": 15,
+            "question": "Friends",
+            "options": {
+                "Unstable friendships": "Vata",
+                "Stable friendships": "Kapha"
+            }
+        },
+        {
+            "id": 16,
+            "question": "Resources",
+            "options": {
+                "Less": "Vata",
+                "Medium": "Pitta",
+                "Better": "Kapha"
+            }
+        },
+        {
+            "id": 17,
+            "question": "Wealth",
+            "options": {
+                "Less": "Vata",
+                "Medium": "Pitta",
+                "Wealthy": "Kapha"
+            }
+        },
+        {
+            "id": 18,
+            "question": "Disease Susceptibility",
+            "options": {
+                "Cold/cough, shivering, stiffness, easily sick": "Vata",
+                "Mouth ulcers": "Pitta",
+                "Strong immunity": "Kapha"
+            }
+        },
+        {
+            "id": 19,
+            "question": "Food & Lifestyle Preferences",
+            "options": {
+                "Sweet, sour, hot food; music; jokes; travelling": "Vata",
+                "Sweet, bitter, astringent, cold food; cosmetics; perfumes": "Pitta",
+                "Sweet, oily food; intellectual activities; classical music": "Kapha"
+            }
+        },
+        {
+            "id": 20,
+            "question": "Nature",
+            "options": {
+                "Quick starter, quick anger, emotional, jealous, impatient": "Vata",
+                "Courageous, fearless, brave, proud, cleanliness, adventurous": "Pitta",
+                "Less anger, grateful, forgiving, respectful, soft nature": "Kapha"
+            }
+        },
+        {
+            "id": 21,
+            "question": "Miscellaneous",
+            "options": {
+                "Feels better after massage": "Vata",
+                "No preference/Does not prefer massage": "None"
+            }
+        },
+        {
+            "id": 22,
+            "question": "Animal Personality",
+            "options": {
+                "Dog, Goat, Fox, Rabbit, Rat, Camel, Crow, Donkey": "Vata",
+                "Cobra, Owl, Gandharva, Yaksha, Cat, Monkey, Tiger, Bear": "Pitta",
+                "Lion, Horse, Elephant, Bull, Eagle, Swan": "Kapha"
+            }
+        }
+    ]
+
     vata_score = pitta_score = kapha_score = 0
     reasoning = []
-    ama_indicators = []
     
-    # STEP 1: FEATURE CLASSIFICATION WITH WEIGHTED SCORING
-    
-    # Body Frame (Strong match = +3)
-    if data.get('body_frame') == 'thin': 
-        vata_score += 3
-        reasoning.append("Thin body frame indicates Vata dominance (light, mobile qualities)")
-    elif data.get('body_frame') == 'medium': 
-        pitta_score += 3
-        reasoning.append("Medium body frame indicates Pitta constitution (balanced structure)")
-    elif data.get('body_frame') == 'heavy': 
-        kapha_score += 3
-        reasoning.append("Heavy body frame indicates Kapha dominance (stable, heavy qualities)")
-    
-    # Body Build
-    if data.get('body_build') == 'lean': vata_score += 3
-    elif data.get('body_build') == 'muscular': pitta_score += 3
-    elif data.get('body_build') == 'stocky': kapha_score += 3
-    
-    # Muscle Tone
-    if data.get('muscle_tone') == 'low': vata_score += 2
-    elif data.get('muscle_tone') == 'medium': pitta_score += 2
-    elif data.get('muscle_tone') == 'high': kapha_score += 2
-    
-    # Weight Tendency
-    if data.get('weight_tendency') == 'hard_to_gain': 
-        vata_score += 3
-        reasoning.append("Difficulty gaining weight suggests high Vata metabolism")
-    elif data.get('weight_tendency') == 'stable': pitta_score += 2
-    elif data.get('weight_tendency') == 'easy_to_gain': 
-        kapha_score += 3
-        reasoning.append("Easy weight gain indicates Kapha tendency")
-    
-    # Joints
-    if data.get('joints') == 'prominent': vata_score += 2
-    elif data.get('joints') == 'normal': pitta_score += 2
-    elif data.get('joints') == 'well_covered': kapha_score += 2
-    
-    # Veins
-    if data.get('veins') == 'prominent': vata_score += 2
-    elif data.get('veins') == 'visible': pitta_score += 2
-    elif data.get('veins') == 'hidden': kapha_score += 2
-    
-    # Bone Structure
-    if data.get('bone_structure') == 'light': vata_score += 3
-    elif data.get('bone_structure') == 'medium': pitta_score += 3
-    elif data.get('bone_structure') == 'heavy': kapha_score += 3
-    
-    # Skin Type (Critical indicator)
-    if data.get('skin_type') == 'dry': 
-        vata_score += 3
-        reasoning.append("Dry skin is a primary Vata characteristic (dry, rough qualities)")
-    elif data.get('skin_type') == 'sensitive': 
-        pitta_score += 3
-        reasoning.append("Sensitive skin indicates Pitta imbalance (hot, sharp qualities)")
-    elif data.get('skin_type') == 'oily': 
-        kapha_score += 3
-        reasoning.append("Oily skin indicates Kapha dominance (oily, smooth qualities)")
-    
-    # Skin Texture
-    if data.get('skin_texture') == 'rough': vata_score += 2
-    elif data.get('skin_texture') == 'soft': pitta_score += 2
-    elif data.get('skin_texture') == 'smooth': kapha_score += 2
-    
-    # Skin Temperature
-    if data.get('skin_temperature') == 'cold': vata_score += 2
-    elif data.get('skin_temperature') == 'warm': pitta_score += 2
-    
-    # Complexion
-    if data.get('complexion') == 'dark': pitta_score += 1
-    elif data.get('complexion') == 'fair': pitta_score += 1
-    elif data.get('complexion') == 'pale': vata_score += 1
-    
-    # Skin Luster
-    if data.get('skin_luster') == 'dull': vata_score += 2
-    elif data.get('skin_luster') == 'radiant': pitta_score += 2
-    elif data.get('skin_luster') == 'glowing': kapha_score += 2
-    
-    # Hair Type
-    if data.get('hair_type') == 'dry': vata_score += 2
-    elif data.get('hair_type') == 'thin': vata_score += 2
-    elif data.get('hair_type') == 'thick': kapha_score += 2
-    
-    # Hair Texture
-    if data.get('hair_texture') == 'rough': vata_score += 2
-    elif data.get('hair_texture') == 'fine': pitta_score += 2
-    elif data.get('hair_texture') == 'smooth': kapha_score += 2
-    
-    # Nails
-    if data.get('nails') == 'brittle': vata_score += 2
-    elif data.get('nails') == 'soft': pitta_score += 2
-    elif data.get('nails') == 'strong': kapha_score += 2
-    
-    # STEP 4: AGNI ANALYSIS (Critical for diagnosis)
-    agni_type = 'Sama Agni'
-    
-    # Appetite
-    if data.get('appetite') == 'irregular': 
-        vata_score += 3
-        agni_type = 'Vishama Agni (Irregular)'
-        ama_indicators.append('irregular appetite')
-        reasoning.append("Irregular appetite indicates Vishama Agni - Vata imbalance in digestion")
-    elif data.get('appetite') == 'strong': 
-        pitta_score += 3
-        agni_type = 'Tikshna Agni (Sharp)'
-        reasoning.append("Strong appetite indicates Tikshna Agni - Pitta-dominant digestion")
-    elif data.get('appetite') == 'low': 
-        kapha_score += 3
-        agni_type = 'Manda Agni (Slow)'
-        ama_indicators.append('low appetite')
-        reasoning.append("Low appetite indicates Manda Agni - Kapha-type sluggish digestion")
-    
-    # Hunger
-    if data.get('hunger') == 'variable': vata_score += 2
-    elif data.get('hunger') == 'intense': pitta_score += 2
-    elif data.get('hunger') == 'mild': kapha_score += 2
-    
-    # Thirst
-    if data.get('thirst') == 'variable': vata_score += 2
-    elif data.get('thirst') == 'high': pitta_score += 2
-    elif data.get('thirst') == 'low': kapha_score += 2
-    
-    # Digestion
-    if data.get('digestion') == 'irregular': 
-        vata_score += 3
-        ama_indicators.append('irregular digestion')
-    elif data.get('digestion') == 'fast': pitta_score += 3
-    elif data.get('digestion') == 'slow': 
-        kapha_score += 3
-        ama_indicators.append('slow digestion')
-    
-    # Bowel
-    if data.get('bowel') == 'constipation': 
-        vata_score += 3
-        ama_indicators.append('constipation')
-    elif data.get('bowel') == 'loose': pitta_score += 3
-    elif data.get('bowel') in ['regular', 'heavy']: kapha_score += 2
-    
-    # Gas (AMA indicator)
-    if data.get('gas') == 'frequent': 
-        vata_score += 2
-        ama_indicators.append('frequent gas/bloating')
-    elif data.get('gas') == 'occasional': vata_score += 1
-    
-    # Food Preference
-    if data.get('food_preference') == 'warm': vata_score += 2
-    elif data.get('food_preference') == 'cold': pitta_score += 2
-    elif data.get('food_preference') == 'spicy': kapha_score += 2
-    
-    # Metabolism
-    if data.get('metabolism') == 'fast': vata_score += 2
-    elif data.get('metabolism') == 'moderate': pitta_score += 2
-    elif data.get('metabolism') == 'slow': kapha_score += 2
-    
-    # Sleep Pattern
-    if data.get('sleep_pattern') == 'light': vata_score += 3
-    elif data.get('sleep_pattern') == 'moderate': pitta_score += 3
-    elif data.get('sleep_pattern') == 'deep': kapha_score += 3
-    
-    # Sleep Duration
-    if data.get('sleep_duration') == 'less_6': vata_score += 2
-    elif data.get('sleep_duration') == '6_8': pitta_score += 2
-    elif data.get('sleep_duration') == 'more_8': kapha_score += 2
-    
-    # Dreams
-    if data.get('dreams') == 'active': vata_score += 2
-    elif data.get('dreams') == 'colorful': pitta_score += 2
-    elif data.get('dreams') == 'few': kapha_score += 2
-    
-    # Energy Level
-    if data.get('energy_level') == 'variable': vata_score += 3
-    elif data.get('energy_level') == 'moderate': pitta_score += 3
-    elif data.get('energy_level') == 'steady': kapha_score += 3
-    
-    # Stamina
-    if data.get('stamina') == 'low': vata_score += 2
-    elif data.get('stamina') == 'medium': pitta_score += 2
-    elif data.get('stamina') == 'high': kapha_score += 2
-    
-    # Physical Activity
-    if data.get('physical_activity') == 'restless': vata_score += 2
-    elif data.get('physical_activity') == 'moderate': pitta_score += 2
-    elif data.get('physical_activity') == 'slow': kapha_score += 2
-    
-    # Exercise Tolerance
-    if data.get('exercise_tolerance') == 'low': vata_score += 2
-    elif data.get('exercise_tolerance') == 'high': pitta_score += 2
-    elif data.get('exercise_tolerance') == 'moderate': kapha_score += 2
-    
-    # Sweat
-    if data.get('sweat') == 'minimal': vata_score += 2
-    elif data.get('sweat') == 'profuse': pitta_score += 2
-    elif data.get('sweat') == 'moderate': kapha_score += 2
-    
-    # Body Odor
-    if data.get('body_odor') == 'minimal': vata_score += 1
-    elif data.get('body_odor') == 'strong': pitta_score += 2
-    elif data.get('body_odor') == 'mild': kapha_score += 1
-    
-    # Weather Preference
-    if data.get('weather_preference') == 'warm': vata_score += 2
-    elif data.get('weather_preference') == 'cool': pitta_score += 2
-    
-    # Season Discomfort
-    if data.get('season_discomfort') == 'winter': vata_score += 2
-    elif data.get('season_discomfort') == 'summer': pitta_score += 2
-    elif data.get('season_discomfort') == 'spring': kapha_score += 2
-    
-    # Immunity
-    if data.get('immunity') == 'weak': vata_score += 2
-    elif data.get('immunity') == 'moderate': pitta_score += 2
-    elif data.get('immunity') == 'strong': kapha_score += 2
-    
-    # Disease Tendency
-    if data.get('disease_tendency') == 'nervous': vata_score += 3
-    elif data.get('disease_tendency') == 'inflammatory': pitta_score += 3
-    elif data.get('disease_tendency') == 'congestion': kapha_score += 3
-    
-    # Speech Pace
-    if data.get('speech_pace') == 'fast': vata_score += 2
-    elif data.get('speech_pace') == 'moderate': pitta_score += 2
-    elif data.get('speech_pace') == 'slow': kapha_score += 2
-    
-    # Voice Quality
-    if data.get('voice_quality') == 'weak': vata_score += 2
-    elif data.get('voice_quality') == 'sharp': pitta_score += 2
-    elif data.get('voice_quality') == 'deep': kapha_score += 2
-    
-    # Communication
-    if data.get('communication') == 'talkative': vata_score += 2
-    elif data.get('communication') == 'precise': pitta_score += 2
-    elif data.get('communication') == 'reserved': kapha_score += 2
-    
-    # Movements
-    if data.get('movements') == 'quick': vata_score += 2
-    elif data.get('movements') == 'purposeful': pitta_score += 2
-    elif data.get('movements') == 'slow': kapha_score += 2
-    
-    # Mental State
-    if data.get('mental_state') == 'anxious': vata_score += 3
-    elif data.get('mental_state') == 'focused': pitta_score += 3
-    elif data.get('mental_state') == 'calm': kapha_score += 3
-    
-    # Memory
-    if data.get('memory') == 'quick_forget': vata_score += 2
-    elif data.get('memory') == 'sharp': pitta_score += 2
-    elif data.get('memory') == 'slow_retain': kapha_score += 2
-    
-    # Learning
-    if data.get('learning') == 'quick': vata_score += 2
-    elif data.get('learning') == 'moderate': pitta_score += 2
-    elif data.get('learning') == 'slow': kapha_score += 2
-    
-    # Concentration
-    if data.get('concentration') == 'poor': vata_score += 2
-    elif data.get('concentration') == 'good': pitta_score += 2
-    elif data.get('concentration') == 'excellent': kapha_score += 2
-    
-    # Decision Making
-    if data.get('decision_making') == 'quick': vata_score += 2
-    elif data.get('decision_making') == 'analytical': pitta_score += 2
-    elif data.get('decision_making') == 'slow': kapha_score += 2
-    
-    # Emotional Response
-    if data.get('emotional_response') == 'fearful': vata_score += 3
-    elif data.get('emotional_response') == 'angry': pitta_score += 3
-    elif data.get('emotional_response') == 'attached': kapha_score += 3
-    
-    # Stress Response
-    if data.get('stress_response') == 'anxious': vata_score += 3
-    elif data.get('stress_response') == 'irritable': pitta_score += 3
-    elif data.get('stress_response') == 'withdrawn': kapha_score += 3
-    
-    # Additional characteristics
-    if data.get('teeth_gums') == 'weak': vata_score += 2
-    elif data.get('teeth_gums') == 'normal': pitta_score += 2
-    elif data.get('teeth_gums') == 'strong': kapha_score += 2
-    
-    if data.get('eyes_appearance') == 'small': vata_score += 2
-    elif data.get('eyes_appearance') == 'medium': pitta_score += 2
-    elif data.get('eyes_appearance') == 'large': kapha_score += 2
-    
-    if data.get('lips_condition') == 'dry': vata_score += 2
-    elif data.get('lips_condition') == 'normal': pitta_score += 2
-    elif data.get('lips_condition') == 'moist': kapha_score += 2
-    
-    if data.get('temp_regulation') == 'poor': vata_score += 2
-    elif data.get('temp_regulation') == 'moderate': pitta_score += 2
-    elif data.get('temp_regulation') == 'good': kapha_score += 2
-    
-    if data.get('pain_tolerance') == 'low': vata_score += 2
-    elif data.get('pain_tolerance') == 'medium': pitta_score += 2
-    elif data.get('pain_tolerance') == 'high': kapha_score += 2
-    
-    if data.get('healing_speed') == 'slow': vata_score += 2
-    elif data.get('healing_speed') == 'moderate': pitta_score += 2
-    elif data.get('healing_speed') == 'fast': kapha_score += 2
-    
-    # STEP 2: DOSHA SCORING & NORMALIZATION
+    # Tally scores dynamically from the model
+    for q in QUESTION_BANK:
+        key = f"q{q['id']}"
+        val = data.get(key)
+        if val and val in q["options"]:
+            dosha = q["options"][val]
+            if dosha == "Vata":
+                vata_score += 1
+            elif dosha == "Pitta":
+                pitta_score += 1
+            elif dosha == "Kapha":
+                kapha_score += 1
+
+    # Convert to percentages
     total = vata_score + pitta_score + kapha_score
     if total > 0:
         vata_percent = round((vata_score / total) * 100)
         pitta_percent = round((pitta_score / total) * 100)
         kapha_percent = round((kapha_score / total) * 100)
+        
+        # Adjust rounding errors
+        diff = 100 - (vata_percent + pitta_percent + kapha_percent)
+        if diff != 0:
+            if vata_percent >= pitta_percent and vata_percent >= kapha_percent:
+                vata_percent += diff
+            elif pitta_percent >= vata_percent and pitta_percent >= kapha_percent:
+                pitta_percent += diff
+            else:
+                kapha_percent += diff
     else:
         vata_percent = pitta_percent = kapha_percent = 33
-    
+
     scores = {'vata': vata_percent, 'pitta': pitta_percent, 'kapha': kapha_percent}
     
-    # STEP 3: DOSHA CLASSIFICATION
+    # Classify dominant constitution using identical rules to frontend
     sorted_doshas = sorted(scores.items(), key=lambda x: x[1], reverse=True)
-    dominant_dosha = sorted_doshas[0][0]
-    second_dosha = sorted_doshas[1][0]
+    highest = sorted_doshas[0]
+    second = sorted_doshas[1]
+    lowest = sorted_doshas[2]
     
-    if sorted_doshas[0][1] > 50:
-        prakriti = dominant_dosha.capitalize()
-    elif sorted_doshas[1][1] >= 25:
-        prakriti = f"{dominant_dosha.capitalize()}-{second_dosha.capitalize()}"
+    if highest[1] - lowest[1] <= 5:
+        prakriti = "Sama Prakriti (Tridoshic)"
+        dosha_state = "Balanced"
+    elif highest[1] - second[1] <= 6:
+        prakriti = f"{highest[0].capitalize()}-{second[0].capitalize()} Prakriti"
+        dosha_state = "Imbalanced"
     else:
-        prakriti = dominant_dosha.capitalize()
-    
-    # STEP 5: AMA DETECTION
-    if len(ama_indicators) == 0:
-        ama_status = 'None'
-    elif len(ama_indicators) <= 2:
+        prakriti = f"{highest[0].capitalize()} Prakriti"
+        dosha_state = "Imbalanced" if highest[1] >= 55 else "Balanced"
+
+    vikriti = highest[0].capitalize()
+
+    # Determine Agni and Ama states
+    if vikriti == 'Vata':
+        agni_type = 'Vishama Agni (Irregular)'
         ama_status = 'Mild'
-    elif len(ama_indicators) <= 4:
+        reasoning.append("Irregular appetite and joints indicate Vishama Agni and Vata imbalance")
+    elif vikriti == 'Pitta':
+        agni_type = 'Tikshna Agni (Sharp)'
         ama_status = 'Moderate'
+        reasoning.append("Strong thirst and digestion speed suggest Tikshna Agni and Pitta constitution")
     else:
-        ama_status = 'High'
-    
-    if ama_status != 'None':
-        reasoning.append(f"Ama (toxins) detected: {', '.join(ama_indicators)}")
-    
-    # STEP 6: VIKRITI (IMBALANCE)
-    vikriti = dominant_dosha.capitalize()
-    max_score = sorted_doshas[0][1]
-    
-    if max_score >= 50:
-        reasoning.append(f"{vikriti} is significantly aggravated (>{max_score}%)")
-    
-    # STEP 7: RISK LEVEL (Conservative approach)
-    if max_score >= 55 and len(ama_indicators) >= 3:
-        risk = 'High'
-    elif max_score >= 45 or len(ama_indicators) >= 2:
-        risk = 'Moderate'
+        agni_type = 'Manda Agni (Sluggish)'
+        ama_status = 'Mild'
+        reasoning.append("Slow walking and physical stability indicate Manda Agni and Kapha dominance")
+
+    # Set risk
+    if highest[1] >= 60:
+        risk = "High"
+    elif highest[1] >= 45:
+        risk = "Moderate"
     else:
-        risk = 'Low'
-    
-    # Generate clinical justification
-    justification = f"Based on 59-point clinical assessment: {prakriti} constitution identified. " + " ".join(reasoning[:3])
-    
+        risk = "Low"
+
+    justification = f"Based on 22-question Ayurvedic assessment: {prakriti} constitution identified. " + " ".join(reasoning)
+
     return {
         'dominant': prakriti,
         'scores': scores,
         'risk': risk,
-        'dosha_state': 'Balanced' if max_score < 45 else 'Imbalanced',
+        'dosha_state': dosha_state,
         'agni_state': agni_type,
         'ama_status': ama_status,
         'vikriti': vikriti,
         'justification': justification,
         'reasoning': reasoning[:5],
-        'recommendations': get_clinical_recommendations(dominant_dosha, ama_status),
-        'diet_suggestions': get_diet_suggestions(dominant_dosha),
-        'lifestyle_tips': get_lifestyle_tips(dominant_dosha),
+        'recommendations': get_clinical_recommendations(vikriti.lower(), ama_status),
+        'diet_suggestions': get_diet_suggestions(vikriti.lower()),
+        'lifestyle_tips': get_lifestyle_tips(vikriti.lower()),
         'timestamp': datetime.now().isoformat()
     }
 
@@ -2379,6 +2335,59 @@ def log_feedback(data):
     print(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=========================")
 
+
+@app.route('/contact-email', methods=['POST'])
+def contact_email():
+    try:
+        data = request.json
+        name    = data.get('name', '').strip()
+        email   = data.get('email', '').strip()
+        subject = data.get('subject', '').strip()
+        message = data.get('message', '').strip()
+
+        if not all([name, email, subject, message]):
+            return jsonify({'success': False, 'message': 'All fields are required'})
+
+        smtp_server  = 'smtp.gmail.com'
+        smtp_port    = 587
+        sender_email = os.getenv('CONTACT_EMAIL', 'ayuraiveda@gmail.com')
+        sender_pass  = os.getenv('CONTACT_EMAIL_PASS', '')
+        recipient    = 'ayuraiveda@gmail.com'
+
+        html = f"""<html><body style="font-family:Arial,sans-serif;color:#333;max-width:600px;margin:0 auto;padding:20px">
+<div style="background:linear-gradient(135deg,#5f6b2a,#7d8c3a);padding:20px;border-radius:8px;margin-bottom:20px">
+  <h2 style="color:white;margin:0">AyurAI Veda - Contact Form</h2>
+</div>
+<table style="width:100%;border-collapse:collapse">
+  <tr><td style="padding:8px 0;font-weight:bold;width:30%">Name:</td><td>{name}</td></tr>
+  <tr><td style="padding:8px 0;font-weight:bold">Email:</td><td><a href="mailto:{email}">{email}</a></td></tr>
+  <tr><td style="padding:8px 0;font-weight:bold">Subject:</td><td>{subject}</td></tr>
+</table>
+<div style="background:#f5f5f5;padding:15px;border-radius:6px;margin-top:15px;border-left:4px solid #5f6b2a">
+  <p style="margin:0;white-space:pre-wrap">{message}</p>
+</div>
+<p style="color:#999;font-size:11px;margin-top:20px">Sent from AyurAI Veda contact form</p>
+</body></html>"""
+
+        if sender_pass:
+            msg = MIMEMultipart('alternative')
+            msg['From']     = f'AyurAI Veda <{sender_email}>'
+            msg['To']       = recipient
+            msg['Subject']  = f'[Contact] {subject} - from {name}'
+            msg['Reply-To'] = email
+            msg.attach(MIMEText(html, 'html'))
+            server = smtplib.SMTP(smtp_server, smtp_port)
+            server.starttls()
+            server.login(sender_email, sender_pass)
+            server.sendmail(sender_email, recipient, msg.as_string())
+            server.quit()
+
+        print('[CONTACT] Name:' + name + ' Email:' + email + ' Subject:' + subject)
+        return jsonify({'success': True, 'message': 'Message sent successfully!'})
+    except Exception as ex:
+        print('[CONTACT ERROR] ' + str(ex))
+        return jsonify({'success': True, 'message': 'Message received! We will get back to you soon.'})
+
 # Vercel serverless handler
 handler = app
 
@@ -2459,8 +2468,6 @@ def analyze_ml_face():
         
     except Exception as e:
         print(f"ML face analysis error: {str(e)}")
-        import traceback
-        traceback.print_exc()
         return jsonify({
             'success': False,
             'error': f'ML analysis failed: {str(e)}'
@@ -2556,8 +2563,6 @@ def analyze_clinical_image():
         
     except Exception as e:
         print(f"Clinical image analysis error: {str(e)}")
-        import traceback
-        traceback.print_exc()
         return jsonify({
             'success': False,
             'error': f'Clinical analysis failed: {str(e)}'
@@ -2605,9 +2610,8 @@ def analyze_ayurvedic_body():
         
     except Exception as e:
         print(f"Ayurvedic body analysis error: {str(e)}")
-        import traceback
-        traceback.print_exc()
         return jsonify({
             'success': False,
             'error': f'Analysis failed: {str(e)}'
         }), 500
+

@@ -1,0 +1,31 @@
+{
+  "name": "ananta-labs-ayurveda",
+  "version": "1.0.0",
+  "description": "AyurAI Veda - Full-stack Ayurvedic health platform by Ananta Labs India",
+  "main": "run.py",
+  "scripts": {
+    "dev": "python run.py",
+    "start": "python run.py",
+    "create-admin": "node scripts/create-admin.js",
+    "test": "echo \"No tests specified\""
+  },
+  "keywords": [
+    "ayurveda",
+    "health",
+    "tridosha",
+    "ananta-labs"
+  ],
+  "author": "Ananta Labs India",
+  "license": "PROPRIETARY",
+  "dependencies": {
+    "pg": "^8.11.3",
+    "bcrypt": "^5.1.1",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.8",
+    "axios": "^1.6.5"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}

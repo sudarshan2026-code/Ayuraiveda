@@ -223,15 +223,18 @@
         nav ul {
             list-style: none;
             display: flex;
-            gap: 1.5rem;
+            gap: 1rem;
             justify-content: center;
             flex-wrap: wrap;
             margin: 0;
             padding: 0;
+            align-items: center;
         }
 
         nav li {
             margin: 0;
+            display: flex;
+            gap: 0.5rem;
         }
 
         nav a {
@@ -904,10 +907,17 @@
                 <li><a href="/">Home</a></li>
                 <li><a href="/about">About</a></li>
                 <li><a href="/clinical-assessment">Clinical Assessment</a></li>
-                <li><a href="/body-analysis">Face & Body Analysis</a></li>
                 <li><a href="/chatbot">AyurVaani Chat</a></li>
                 <li><a href="/contact">Contact</a></li>
                 <li><a href="/feedback">Feedback</a></li>
+                <li id="authLinks">
+                    <a href="/login">Login</a>
+                    <a href="/register">Register</a>
+                </li>
+                <li id="userLinks" style="display:none;">
+                    <a href="/dashboard">Dashboard</a>
+                    <a href="#" id="logoutLink">Logout</a>
+                </li>
             </ul>
         </nav>
     </header>
@@ -936,6 +946,34 @@
         document.addEventListener('DOMContentLoaded', function() {
             const mobileMenuToggle = document.getElementById('mobileMenuToggle');
             const mainNav = document.getElementById('mainNav');
+            
+            // Check authentication status
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            
+            if (token && user.id) {
+                // User is logged in - show dashboard and logout
+                document.getElementById('authLinks').style.display = 'none';
+                document.getElementById('userLinks').style.display = 'block';
+            } else {
+                // User not logged in - show login and register
+                document.getElementById('authLinks').style.display = 'block';
+                document.getElementById('userLinks').style.display = 'none';
+            }
+            
+            // Logout handler
+            const logoutLink = document.getElementById('logoutLink');
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('usage');
+                    localStorage.removeItem('subscription');
+                    alert('Logged out successfully!');
+                    window.location.href = '/';
+                });
+            }
             
             if (mobileMenuToggle) {
                 mobileMenuToggle.addEventListener('click', function() {

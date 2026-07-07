@@ -2,74 +2,47 @@
 __pycache__/
 *.py[cod]
 *$py.class
-*.so
 .Python
+api/__pycache__/
+backend/__pycache__/
 
 # Virtual Environment
 venv/
 env/
 ENV/
-.venv
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
-*~
 
 # OS
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
 
-# Database
+# Database & Storage
 *.db
 *.sqlite
 *.sqlite3
-ayurveda_auth.db
-ayurveda_chat.db
+pb_data/
+pocketbase
+pocketbase.exe
+check.txt
+raw.txt
 
-# Large ML model files
-*.pkl
-*.h5
-efficientnetv2-b3_notop.h5
-assessment_model.pkl
-ayurveda_model.pkl
-dosha_assessment_model.pkl
+# Node / Frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/android/app/build/
+frontend/android/.gradle/
 
-# PDF files (too large for Git)
-*.pdf
-
-# Logs
-*.log
-
-# Environment variables
+# Environment config
 .env
-.env.local
+frontend/.env
 
-# Compiled files
-*.pyc
-*.pyo
-
-# Distribution / packaging
-build/
-dist/
-*.egg-info/
-
-# Testing
-.pytest_cache/
-.coverage
-htmlcov/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# Temporary files
-*.tmp
-*.bak
-*.swp
+# Compiled Binaries
+*.apk
+*.zip
+*.tar.gz

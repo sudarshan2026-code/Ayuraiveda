@@ -1,10 +1,20 @@
 """
-AyurAI Veda - Dynamic Ayurvedic Theme Application
-Run this file to start the Flask server
+AyurAI Veda - Run Flask Server
 """
-
 import sys
 import os
+
+# Fix Unicode output on Windows terminals
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+
+# Load .env file
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # python-dotenv not installed, use system env vars
 
 # Add the project directory to Python path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -13,28 +23,12 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from api.index import app
 
 if __name__ == '__main__':
-    print("=" * 60)
-    print("🌿 AyurAI Veda - Time-Aware Ayurvedic Intelligence")
-    print("=" * 60)
-    print("\n✨ Starting Flask server...\n")
-    print("📍 Access the application at:")
-    print("   → http://127.0.0.1:5000/")
-    print("   → http://localhost:5000/")
-    print("\n🎨 Dynamic Theme System:")
-    print("   → Vata Time: 4:00 AM - 10:00 AM (Morning)")
-    print("   → Pitta Time: 10:00 AM - 2:00 PM (Midday)")
-    print("   → Kapha Time: 6:00 PM - 10:00 PM (Evening)")
-    print("\n⚡ Features:")
-    print("   ✓ Time-aware backgrounds")
-    print("   ✓ Glassmorphism UI")
-    print("   ✓ Smooth animations")
-    print("   ✓ Manual theme toggle")
-    print("   ✓ Fully responsive")
-    print("\n🔧 Press Ctrl+C to stop the server")
-    print("=" * 60)
-    print()
-    
-    # Run the Flask app
+    print("=" * 50)
+    print("AyurAI Veda - Flask Server")
+    print("=" * 50)
+    print("Access at: http://127.0.0.1:5000")
+    print("Press Ctrl+C to stop")
+    print("=" * 50)
     app.run(
         host='0.0.0.0',
         port=5000,
