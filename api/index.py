@@ -2,7 +2,7 @@ if __import__('sys').platform == 'win32':
     __import__('sys').stdout.reconfigure(encoding='utf-8', errors='replace')
     __import__('sys').stderr.reconfigure(encoding='utf-8', errors='replace')
 
-from flask import Flask, request, jsonify, render_template, send_file, session
+from flask import Flask, request, jsonify, render_template, send_file, session, make_response
 import json
 import io
 import os
@@ -14,6 +14,23 @@ from datetime import datetime
 
 app = Flask(__name__, template_folder='../templates', static_folder='../static')
 app.secret_key = os.getenv('SECRET_KEY', 'ayurveda_secret_key_2024')
+
+# Enable CORS globally for native app API requests (Capacitor/Cordova)
+@app.before_request
+def handle_options_preflight():
+    if request.method == 'OPTIONS':
+        response = make_response()
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
+        response.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,OPTIONS'
+        return response
+
+@app.after_request
+def add_cors_headers(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
+    response.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,OPTIONS'
+    return response
 
 # Import authentication routes
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)) + '/..')
