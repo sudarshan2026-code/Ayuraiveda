@@ -1,7 +1,6 @@
 from backend.vector_db.vector_store import LightweightVectorStore
 from backend.utils.web_searcher import WebSearcher
 from backend.utils.ml_loader import AyurMLModelLoader
-from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 
 class RAGPipeline:
@@ -31,6 +30,7 @@ class RAGPipeline:
         # CCRAS Prakriti SOP ML model matching
         if self.ml_loader.vectorizer and len(self.ml_loader.chunks) > 0:
             try:
+                from sklearn.metrics.pairwise import cosine_similarity
                 query_vec = self.ml_loader.vectorizer.transform([query])
                 similarities = cosine_similarity(query_vec, self.ml_loader.tfidf_matrix).flatten()
                 top_indices = np.argsort(similarities)[-3:][::-1]

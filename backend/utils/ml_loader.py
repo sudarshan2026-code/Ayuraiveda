@@ -1,10 +1,12 @@
 import os
 import pickle
 import warnings
-from sklearn.exceptions import InconsistentVersionWarning
-
-# Suppress sklearn unpickling version warnings
-warnings.filterwarnings("ignore", category=InconsistentVersionWarning)
+# Suppress sklearn unpickling version warnings if installed
+try:
+    from sklearn.exceptions import InconsistentVersionWarning
+    warnings.filterwarnings("ignore", category=InconsistentVersionWarning)
+except ImportError:
+    pass
 warnings.filterwarnings("ignore", category=UserWarning)
 
 class AyurMLModelLoader:
