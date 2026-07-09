@@ -2157,8 +2157,33 @@ def get_lifestyle_tips(dominant):
 
 def get_chatbot_response(message):
     """Enhanced chatbot with comprehensive responses"""
+    msg_clean = message.strip().lower().rstrip("?./!")
+    greetings = ["hi", "hello", "namaste", "hey", "good morning", "good afternoon", "good evening"]
     
-    if 'tridosha' in message or 'tri dosha' in message or 'three dosha' in message:
+    is_pure_greeting = False
+    temp_msg = msg_clean.strip(" ,.!?;:")
+    if temp_msg in greetings:
+        is_pure_greeting = True
+        
+    if not is_pure_greeting:
+        for g in greetings:
+            if temp_msg.startswith(g):
+                remaining = temp_msg[len(g):].strip(" ,.!?;:")
+                if remaining:
+                    msg_clean = remaining
+                    break
+                    
+    if is_pure_greeting:
+        return """Hello! I'm AyurVaani, your Ayurvedic wellness assistant. I can help you with:<br><br>
+🌬️ Understanding Vata, Pitta, and Kapha doshas<br>
+🍽️ Personalized diet recommendations<br>
+🌿 Herbal remedies and natural treatments<br>
+🧘 Yoga and pranayama practices<br>
+😌 Stress management and sleep improvement<br>
+🔥 Digestive health and Agni strengthening<br><br>
+What would you like to know about Ayurveda today?"""
+
+    if 'tridosha' in msg_clean or 'tri dosha' in msg_clean or 'three dosha' in msg_clean:
         return """<strong>Tridosha - The Three Fundamental Energies</strong><br><br>
 Tridosha is the foundation of Ayurveda, consisting of three biological energies (doshas) that govern all physical and mental processes:<br><br>
 <strong>🌬️ Vata (Air + Space)</strong><br>
@@ -2178,34 +2203,34 @@ Tridosha is the foundation of Ayurveda, consisting of three biological energies 
 • Balance: Light foods, exercise, avoid dairy<br><br>
 Everyone has a unique combination of these three doshas, called their <strong>Prakriti</strong> (constitution). Take our AI Health Assessment to discover your dominant dosha! 🌿"""
     
-    elif 'vata' in message:
+    elif 'vata' in msg_clean:
         return "Vata dosha (Air + Space) governs movement, creativity, and the nervous system. When balanced, it promotes creativity and flexibility. When imbalanced, it can cause anxiety, dry skin, and digestive issues. Balance vata with warm foods, regular routines, and oil massage."
     
-    elif 'pitta' in message:
+    elif 'pitta' in msg_clean:
         return "Pitta dosha (Fire + Water) governs metabolism and is associated with fire and water elements. When balanced, it promotes good digestion and sharp intellect. When imbalanced, it can cause acidity, anger, and skin inflammation. Balance pitta with cooling foods and avoiding excessive heat."
     
-    elif 'kapha' in message:
+    elif 'kapha' in msg_clean:
         return "Kapha dosha (Water + Earth) governs structure and is associated with water and earth elements. When balanced, it provides strength and immunity. When imbalanced, it can cause weight gain, congestion, and lethargy. Balance kapha with light foods, regular exercise, and staying active."
     
-    elif 'diet' in message or 'food' in message:
+    elif 'diet' in msg_clean or 'food' in msg_clean:
         return "Ayurvedic diet is based on your dosha constitution. Vata types need warm, moist foods. Pitta types need cooling, less spicy foods. Kapha types need light, warm, spicy foods. Eat fresh, seasonal foods and avoid processed items."
     
-    elif 'yoga' in message or 'exercise' in message:
+    elif 'yoga' in msg_clean or 'exercise' in msg_clean:
         return "Yoga is an integral part of Ayurveda. Vata types benefit from gentle, grounding poses. Pitta types need cooling, moderate practices. Kapha types need energizing, vigorous sequences. Practice regularly for best results."
     
-    elif 'sleep' in message or 'insomnia' in message:
+    elif 'sleep' in msg_clean or 'insomnia' in msg_clean:
         return "Good sleep is crucial for health. Vata types need 7-8 hours with regular bedtime. Pitta types need 6-7 hours in cool environment. Kapha types need 6-7 hours and should wake early. Avoid screens before bed."
     
-    elif 'stress' in message or 'anxiety' in message:
+    elif 'stress' in msg_clean or 'anxiety' in msg_clean:
         return "Ayurvedic stress management: Regular routine, adequate sleep, meditation, pranayama (breathing exercises), Abhyanga (oil massage), and adaptogenic herbs like Ashwagandha. Stress is seen as Vata imbalance affecting the mind."
     
-    elif 'digestion' in message or 'agni' in message:
+    elif 'digestion' in msg_clean or 'agni' in msg_clean:
         return "To improve digestion (Agni): Eat at regular times, use digestive spices (ginger, cumin, fennel), avoid overeating, drink warm water, and walk after meals. Strong Agni is key to health in Ayurveda."
     
-    elif 'meditation' in message:
+    elif 'meditation' in msg_clean:
         return "Meditation balances all doshas. Vata types benefit from grounding meditations. Pitta types need cooling, calming practices. Kapha types benefit from energizing techniques. Start with 10-15 minutes daily."
     
-    elif 'herb' in message or 'ashwagandha' in message or 'turmeric' in message:
+    elif 'herb' in msg_clean or 'ashwagandha' in msg_clean or 'turmeric' in msg_clean:
         return "Key Ayurvedic herbs: Ashwagandha (stress relief, strength), Turmeric (anti-inflammatory), Tulsi (immunity, stress), Amla (Vitamin C, rejuvenation), Brahmi (memory, clarity), and Neem (blood purification)."
     
     else:

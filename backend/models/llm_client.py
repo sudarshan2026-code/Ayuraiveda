@@ -197,7 +197,20 @@ class AyurvedaLLMClient:
 
         # 1. Greetings check
         greetings = ["hi", "hello", "namaste", "hey", "good morning", "good afternoon", "good evening"]
-        if any(g == query_lower or query_lower.startswith(g + " ") for g in greetings):
+        is_pure_greeting = False
+        temp_query = query_lower.strip(" ,.!?;:")
+        if temp_query in greetings:
+            is_pure_greeting = True
+            
+        if not is_pure_greeting:
+            for g in greetings:
+                if temp_query.startswith(g):
+                    remaining = temp_query[len(g):].strip(" ,.!?;:")
+                    if remaining:
+                        query_lower = remaining
+                        break
+                        
+        if is_pure_greeting or any(g == query_lower for g in greetings):
             if lang_lbl == 'hi':
                 return """### 🌿 नमस्ते! आयुर्वाणी™ में आपका स्वागत है
 
