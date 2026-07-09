@@ -24,7 +24,7 @@ const PERSONAL_FIELDS = [
 ]
 
 export default function Assessment() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [phase, setPhase] = useState('intro') // 'intro' | 'form' | 'processing' | 'results'
   const [step, setStep] = useState(0) // 0 = Personal Info, 1 to 22 = Q1 to Q22
   const [answers, setAnswers] = useState({})

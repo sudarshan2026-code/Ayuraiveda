@@ -1834,6 +1834,65 @@ def analyze_clinical(data):
         }
     ]
 
+    # ML model loading for hybrid calculation
+    ml_vata_score = ml_pitta_score = ml_kapha_score = 0
+    ml_calculated = False
+    
+    try:
+        from backend.utils.ml_loader import AyurMLModelLoader
+        from sklearn.metrics.pairwise import cosine_similarity
+        import numpy as np
+        import re
+        
+        ml_loader = AyurMLModelLoader()
+        if ml_loader.vectorizer and len(ml_loader.chunks) > 0:
+            # 1. Compile user answers into a single text profile string
+            user_answers = []
+            for q in QUESTION_BANK:
+                key = f"q{q['id']}"
+                val = data.get(key)
+                if val:
+                    user_answers.append(f"{q['question']}: {val}")
+            
+            patient_profile_text = ". ".join(user_answers)
+            
+            # 2. Get similarity vector
+            query_vec = ml_loader.vectorizer.transform([patient_profile_text])
+            similarities = cosine_similarity(query_vec, ml_loader.tfidf_matrix).flatten()
+            
+            # 3. Match against the top chunks
+            top_k = min(30, len(ml_loader.chunks))
+            top_indices = np.argsort(similarities)[-top_k:][::-1]
+            
+            # 4. Score based on matching keyword occurrences in relevant guidelines
+            vata_kws = r'\b(vata|vataja|vayu|dryness|roughness|coldness|lightness|unstable|cracking)\b'
+            pitta_kws = r'\b(pitta|pittaja|heat|redness|acidity|sharpness|soft|sweat|flushed)\b'
+            kapha_kws = r'\b(kapha|kaphaja|heaviness|oiliness|smoothness|stability|stout|nourish)\b'
+            
+            for idx in top_indices:
+                sim = similarities[idx]
+                if sim > 0:
+                    chunk_text = ml_loader.chunks[idx].lower()
+                    
+                    vata_cnt = len(re.findall(vata_kws, chunk_text))
+                    pitta_cnt = len(re.findall(pitta_kws, chunk_text))
+                    kapha_cnt = len(re.findall(kapha_kws, chunk_text))
+                    
+                    ml_vata_score += sim * vata_cnt
+                    ml_pitta_score += sim * pitta_cnt
+                    ml_kapha_score += sim * kapha_cnt
+            
+            # 5. Convert ML scores to percentages
+            ml_total = ml_vata_score + ml_pitta_score + ml_kapha_score
+            if ml_total > 0:
+                ml_vata_pct = (ml_vata_score / ml_total) * 100
+                ml_pitta_pct = (ml_pitta_score / ml_total) * 100
+                ml_kapha_pct = (ml_kapha_score / ml_total) * 100
+                ml_calculated = True
+    except Exception as e:
+        print(f"[WARN] ML Clinical Scoring failed: {str(e)}")
+        ml_calculated = False
+
     vata_score = pitta_score = kapha_score = 0
     reasoning = []
     
@@ -1853,10 +1912,21 @@ def analyze_clinical(data):
     # Convert to percentages
     total = vata_score + pitta_score + kapha_score
     if total > 0:
-        vata_percent = round((vata_score / total) * 100)
-        pitta_percent = round((pitta_score / total) * 100)
-        kapha_percent = round((kapha_score / total) * 100)
+        vata_percent_rule = (vata_score / total) * 100
+        pitta_percent_rule = (pitta_score / total) * 100
+        kapha_percent_rule = (kapha_score / total) * 100
         
+        # Apply hybrid blend if ML was successfully calculated
+        if ml_calculated:
+            # 50/50 blend of Rule-based and ML-based similarity mapping
+            vata_percent = round(0.5 * vata_percent_rule + 0.5 * ml_vata_pct)
+            pitta_percent = round(0.5 * pitta_percent_rule + 0.5 * ml_pitta_pct)
+            kapha_percent = round(0.5 * kapha_percent_rule + 0.5 * ml_kapha_pct)
+        else:
+            vata_percent = round(vata_percent_rule)
+            pitta_percent = round(pitta_percent_rule)
+            kapha_percent = round(kapha_percent_rule)
+            
         # Adjust rounding errors
         diff = 100 - (vata_percent + pitta_percent + kapha_percent)
         if diff != 0:

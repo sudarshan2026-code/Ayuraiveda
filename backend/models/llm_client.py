@@ -44,6 +44,13 @@ class AyurvedaLLMClient:
             self.model = "local-clinical-rules"
             self.url = None
 
+        try:
+            from backend.utils.ml_loader import AyurMLModelLoader
+            self.ml_loader = AyurMLModelLoader()
+        except Exception as e:
+            print(f"[WARN] Failed to initialize ML loader in LLM client: {e}")
+            self.ml_loader = None
+
     def generate_response(self, system_prompt: str, user_message: str, history: list = None, language: str = 'en') -> str:
         """Sends chat completion query to active provider, handles history, returns response string"""
         if self.provider == "fallback":
@@ -374,6 +381,65 @@ Please tell me about:
 * **Imbalance Symptoms**: Congestion, mucus buildup, weight gain, lethargy, sluggish digestion, and oversleeping.
 * **Pacifying Principles**: Warmth, dryness, lightness, activity, spices, and avoiding heavy, oily, and cold dairy foods."""
 
+        # ML CCRAS SOP Model Integration
+        ml_block = ""
+        raw_ml_insights = []
+        if self.ml_loader and self.ml_loader.vectorizer and len(self.ml_loader.chunks) > 0:
+            try:
+                from sklearn.metrics.pairwise import cosine_similarity
+                import numpy as np
+                query_vec = self.ml_loader.vectorizer.transform([query])
+                similarities = cosine_similarity(query_vec, self.ml_loader.tfidf_matrix).flatten()
+                top_indices = np.argsort(similarities)[-3:][::-1]
+                
+                for idx in top_indices:
+                    if similarities[idx] > 0.08:
+                        chunk_text = self.ml_loader.chunks[idx].strip()
+                        
+                        # Refine: clean and filter boilerplate text
+                        boilerplate = [
+                            r"(?i)ccras", r"(?i)manual\s+of\s+standard\s+operative\s+procedures",
+                            r"(?i)prakriti\s+assessment", r"(?i)all\s+right\s+reserved",
+                            r"(?i)ministry\s+of\s+ayush", r"(?i)government\s+of\s+india",
+                            r"(?i)publisher", r"(?i)isbn", r"(?i)ccras\s+shall\s+not\s+be\s+accountable",
+                            r"(?i)this\s+is\s+a\s+preview", r"(?i)some\s+pages\s+are\s+omitted",
+                            r"(?i)successful\s+completion\s+of\s+training"
+                        ]
+                        import re
+                        for pattern in boilerplate:
+                            chunk_text = re.sub(pattern, "", chunk_text)
+                            
+                        # Clean spaces and OCR junk
+                        chunk_text = re.sub(r'\s+', ' ', chunk_text).strip()
+                        chunk_text = chunk_text.strip(".:,- ")
+                        
+                        # Sentence-level refinement: only take the most relevant sentences
+                        sentences = re.split(r'(?<=[.!?])\s+', chunk_text)
+                        relevant_sentences = []
+                        keywords = ['vata', 'pitta', 'kapha', 'dosha', 'diet', 'food', 'body', 'mind', 'health', 'sleep', 'agni', 'prakriti', 'assessment']
+                        for sentence in sentences:
+                            if any(kw in sentence.lower() for kw in keywords) and len(sentence) > 15:
+                                # Ensure no duplicates
+                                if sentence not in relevant_sentences:
+                                    relevant_sentences.append(sentence)
+                                    
+                        if relevant_sentences:
+                            refined_chunk = " ".join(relevant_sentences[:3]) # Limit to top 3 sentences for output refinement
+                            if len(refined_chunk) > 30 and refined_chunk not in raw_ml_insights:
+                                raw_ml_insights.append(refined_chunk)
+                                
+                if raw_ml_insights:
+                    if lang_lbl == 'hi':
+                        ml_block = "\n\n### 🧠 राष्ट्रीय आयुर्वेद मानकों (CCRAS) से प्रमाणित अंतर्दृष्टि:\n"
+                    elif lang_lbl == 'gu':
+                        ml_block = "\n\n### 🧠 રાષ્ટ્રીય આયુર્વેદ ધોરણો (CCRAS) દ્વારા પ્રમાણિત માહિતી:\n"
+                    else:
+                        ml_block = "\n\n### 🧠 CCRAS Clinical SOP Standard Guidelines (ML-derived):\n"
+                    for ins in raw_ml_insights[:2]:
+                        ml_block += f"- {ins}\n"
+            except Exception as e:
+                print(f"Error getting ML insights in fallback: {str(e)}")
+
         # 4. Real-time web search integration and self-filtering (no urls, site names, or search words)
         web_block = ""
         raw_insights = []
@@ -421,26 +487,26 @@ Please tell me about:
         symptom_words = ["constipation", "gas", "bloat", "acidity", "burn", "heat", "weight", "heavy", "congestion", "mucus", "cough", "fever", "pain"]
         is_symptom = any(sw in query_lower for sw in symptom_words)
         
-        if web_block and not is_symptom and not any(g in query_lower for g in ["what is vata", "what is pitta", "what is kapha", "what is ayurveda", "about ayurveda", "define ayurveda"]):
+        if (web_block or ml_block) and not is_symptom and not any(g in query_lower for g in ["what is vata", "what is pitta", "what is kapha", "what is ayurveda", "about ayurveda", "define ayurveda"]):
             if lang_lbl == 'hi':
                 return f"""### 🌿 आयुर्वाणी™ आयुर्वेदिक परामर्श
 
 पारंपरिक सिद्धांतों और नैदानिक टिप्पणियों के आधार पर, यहाँ **{query}** के संबंध में आवश्यक जानकारी दी गई है:
-{web_block}
+{ml_block}{web_block}
 ---
 *अस्वीकरण: यह जानकारी केवल शैक्षिक उद्देश्यों के लिए है। व्यक्तिगत निदान के लिए कृपया एक योग्य BAMS आयुर्वेदिक चिकित्सक से परामर्श करें।*"""
             elif lang_lbl == 'gu':
                 return f"""### 🌿 આયુર્વાણી™ આયુર્વેદિક પરામર્શ
 
 પરંપરાગત સિદ્ધાંતો અને ક્લિનિકલ અવલોકનોના આધારે, અહીં **{query}** સંબંધિત માહિતી આપવામાં આવી છે:
-{web_block}
+{ml_block}{web_block}
 ---
 *ડિસ્ક્લેમર: આ માહિતી માત્ર શૈક્ષણિક હેતુઓ માટે છે. વ્યક્તિગત નિદાન માટે કૃપા કરીને લાયક BAMS આયુર્વેદિક ચિકિત્સકનો સંપર્ક કરો.*"""
             else:
                 return f"""### 🌿 AyurVaani™ Ayurvedic Consultation
 
 Based on classical principles and therapeutic observations, here is what you need to know regarding **{query}**:
-{web_block}
+{ml_block}{web_block}
 ---
 *Disclaimer: This information is for educational purposes. Please consult a qualified BAMS Ayurvedic practitioner for personalized diagnosis.*"""
 
@@ -485,7 +551,7 @@ Based on classical principles and therapeutic observations, here is what you nee
 * **प्रकृति प्रभाव**: वर्तमान लक्षण आपके मूल शारीरिक संतुलन में बदलाव का संकेत देते हैं।
 * **संभावित विकृति**: {vikriti_hi} (असंतुलन की वर्तमान स्थिति)।
 * **चिकित्सीय कारण**: {explanation_hi}
-* **आयुर्वेदिक व्याख्या**: प्रभावित स्रोतस: {srotas_hi}। प्रभावित धातु: {dhatu_hi}। पाचन अग्नि की स्थिति मंद या अनियमित है। अल्प मात्रा में आम (विषाक्त अपशिष्ट) की उपस्थिति है।{web_block}
+* **आयुर्वेदिक व्याख्या**: प्रभावित स्रोतस: {srotas_hi}। प्रभावित धातु: {dhatu_hi}। पाचन अग्नि की स्थिति मंद या अनियमित है। अल्प मात्रा में आम (विषाक्त अपशिष्ट) की उपस्थिति है।{ml_block}{web_block}
 
 ---
 
@@ -526,7 +592,7 @@ Based on classical principles and therapeutic observations, here is what you nee
 * **પ્રકૃતિ પ્રભાવ**: હાલના લક્ષણો તમારા મૂળ શારીરિક સંતુલનમાં ફેરફાર સૂચવે છે.
 * **સંભવિત વિકૃતિ**: {vikriti_gu} (અસંતુલનની વર્તમાન સ્થિતિ).
 * **ક્લિનિકલ કારણ**: {explanation_gu}
-* **આયુર્વેદિક સ્પષ્ટીકરણ**: પ્રભાવિત સ્રોતસ: {srotas_gu}। પ્રભાવિત ધાતુ: {dhatu_gu}। પાચન અગ્નિની સ્થિતિ મંદ અથવા અનિયમિત છે. પાચનમાં સહેજ આમ (ઝેરી કચરો) ની હાજરી જણાય છે.{web_block}
+* **આયુર્વેદિક સ્પષ્ટીકરણ**: પ્રભાવિત સ્રોતસ: {srotas_gu}। પ્રભાવિત ધાતુ: {dhatu_gu}। પાચન અગ્નિની સ્થિતિ મંદ અથવા અનિયમિત છે. પાચનમાં સહેજ આમ (ઝેરી કચરો) ની હાજરી જણાય છે.{ml_block}{web_block}
 
 ---
 
@@ -556,7 +622,7 @@ Based on classical principles and therapeutic observations, here is what you nee
 * **Prakriti Impact**: The current symptoms suggest an alteration in your baseline constitutional balance.
 * **Possible Vikriti**: {vikriti} (Current imbalance state).
 * **Clinical Reasoning**: The condition relates to the {explanation}
-* **Ayurvedic Explanation**: Affected channels: {srotas}. Affected tissues: {dhatu}. Agni (digestive fire) status is likely impaired (sluggish or irregular). Possible Ama (digestive toxins) involvement is present.{web_block}
+* **Ayurvedic Explanation**: Affected channels: {srotas}. Affected tissues: {dhatu}. Agni (digestive fire) status is likely impaired (sluggish or irregular). Possible Ama (digestive toxins) involvement is present.{ml_block}{web_block}
 
 ---
 
