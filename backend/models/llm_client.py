@@ -51,8 +51,68 @@ class AyurvedaLLMClient:
             print(f"[WARN] Failed to initialize ML loader in LLM client: {e}")
             self.ml_loader = None
 
+    def _clean_response_references(self, text: str) -> str:
+        """Post-processing fail-safe to clean book citations, chapter mentions, and OCR metadata from user response"""
+        import re
+        if not text:
+            return ""
+            
+        # 1. Clean book/scripture citations
+        book_patterns = [
+            r"(?i)Ashtanga\s+Hridaya", r"(?i)Ashtanga\s+Hrdaya", r"(?i)Astanga\s+Hrdaya",
+            r"(?i)Charaka\s+Samhita", r"(?i)Sushruta\s+Samhita", r"(?i)Caraka\s+Samhita",
+            r"(?i)Susruta\s+Samhita", r"(?i)ccras", r"(?i)ayurgenomics", r"(?i)CCRAS\s+SOP",
+            r"(?i)CCRAS-PAS", r"(?i)ACPI\s+scale", r"(?i)AyuSoft", r"(?i)Rotterdam\s+Symptom\s+Checklist",
+            r"(?i)RSCL", r"(?i)Duchenne\s+Muscular\s+Dystrophy", r"(?i)DMD"
+        ]
+        
+        # 2. Clean chapter, section, page, verse references
+        ref_patterns = [
+            r"(?i)Chapter\s+\d+[:\s-]*", r"(?i)Section\s+\d+[:\s-]*", r"(?i)Page\s+\d+[:\s-]*",
+            r"(?i)Verse\s+\d+[:\s-]*", r"(?i)Sutra\s+\d+[:\s-]*", r"(?i)Vol\.\s+\d+[:\s-]*",
+            r"(?i)Volume\s+\d+[:\s-]*", r"(?i)PMC\d+", r"(?i)PMID\d+", r"(?i)DOI:\d+\.\d+/\S+",
+            r"(?i)Wednesday,\s+August\s+27,\s+2003\s+924\s+AM",
+            r"\b\d{4}\s+by\s+CRC\s+Press\s+LLC\b",
+            r"\bCRC\s+Press\b", r"\bCRC\s+Press\s+LLC\b"
+        ]
+        
+        # 3. Clean files/OCR metadata (e.g. 1366_C32.fm, Page 564, etc.)
+        ocr_patterns = [
+            r"(?i)\w+\.fm\s+Page\s+\d+", r"(?i)\w+\.pdf\b", r"(?i)Page\s+\d+\s+Wednesday,\s+August\s+\d+,\s+\d+",
+            r"(?i)Wednesday,\s+August\s+\d+,\s+\d+\s+\d+\s+AM",
+            r"(?i)Wednesday,\s+August\s+\d+,\s+\d+\s+\d+\s+PM",
+            r"\[\d+\]" # Remove bracketed citations like [1], [2], [15]
+        ]
+        
+        # Apply patterns
+        cleaned = text
+        for p in book_patterns + ref_patterns + ocr_patterns:
+            cleaned = re.sub(p, "", cleaned)
+            
+        # 4. Strip duplicate spaces and clean up sentences
+        # If there are empty list markers or hanging hyphens caused by replacements
+        cleaned = re.sub(r'-\s*-+', '-', cleaned)
+        cleaned = re.sub(r'\s*,\s*,', ',', cleaned)
+        cleaned = re.sub(r'\s*\.\s*\.', '.', cleaned)
+        cleaned = re.sub(r'\s+', ' ', cleaned)
+        cleaned = re.sub(r'-\s*-\s*', '- ', cleaned)
+        cleaned = re.sub(r'-\s*\n', '\n', cleaned)
+        cleaned = re.sub(r'\n\s*-\s*\n', '\n', cleaned)
+        
+        # Clean any trailing/leading dashes or empty brackets
+        cleaned = re.sub(r'\[\s*\]', '', cleaned)
+        cleaned = re.sub(r'\(\s*\)', '', cleaned)
+        cleaned = cleaned.replace(" - ", " ").replace(" , ", ", ").replace(" . ", ". ")
+        
+        return cleaned.strip()
+
     def generate_response(self, system_prompt: str, user_message: str, history: list = None, language: str = 'en') -> str:
-        """Sends chat completion query to active provider, handles history, returns response string"""
+        """Sends chat completion query to active provider, handles history, returns cleaned response string"""
+        raw_response = self._generate_response_raw(system_prompt, user_message, history, language)
+        return self._clean_response_references(raw_response)
+
+    def _generate_response_raw(self, system_prompt: str, user_message: str, history: list = None, language: str = 'en') -> str:
+        """Sends chat completion query to active provider, handles history, returns raw response string"""
         if self.provider == "fallback":
             return self._generate_fallback(user_message, language=language)
 
