@@ -1632,204 +1632,198 @@ def analyze_clinical(data):
             "id": 1,
             "question": "Body Structure",
             "options": {
-                "Under nourished": "Vata",
-                "Short stature": "Vata",
-                "Thin body": "Vata",
-                "Dry skin/body": "Vata",
-                "Tall & thin": "Vata",
-                "Radiant appearance": "Pitta",
-                "Well nourished body": "Kapha",
-                "Stout body": "Kapha",
-                "Stable body": "Kapha",
-                "Pleasant face": "Kapha",
-                "Handsome/Beautiful appearance": "Kapha"
+                "Lean, thin, tall or short stature with dry skin": "Vata",
+                "Medium build, athletic, well-proportioned structure": "Pitta",
+                "Broad, heavy-set, well-nourished, stable structure": "Kapha"
             }
         },
         {
             "id": 2,
             "question": "Body Parts",
             "options": {
-                "Irregular body parts, eyebrows, chin, lips, tongue, head, shoulders, hands, legs, bones": "Vata",
-                "Flushed face, delicate features, fair complexion, acne, moles, warts": "Pitta",
-                "Oily body, delicate features, well nourished body, pleasant appearance, long hands": "Kapha"
+                "Narrow, irregular facial features or bony joints": "Vata",
+                "Delicate/sharp features, fair or flushed complexion": "Pitta",
+                "Round, smooth, well-nourished body and face": "Kapha"
             }
         },
         {
             "id": 3,
             "question": "Sleep",
             "options": {
-                "Disturbed sleep": "Vata",
-                "Sleeps less": "Vata",
-                "Long & sound sleep": "Kapha",
-                "Fond of sleeping": "Kapha"
+                "Light, disturbed, or interrupted sleep": "Vata",
+                "Moderate sleep but wakes up refreshed": "Pitta",
+                "Deep, long sleep, difficult to wake up": "Kapha"
             }
         },
         {
             "id": 4,
             "question": "Dreams",
             "options": {
-                "Mountains/Flying": "Vata",
-                "Fire/Lightning/Red flowers": "Pitta",
-                "Lakes/Lotus/Swans/Birds": "Kapha"
+                "Active, flying, falling, sky, or running": "Vata",
+                "Fire, fighting, sun, lightning, or anger": "Pitta",
+                "Water, lakes, gardens, swans, or clouds": "Kapha"
             }
         },
         {
             "id": 5,
             "question": "Complexion",
             "options": {
-                "Brown/Grey complexion": "Pitta",
-                "Lotus-like complexion": "Kapha",
-                "Golden complexion": "Kapha"
+                "Dusky, darkish, brown, or dry complexion": "Vata",
+                "Fair, pinkish, reddish, or freckled complexion": "Pitta",
+                "Pale white, golden, clear, or glowing complexion": "Kapha"
             }
         },
         {
             "id": 6,
             "question": "Hair",
             "options": {
-                "Rough/Split/Lustreless hair, Dry or less beard, Dry body hair": "Vata",
-                "Premature greying/baldness, Soft or brown beard/body hair": "Pitta",
-                "Thick, shiny black, dense, coloured hair, large body hair": "Kapha"
+                "Dry, rough, thin, brittle, or split-ended hair": "Vata",
+                "Soft, thin, prematurely greying, or balding hair": "Pitta",
+                "Thick, dense, oily, shiny black, or wavy hair": "Kapha"
             }
         },
         {
             "id": 7,
             "question": "Nails",
             "options": {
-                "Dry & rough, small, fast-growing": "Vata",
-                "Pink nails": "Pitta",
-                "Large nails": "Kapha"
+                "Dry, rough, brittle, small, or irregular nails": "Vata",
+                "Pink, smooth, moderate-sized, or flexible nails": "Pitta",
+                "Large, thick, strong, smooth, or pale nails": "Kapha"
             }
         },
         {
             "id": 8,
             "question": "Joints",
             "options": {
-                "Cracking/unstable joints": "Vata",
-                "Flabby ligaments": "Pitta",
-                "Strong ligaments & muscles": "Kapha"
+                "Cracking, dry, unstable, or prominent joints": "Vata",
+                "Moderate, flexible, loose, or flabby ligaments": "Pitta",
+                "Strong, well-built, padded with muscle, silent joints": "Kapha"
             }
         },
         {
             "id": 9,
             "question": "Hunger",
             "options": {
-                "Overeats": "Vata",
-                "Severe hunger": "Pitta",
-                "Less hunger": "Kapha"
+                "Irregular, variable appetite (sometimes high, sometimes low)": "Vata",
+                "Intense, sharp hunger (cannot tolerate skipping meals)": "Pitta",
+                "Mild, slow, stable hunger (can easily skip meals)": "Kapha"
             }
         },
         {
             "id": 10,
             "question": "Thirst",
             "options": {
-                "Strong hunger despite less eating": "Vata",
-                "Strong thirst/Drinks more water": "Pitta",
-                "Less thirst/Drinks little water": "Kapha"
+                "Variable, irregular thirst with dry mouth": "Vata",
+                "Intense, frequent thirst (drinks a lot of water)": "Pitta",
+                "Low thirst (drinks little water, stable)": "Kapha"
             }
         },
         {
             "id": 11,
             "question": "Activity",
             "options": {
-                "Fast walking/activity/eating/talking": "Vata",
-                "Slow activity/eating/talking, steady gait, speaks less, long endurance": "Kapha"
+                "Fast walking, talking, eating, and rapid movements": "Vata",
+                "Moderate, purposeful, energetic, and organized actions": "Pitta",
+                "Slow, steady, deliberate, and relaxed movements": "Kapha"
             }
         },
         {
             "id": 12,
             "question": "Voice",
             "options": {
-                "Dry/Weak/Low/Stammering": "Vata",
-                "Loud/Aggressive": "Pitta",
-                "Soft/Melodious/Resonant": "Kapha"
+                "Dry, weak, low-pitched, or hoarse voice": "Vata",
+                "Loud, sharp, clear, and commanding voice": "Pitta",
+                "Soft, sweet, melodious, and deep resonant voice": "Kapha"
             }
         },
         {
             "id": 13,
             "question": "Exercise & Tolerance",
             "options": {
-                "Likes exercise, intolerant to cold": "Vata",
-                "Intolerant to heat/stress/sun": "Pitta",
-                "Better heat tolerance": "Kapha"
+                "Intolerant to cold, prefers warm climates and gentle exercise": "Vata",
+                "Intolerant to heat/sun, prefers cool environment": "Pitta",
+                "High tolerance to exertion, dislikes cold/damp weather": "Kapha"
             }
         },
         {
             "id": 14,
             "question": "Intelligence & Memory",
             "options": {
-                "Quick learning, poor memory": "Vata",
-                "Brilliant, excellent grasping": "Pitta",
-                "Stable long memory, knowledgeable": "Kapha"
+                "Learns quickly but forgets quickly (short-term memory)": "Vata",
+                "Sharp, intelligent, logical, with excellent comprehension": "Pitta",
+                "Learns slowly but remembers forever (long-term memory)": "Kapha"
             }
         },
         {
             "id": 15,
             "question": "Friends",
             "options": {
-                "Unstable friendships": "Vata",
-                "Stable friendships": "Kapha"
+                "Makes friends quickly, but friendships are unstable": "Vata",
+                "Selective, loyal but demanding circle of friends": "Pitta",
+                "Makes friends slowly, but holds deep, lifelong bonds": "Kapha"
             }
         },
         {
             "id": 16,
             "question": "Resources",
             "options": {
-                "Less": "Vata",
-                "Medium": "Pitta",
-                "Better": "Kapha"
+                "Struggles to save, spends impulsively on whims": "Vata",
+                "Spends planned, buys quality/luxury items": "Pitta",
+                "Saves systematically, spends conservatively, accumulates wealth": "Kapha"
             }
         },
         {
             "id": 17,
             "question": "Wealth",
             "options": {
-                "Less": "Vata",
-                "Medium": "Pitta",
-                "Wealthy": "Kapha"
+                "Variable or fluctuating financial status": "Vata",
+                "Moderate, stable, and well-managed financial status": "Pitta",
+                "Wealthy, stable, and naturally good at accumulating assets": "Kapha"
             }
         },
         {
             "id": 18,
             "question": "Disease Susceptibility",
             "options": {
-                "Cold/cough, shivering, stiffness, easily sick": "Vata",
-                "Mouth ulcers": "Pitta",
-                "Strong immunity": "Kapha"
+                "Prone to cold/cough, stiffness, body pain, easily sick": "Vata",
+                "Prone to heat, mouth ulcers, acidity, inflammation": "Pitta",
+                "Strong general immunity, prone to congestion/mucus": "Kapha"
             }
         },
         {
             "id": 19,
             "question": "Food & Lifestyle Preferences",
             "options": {
-                "Sweet, sour, hot food; music; jokes; travelling": "Vata",
-                "Sweet, bitter, astringent, cold food; cosmetics; perfumes": "Pitta",
-                "Sweet, oily food; intellectual activities; classical music": "Kapha"
+                "Prefers sweet, sour, hot food; enjoys traveling": "Vata",
+                "Prefers sweet, bitter, astringent, cold food and cosmetics": "Pitta",
+                "Prefers warm, spicy, bitter food; enjoys active hobbies": "Kapha"
             }
         },
         {
             "id": 20,
             "question": "Nature",
             "options": {
-                "Quick starter, quick anger, emotional, jealous, impatient": "Vata",
-                "Courageous, fearless, brave, proud, cleanliness, adventurous": "Pitta",
-                "Less anger, grateful, forgiving, respectful, soft nature": "Kapha"
+                "Quick starter, creative, restless, easily anxious": "Vata",
+                "Courageous, ambitious, short-tempered, organized": "Pitta",
+                "Calm, patient, forgiving, slow to anger": "Kapha"
             }
         },
         {
             "id": 21,
             "question": "Miscellaneous",
             "options": {
-                "Feels better after massage": "Vata",
-                "No preference/Does not prefer massage": "None"
+                "Feels highly relaxed and energized after oil massage": "Vata",
+                "Likes massage with cooling oils only": "Pitta",
+                "Does not prefer or need oil massage (feels heavy)": "Kapha"
             }
         },
         {
             "id": 22,
             "question": "Animal Personality",
             "options": {
-                "Dog, Goat, Fox, Rabbit, Rat, Camel, Crow, Donkey": "Vata",
-                "Cobra, Owl, Gandharva, Yaksha, Cat, Monkey, Tiger, Bear": "Pitta",
-                "Lion, Horse, Elephant, Bull, Eagle, Swan": "Kapha"
+                "Goat, Rabbit, Rat, Deer, Crow (quick, active)": "Vata",
+                "Tiger, Cobra, Cat, Monkey (sharp, aggressive)": "Pitta",
+                "Elephant, Lion, Horse, Swan (majestic, calm)": "Kapha"
             }
         }
     ]

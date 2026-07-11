@@ -3,146 +3,177 @@ export const QUESTIONS_TRANSLATIONS: Record<string, Record<number, { question: s
     1: {
       question: "Body Structure",
       options: [
-        "Under nourished", "Short stature", "Thin body", "Dry skin/body", "Tall & thin",
-        "Radiant appearance", "Well nourished body", "Stout body", "Stable body", "Pleasant face",
-        "Handsome/Beautiful appearance"
+        "Lean, thin, tall or short stature with dry skin",
+        "Medium build, athletic, well-proportioned structure",
+        "Broad, heavy-set, well-nourished, stable structure"
       ]
     },
     2: {
       question: "Body Parts",
       options: [
-        "Irregular body parts, eyebrows, chin, lips, tongue, head, shoulders, hands, legs, bones",
-        "Flushed face, delicate features, fair complexion, acne, moles, warts",
-        "Oily body, delicate features, well nourished body, pleasant appearance, long hands"
+        "Narrow, irregular facial features or bony joints",
+        "Delicate/sharp features, fair or flushed complexion",
+        "Round, smooth, well-nourished body and face"
       ]
     },
     3: {
       question: "Sleep",
       options: [
-        "Disturbed sleep", "Sleeps less", "Long & sound sleep", "Fond of sleeping"
+        "Light, disturbed, or interrupted sleep",
+        "Moderate sleep but wakes up refreshed",
+        "Deep, long sleep, difficult to wake up"
       ]
     },
     4: {
       question: "Dreams",
       options: [
-        "Mountains/Flying", "Fire/Lightning/Red flowers", "Lakes/Lotus/Swans/Birds"
+        "Active, flying, falling, sky, or running",
+        "Fire, fighting, sun, lightning, or anger",
+        "Water, lakes, gardens, swans, or clouds"
       ]
     },
     5: {
       question: "Complexion",
       options: [
-        "Brown/Grey complexion", "Lotus-like complexion", "Golden complexion"
+        "Dusky, darkish, brown, or dry complexion",
+        "Fair, pinkish, reddish, or freckled complexion",
+        "Pale white, golden, clear, or glowing complexion"
       ]
     },
     6: {
       question: "Hair",
       options: [
-        "Rough/Split/Lustreless hair, Dry or less beard, Dry body hair",
-        "Premature greying/baldness, Soft or brown beard/body hair",
-        "Thick, shiny black, dense, coloured hair, large body hair"
+        "Dry, rough, thin, brittle, or split-ended hair",
+        "Soft, thin, prematurely greying, or balding hair",
+        "Thick, dense, oily, shiny black, or wavy hair"
       ]
     },
     7: {
       question: "Nails",
       options: [
-        "Dry & rough, small, fast-growing", "Pink nails", "Large nails"
+        "Dry, rough, brittle, small, or irregular nails",
+        "Pink, smooth, moderate-sized, or flexible nails",
+        "Large, thick, strong, smooth, or pale nails"
       ]
     },
     8: {
       question: "Joints",
       options: [
-        "Cracking/unstable joints", "Flabby ligaments", "Strong ligaments & muscles"
+        "Cracking, dry, unstable, or prominent joints",
+        "Moderate, flexible, loose, or flabby ligaments",
+        "Strong, well-built, padded with muscle, silent joints"
       ]
     },
     9: {
       question: "Hunger",
       options: [
-        "Overeats", "Severe hunger", "Less hunger"
+        "Irregular, variable appetite (sometimes high, sometimes low)",
+        "Intense, sharp hunger (cannot tolerate skipping meals)",
+        "Mild, slow, stable hunger (can easily skip meals)"
       ]
     },
     10: {
       question: "Thirst",
       options: [
-        "Strong hunger despite less eating", "Strong thirst/Drinks more water", "Less thirst/Drinks little water"
+        "Variable, irregular thirst with dry mouth",
+        "Intense, frequent thirst (drinks a lot of water)",
+        "Low thirst (drinks little water, stable)"
       ]
     },
     11: {
       question: "Activity",
       options: [
-        "Fast walking/activity/eating/talking",
-        "Slow activity/eating/talking, steady gait, speaks less, long endurance"
+        "Fast walking, talking, eating, and rapid movements",
+        "Moderate, purposeful, energetic, and organized actions",
+        "Slow, steady, deliberate, and relaxed movements"
       ]
     },
     12: {
       question: "Voice",
       options: [
-        "Dry/Weak/Low/Stammering", "Loud/Aggressive", "Soft/Melodious/Resonant"
+        "Dry, weak, low-pitched, or hoarse voice",
+        "Loud, sharp, clear, and commanding voice",
+        "Soft, sweet, melodious, and deep resonant voice"
       ]
     },
     13: {
       question: "Exercise & Tolerance",
       options: [
-        "Likes exercise, intolerant to cold", "Intolerant to heat/stress/sun", "Better heat tolerance"
+        "Intolerant to cold, prefers warm climates and gentle exercise",
+        "Intolerant to heat/sun, prefers cool environment",
+        "High tolerance to exertion, dislikes cold/damp weather"
       ]
     },
     14: {
       question: "Intelligence & Memory",
       options: [
-        "Quick learning, poor memory", "Brilliant, excellent grasping", "Stable long memory, knowledgeable"
+        "Learns quickly but forgets quickly (short-term memory)",
+        "Sharp, intelligent, logical, with excellent comprehension",
+        "Learns slowly but remembers forever (long-term memory)"
       ]
     },
     15: {
       question: "Friends",
       options: [
-        "Unstable friendships", "Stable friendships"
+        "Makes friends quickly, but friendships are unstable",
+        "Selective, loyal but demanding circle of friends",
+        "Makes friends slowly, but holds deep, lifelong bonds"
       ]
     },
     16: {
       question: "Resources",
       options: [
-        "Less", "Medium", "Better"
+        "Struggles to save, spends impulsively on whims",
+        "Spends planned, buys quality/luxury items",
+        "Saves systematically, spends conservatively, accumulates wealth"
       ]
     },
     17: {
       question: "Wealth",
       options: [
-        "Less", "Medium", "Wealthy"
+        "Variable or fluctuating financial status",
+        "Moderate, stable, and well-managed financial status",
+        "Wealthy, stable, and naturally good at accumulating assets"
       ]
     },
     18: {
       question: "Disease Susceptibility",
       options: [
-        "Cold/cough, shivering, stiffness, easily sick", "Mouth ulcers", "Strong immunity"
+        "Prone to cold/cough, stiffness, body pain, easily sick",
+        "Prone to heat, mouth ulcers, acidity, inflammation",
+        "Strong general immunity, prone to congestion/mucus"
       ]
     },
     19: {
       question: "Food & Lifestyle Preferences",
       options: [
-        "Sweet, sour, hot food; music; jokes; travelling",
-        "Sweet, bitter, astringent, cold food; cosmetics; perfumes",
-        "Sweet, oily food; intellectual activities; classical music"
+        "Prefers sweet, sour, hot food; enjoys traveling",
+        "Prefers sweet, bitter, astringent, cold food and cosmetics",
+        "Prefers warm, spicy, bitter food; enjoys active hobbies"
       ]
     },
     20: {
       question: "Nature",
       options: [
-        "Quick starter, quick anger, emotional, jealous, impatient",
-        "Courageous, fearless, brave, proud, cleanliness, adventurous",
-        "Less anger, grateful, forgiving, respectful, soft nature"
+        "Quick starter, creative, restless, easily anxious",
+        "Courageous, ambitious, short-tempered, organized",
+        "Calm, patient, forgiving, slow to anger"
       ]
     },
     21: {
       question: "Miscellaneous",
       options: [
-        "Feels better after massage", "No preference/Does not prefer massage"
+        "Feels highly relaxed and energized after oil massage",
+        "Likes massage with cooling oils only",
+        "Does not prefer or need oil massage (feels heavy)"
       ]
     },
     22: {
       question: "Animal Personality",
       options: [
-        "Dog, Goat, Fox, Rabbit, Rat, Camel, Crow, Donkey",
-        "Cobra, Owl, Gandharva, Yaksha, Cat, Monkey, Tiger, Bear",
-        "Lion, Horse, Elephant, Bull, Eagle, Swan"
+        "Goat, Rabbit, Rat, Deer, Crow (quick, active)",
+        "Tiger, Cobra, Cat, Monkey (sharp, aggressive)",
+        "Elephant, Lion, Horse, Swan (majestic, calm)"
       ]
     }
   },
@@ -150,146 +181,177 @@ export const QUESTIONS_TRANSLATIONS: Record<string, Record<number, { question: s
     1: {
       question: "शरीर की संरचना",
       options: [
-        "अल्पपोषित (कमजोर)", "कम कद", "दुबला शरीर", "सूखी त्वचा/शरीर", "लंबा और दुबला",
-        "चमकदार चेहरा/शरीर", "अच्छी तरह से पोषित शरीर", "मजबूत शरीर", "स्थिर शरीर", "प्रसन्न चेहरा",
-        "सुंदर/आकर्षक रूप"
+        "दुबला-पतला, लंबा या छोटा कद और सूखी त्वचा",
+        "मध्यम शरीर, एथलेटिक और सुडौल शारीरिक संरचना",
+        "चौड़ा, भारी, अच्छी तरह से पोषित और मजबूत शरीर"
       ]
     },
     2: {
       question: "शरीर के अंग",
       options: [
-        "अनियमित शरीर के अंग (भौहें, ठुड्डी, होंठ, जीभ, सिर, कंधे, हाथ, पैर, हड्डियां)",
-        "लाल चेहरा, नाजुक विशेषताएं, साफ रंग, मुंहासे, तिल, मस्से",
-        "तैलीय शरीर, नाजुक विशेषताएं, अच्छी तरह से पोषित, सुखद रूप, लंबे हाथ"
+        "भौहें, होंठ, जीभ, सिर और हड्डियों का टेढ़ा-मेढ़ा होना",
+        "लाल चेहरा, तीखे नैन-नक्श और चेहरे पर तिल/मस्से",
+        "सुंदर, चिकना चेहरा और अच्छी तरह से पोषित अंग"
       ]
     },
     3: {
       question: "नींद",
       options: [
-        "अव्यवस्थित/टूटी हुई नींद", "कम नींद आना", "लंबी और गहरी नींद", "सोने का शौकीन होना"
+        "अव्यवस्थित, टूटी हुई या हल्की नींद",
+        "मध्यम नींद लेकिन सुबह तरोताजा उठना",
+        "गहरी, लंबी नींद और उठने में कठिनाई"
       ]
     },
     4: {
       question: "सपने",
       options: [
-        "पहाड़/उड़ना", "आग/बिजली/लाल फूल", "झीलें/कमल/हंस/पक्षी"
+        "पहाड़, उड़ना या हवा में तैरना",
+        "आग, बिजली, लड़ाई या लाल फूल",
+        "झील, कमल, तैरते हंस या शांत बादल"
       ]
     },
     5: {
       question: "त्वचा का रंग",
       options: [
-        "भूरा/धूसर रंग", "कमल जैसा रंग", "सुनहरा/गोरा रंग"
+        "धूसर, सांवला या रूखा रंग",
+        "गोरा, गुलाबी, लाल या झाइयों वाला रंग",
+        "सफेद, चमकदार, सुनहरी या चिकनी त्वचा"
       ]
     },
     6: {
       question: "बाल",
       options: [
-        "रूखे/दोमुंहे/बेजान बाल, सूखी या कम दाढ़ी, शरीर पर कम बाल",
-        "समय से पहले बालों का सफेद होना/गंजापन, मुलायम या भूरी दाढ़ी/रोम",
-        "घने, चमकदार काले, सघन रंगीन बाल, शरीर पर अधिक बाल"
+        "रूखे, दोमुंहे, पतले और बेजान बाल",
+        "मुलायम, भूरे, समय से पहले सफेद होने वाले बाल",
+        "घने, मजबूत, तैलीय और चमकदार काले बाल"
       ]
     },
     7: {
       question: "नाखून",
       options: [
-        "सूखे और खुरदरे, छोटे, तेजी से बढ़ने वाले", "गुलाबी नाखून", "बड़े नाखून"
+        "सूखे, खुरदरे, छोटे और जल्दी टूटने वाले नाखून",
+        "गुलाबी, चिकने, मध्यम और लचीले नाखून",
+        "बड़े, मोटे, मजबूत, चिकने और सफेद नाखून"
       ]
     },
     8: {
-      question: "जोड़ (Joints)",
+      question: "जोड़ (Joints)",
       options: [
-        "जोड़ों से आवाज आना/अस्थिर जोड़", "ढीले लिगामेंट्स", "मजबूत मांसपेशियां और लिगामेंट्स"
+        "जोड़ों से कट-कट आवाज आना या अस्थिर होना",
+        "मध्यम लचीले और ढीले लिगामेंट्स",
+        "मजबूत, मांसल, अच्छी तरह से जुड़े और शांत जोड़"
       ]
     },
     9: {
       question: "भूख",
       options: [
-        "जरूरत से ज्यादा खाना", "अत्यधिक/तेज भूख लगना", "कम भूख लगना"
+        "अनियमित भूख (कभी बहुत अधिक, कभी बिल्कुल नहीं)",
+        "तीव्र भूख (भोजन में देरी सहन नहीं कर पाना)",
+        "हल्की, धीमी और स्थिर भूख (भोजन छोड़ना आसान)"
       ]
     },
     10: {
       question: "प्यास",
       options: [
-        "कम खाने पर भी तेज भूख/प्यास लगना", "अत्यधिक प्यास/अधिक पानी पीना", "कम प्यास/कम पानी पीना"
+        "असामान्य प्यास और बार-बार मुंह सूखना",
+        "तीव्र प्यास (बार-बार और अधिक पानी पीना)",
+        "कम प्यास लगना और कम पानी से काम चलना"
       ]
     },
     11: {
       question: "गतिविधि",
       options: [
-        "तेज चलना/जल्दी काम करना/तेज बोलना/तेजी से खाना",
-        "धीमी गतिविधि/खाना/बोलना, स्थिर चाल, कम बोलना, सहनशक्ति अधिक"
+        "तेज चलना, जल्दी बोलना, तेजी से खाना और फुर्ती",
+        "मध्यम, उद्देश्यपूर्ण, ऊर्जावान और संगठित कार्य",
+        "धीमी, स्थिर, विचारशील और शांत चाल-ढाल"
       ]
     },
     12: {
       question: "आवाज",
       options: [
-        "सूखी/कमजोर/धीमी/हकलाहट वाली", "तेज/आक्रामक", "मधुर/मधुर/गूंजती हुई"
+        "सूखी, कमजोर, धीमी या हकलाहट वाली आवाज",
+        "तेज, तीखी, स्पष्ट और प्रभावशाली आवाज",
+        "कोमल, मीठी, मधुर और गूंजने वाली आवाज"
       ]
     },
     13: {
       question: "व्यायाम और सहनशीलता",
       options: [
-        "व्यायाम पसंद है, ठंड के प्रति असहिष्णु", "गर्मी/तनाव/धूप के प्रति असहिष्णु", "बेहतर गर्मी सहनशीलता"
+        "ठंड बिल्कुल सहन न होना, गर्मी और हल्की कसरत पसंद",
+        "गर्मी और धूप सहन न होना, ठंडी जगह पसंद",
+        "अधिक कसरत सहन करने की क्षमता, नमी वाली ठंड नापसंद"
       ]
     },
     14: {
       question: "बुद्धि और स्मृति",
       options: [
-        "जल्दी सीखना, कमजोर याददाश्त", "बुद्धिमान, उत्कृष्ट समझ", "स्थिर लंबी याददाश्त, ज्ञानी"
+        "जल्दी सीखना लेकिन जल्दी भूल जाना (अल्पकालिक स्मृति)",
+        "तीक्ष्ण बुद्धि, तर्कशील और उत्कृष्ट समझ",
+        "धीरे-धीरे सीखना लेकिन हमेशा याद रखना (दीर्घकालिक स्मृति)"
       ]
     },
     15: {
       question: "मित्र",
       options: [
-        "अस्थिर मित्रता", "स्थिर/पक्की मित्रता"
+        "जल्दी दोस्त बनाना लेकिन रिश्ते अस्थिर होना",
+        "गिने-चुने, वफादार लेकिन उम्मीद रखने वाले दोस्त",
+        "धीरे-धीरे दोस्त बनाना और आजीवन दोस्ती निभाना"
       ]
     },
     16: {
       question: "संसाधन",
       options: [
-        "कम", "मध्यम", "बेहतर"
+        "बचत करने में कठिनाई, बिना सोचे-समझे खर्च",
+        "सोच-समझकर खर्च और गुणवत्ता वाली चीजें खरीदना",
+        "व्यवस्थित बचत, कम खर्च और संपत्ति जमा करना"
       ]
     },
     17: {
       question: "धन",
       options: [
-        "कम", "मध्यम", "धनी"
+        "उतार-चढ़ाव वाली आर्थिक स्थिति",
+        "सामान्य, स्थिर और व्यवस्थित वित्तीय स्थिति",
+        "समृद्ध, स्थिर और संपत्ति जमा करने में कुशल"
       ]
     },
     18: {
       question: "रोग संवेदनशीलता",
       options: [
-        "सर्दी/खांसी, कंपकंपी, जकड़न, जल्दी बीमार होना", "मुंह के छाले", "मजबूत रोग प्रतिरोधक क्षमता"
+        "ठंड/खांसी, जकड़न, शरीर दर्द और जल्दी बीमार पड़ना",
+        "मुंह के छाले, एसिडिटी, गर्मी और सूजन",
+        "मजबूत रोग प्रतिरोधक क्षमता, कफ और भारीपन की समस्या"
       ]
     },
     19: {
       question: "आहार और जीवनशैली प्राथमिकताएं",
       options: [
-        "मीठा, खट्टा, गर्म भोजन; संगीत; चुटकुले; यात्रा करना",
-        "मीठा, कड़वा, कसैला, ठंडा भोजन; सौंदर्य प्रसाधन; इत्र",
-        "मीठा, तैलीय भोजन; बौद्धिक गतिविधियाँ; शास्त्रीय संगीत"
+        "मीठा, खट्टा और गर्म भोजन; यात्रा करना पसंद",
+        "मीठा, कड़वा, कसैला और ठंडा भोजन; सौंदर्य प्रसाधन पसंद",
+        "गर्म, तीखा और कड़वा भोजन; सक्रिय शौक पसंद"
       ]
     },
     20: {
       question: "स्वभाव",
       options: [
-        "जल्दी शुरू करने वाला, जल्दी गुस्सा, भावुक, ईर्ष्यालु, अधीर",
-        "साहसी, निडर, गर्वित, स्वच्छता पसंद, साहसिक",
-        "कम गुस्सा, आभारी, क्षमाशील, सम्मानजनक, कोमल स्वभाव"
+        "जल्दी काम शुरू करने वाला, रचनात्मक, चंचल और चिंतित",
+        "साहसी, महत्वाकांक्षी, गुस्सैल और व्यवस्थित",
+        "शांत, धैर्यवान, क्षमाशील और शांत रहने वाला"
       ]
     },
     21: {
       question: "विविध",
       options: [
-        "मालिश के बाद बेहतर महसूस करना", "कोई प्राथमिकता नहीं/मालिश पसंद नहीं"
+        "तेल मालिश के बाद बहुत आराम और ऊर्जा महसूस करना",
+        "केवल ठंडे तेलों से मालिश पसंद करना",
+        "मालिश की जरूरत न होना (मालिश से भारीपन महसूस होना)"
       ]
     },
     22: {
       question: "पशु व्यक्तित्व",
       options: [
-        "कुत्ता, बकरी, लोमड़ी, खरगोश, चूहा, ऊंट, कौआ, गधा",
-        "कोबरा, उल्लू, गंधर्व, यक्ष, बिल्ली, बंदर, बाघ, भालू",
-        "शेर, घोड़ा, हाथी, बैल, बाज, हंस"
+        "बक्री, खरगोश, चूहा, हिरण, कौआ (फुर्तीले)",
+        "बाघ, कोबरा, बिल्ली, बंदर (तीखे/आक्रामक)",
+        "हाथी, शेर, घोड़ा, हंस (राजसी/शांत)"
       ]
     }
   },
@@ -297,146 +359,177 @@ export const QUESTIONS_TRANSLATIONS: Record<string, Record<number, { question: s
     1: {
       question: "શારીરિક બંધારણ",
       options: [
-        "અલ્પપોષિત (નબળું)", "નાનું કદ", "પાતળું શરીર", "સૂકી ત્વચા/શરીર", "લાંબું અને પાતળું",
-        "તેજસ્વી દેખાવ", "સારું પોષણ ધરાવતું શરીર", "મજબૂત શરીર", "સ્થિર શરીર", "પ્રસન્ન ચહેરો",
-        "સુંદર/આકર્ષક દેખાવ"
+        "પાતળું શરીર, લાંબું અથવા ટૂંકું કદ અને સૂકી ત્વચા",
+        "મધ્યમ શરીર, એથ્લેટિક અને સુડોળ શારીરિક બંધારણ",
+        "પહોળું, ભારે, સારું પોષણ ધરાવતું અને મજબૂત શરીર"
       ]
     },
     2: {
       question: "શરીરના અંગો",
       options: [
-        "અનિયમિત અંગો (ભમર, દાઢી, હોઠ, જીભ, માથું, ખભા, હાથ, પગ, હાડકાં)",
-        "લાલ ચહેરો, નાજુક નકશી, ગોરો રંગ, ખીલ, તલ, મસા",
-        "તેલી શરીર, નાજુક નકશી, ભરાવદાર શરીર, પ્રસન્ન દેખાવ, લાંબા હાથ"
+        "અનિયમિત અંગો, ભમર, હોઠ, જીભ અને હાડકાંની અસમપ્રમાણતા",
+        "લાલ ચહેરો, તીક્ષ્ણ નકશી અને ચહેરા પર તલ/મસા",
+        "સુંદર, કોમળ ચહેરો અને સુવિકસિત શારીરિક અંગો"
       ]
     },
     3: {
       question: "ઊંઘ",
       options: [
-        "ખલેલ પહોંચેલી/કાચી ઊંઘ", "ઓછી ઊંઘ આવવી", "લાંબી અને ઘાટી ઊંઘ", "ઊંઘવાના શોખીન"
+        "કાચી, ખલેલ પહોંચેલી અથવા હળવી ઊંઘ",
+        "મધ્યમ ઊંઘ પરંતુ સવારે તાજગી અનુભવવી",
+        "ઘાટી, લાંબી ઊંઘ અને જાગવામાં મુશ્કેલી"
       ]
     },
     4: {
       question: "સપના",
       options: [
-        "પર્વતો/ઊડવું", "આગ/વીજળી/લાલ ફૂલો", "તળાવો/કમળ/હંસ/પક્ષીઓ"
+        "પર્વતો, આકાશમાં ઊડવું અથવા દોડવું",
+        "આગ, વીજળી, લડાઈ અથવા લાલ ફૂલો",
+        "તળાવ, કમળ, હંસ અથવા શાંત વાદળો"
       ]
     },
     5: {
       question: "ત્વચાનો રંગ",
       options: [
-        "ભૂરો/રાખોડી રંગ", "કમળ જેવો રંગ", "સોનેરી/ગોરો રંગ"
+        "શ્યામ, રાતો અથવા સૂકી ત્વચાનો રંગ",
+        "ગોરો, ગુલાબી, લાલ અથવા ચાઠાવાળો રંગ",
+        "સફેદ, તેજસ્વી, સોનેરી અથવા લીસી ત્વચા"
       ]
     },
     6: {
       question: "વાળ",
       options: [
-        "રૂખા/બેમોઢાળા/બેજાન વાળ, સૂકી કે ઓછી દાઢી, શરીર પર ઓછા વાળ",
-        "સમય પહેલા વાળ સફેદ થવા/ટાલ પડવી, નરમ કે ભૂરા વાળ/દાઢી",
-        "ઘાટા, ચમકદાર કાળા, સઘન રંગીન વાળ, શરીર પર વધુ વાળ"
+        "રૂખા, બેમોઢાળા, પાતળા અથવા નબળા વાળ",
+        "નરમ, પાતળા, સમય પહેલા સફેદ થતા અથવા ખરતા વાળ",
+        "ઘાટા, મજબૂત, તેલી અને ચમકદાર કાળા વાળ"
       ]
     },
     7: {
       question: "નખ",
       options: [
-        "સૂકા અને ખરબચડા, નાના, ઝડપથી વધતા", "ગુલાબી નખ", "મોટા નખ"
+        "સૂકા, ખરબચડા, નાના અને જલ્દી તૂટી જતા નખ",
+        "ગુલાબી, લીસા, મધ્યમ અને લવચીક નખ",
+        "મોટા, જાડા, મજબૂત, લીસા અને સફેદ નખ"
       ]
     },
     8: {
       question: "સાંધા (Joints)",
       options: [
-        "સાંધામાંથી અવાજ આવવો/અસ્થિર સાંધા", "ઢીલા લિગામેન્ટ્સ", "મજબૂત સ્નાયુઓ અને લિગામેન્ટ્સ"
+        "સાંધામાંથી કડક અવાજ આવવો અથવા અસ્થિર સાંધા",
+        "મધ્યમ લવચીક અને ઢીલા લિગામેન્ટ્સ",
+        "મજબૂત, સ્નાયુબદ્ધ, સારી રીતે જોડાયેલા અને અવાજ વગરના સાંધા"
       ]
     },
     9: {
       question: "ભૂખ",
       options: [
-        "જરૂરિયાત કરતા વધુ ખાવું", "અતિશય/તીવ્ર ભૂખ લાગવી", "ઓછી ભૂખ લાગવી"
+        "અનિયમિત ભૂખ (ક્યારેક વધુ તો ક્યારેક બિલકુલ નહીં)",
+        "તીવ્ર ભૂખ (ભોજન મોડું થવું સહન ન થવું)",
+        "હળવી, ધીમી અને સ્થિર ભૂખ (જમવાનું ટાળવું સરળ)"
       ]
     },
     10: {
       question: "તરસ",
       options: [
-        "ઓછું ખાવા છતાં તીવ્ર ભૂખ/તરસ લાગવી", "વધુ તરસ લાગવી/વધુ પાણી પીવું", "ઓછી તરસ લાગવી/ઓછું પાણી પીવું"
+        "અસામાન્ય તરસ અને વારંવાર મોં સુકાવું",
+        "તીવ્ર તરસ (વારંવાર અને વધુ પાણી પીવું)",
+        "ઓછી તરસ લાગવી અને ઓછા પાણીથી સંતોષ"
       ]
     },
     11: {
       question: "પ્રવૃત્તિ",
       options: [
-        "ઝડપથી ચાલવું/ઝડપથી કામ કરવું/ઝડપથી બોલવું/ખાવામાં ઉતાવળ",
-        "ધીમી પ્રવૃત્તિ/ખાવા/બોલવાની આદત, સ્થિર ચાલ, ઓછું બોલવું, સહનશક્તિ વધુ"
+        "ઝડપથી ચાલવું, બોલવું, ખાવું અને ચપળ હલનચલન",
+        "મધ્યમ, હેતુપૂર્ણ, ઉર્જાવાન અને સંગઠિત કાર્યો",
+        "ધીમી, સ્થિર, ગંભીર અને શાંત ચાલ-ઢાલ"
       ]
     },
     12: {
       question: "અવાજ",
       options: [
-        "સૂકો/નબળો/ધીમો/તોતડાતો", "મોટો/આક્રમક", "મધુર/કોમળ/ગુંજતો"
+        "સૂકો, નબળો, ધીમો અથવા તોતડાતો અવાજ",
+        "મોટો, તીણો, સ્પષ્ટ અને પ્રભાવશાળી અવાજ",
+        "કોમળ, મીઠો, મધુર અને ગંભીર અવાજ"
       ]
     },
     13: {
       question: "વ્યાયામ અને સહનશીલતા",
       options: [
-        "કસરત કરવી ગમે છે, ઠંડી સહન ન થવી", "ગરમી/તણાવ/તડકો સહન ન થવો", "ગરમી સહન કરવાની વધુ ક્ષમતા"
+        "ઠંડી બિલકુલ સહન ન થવી, ગરમી અને હળવી કસરત ગમવી",
+        "ગરમી અને તડકો સહન ન થવા, ઠંડક પસંદ",
+        "વધુ કસરત સહન કરવાની ક્ષમતા, ભેજવાળી ઠંડી નાપસંદ"
       ]
     },
     14: {
       question: "બુદ્ધિ અને સ્મૃતિ",
       options: [
-        "ઝડપથી શીખવું, નબળી યાદશક્તિ", "બુદ્ધિશાળી, ઉત્તમ ગ્રહણ શક્તિ", "લાંબી અને સ્થિર યાદશક્તિ, જ્ઞાની"
+        "ઝડપથી શીખવું પરંતુ જલ્દી ભૂલી જવું (ટૂંકા ગાળાની યાદશક્તિ)",
+        "તીક્ષ્ણ બુદ્ધિ, તાર્કિક અને ઉત્તમ સમજશક્તિ",
+        "ધીમેથી શીખવું પરંતુ હંમેશા યાદ રાખવું (લાંબા ગાળાની યાદશક્તિ)"
       ]
     },
     15: {
       question: "મિત્રો",
       options: [
-        "અસ્થિર મિત્રતા", "સ્થિર/ગાઢ મિત્રતા"
+        "ઝડપથી મિત્રો બનાવવા પરંતુ સંબંધો અસ્થિર રહેવા",
+        "પસંદગીના, વફાદાર પરંતુ અપેક્ષા રાખતા મિત્રો",
+        "ધીમે-ધીમે મિત્રો બનાવવા અને આજીવન મિત્રતા નિભાવવી"
       ]
     },
     16: {
       question: "સંસાધનો",
       options: [
-        "ઓછા", "મધ્યમ", "વધુ સારા"
+        "બચત કરવામાં મુશ્કેલી, વિચાર્યા વગર ખર્ચ કરવો",
+        "આયોજનપૂર્વક ખર્ચ અને ગુણવત્તાયુક્ત વસ્તુઓ ખરીદવી",
+        "વ્યવસ્થિત બચત, ઓછો ખર્ચ અને સંપત્તિ જમા કરવી"
       ]
     },
     17: {
       question: "ધન",
       options: [
-        "ઓછું", "મધ્યમ", "ધનવાન"
+        "ઉતાર-ચઢાવવાળી આર્થિક સ્થિતિ",
+        "મધ્યમ, સ્થિર અને વ્યવસ્થિત નાણાકીય સ્થિતિ",
+        "સમૃદ્ધ, સ્થિર અને મિલકત જમા કરવામાં કુશળ"
       ]
     },
     18: {
       question: "રોગ સંવેદનશીલતા",
       options: [
-        "શરદી/કફ, ધ્રુજારી, જકડાઈ જવું, જલ્દી બીમાર થવું", "મોંમાં ચાંદા પડવા", "મજબૂત રોગપ્રતિકારક શક્તિ"
+        "શરદી/કફ, જકડાઈ જવું, શરીરનો દુખાવો અને જલ્દી બીમાર પડવું",
+        "મોંના ચાંદા, એસિડિટી, ગરમી અને સોજો",
+        "મજબૂત રોગપ્રતિકારક શક્તિ, કફ અને શરદીની સમસ્યા"
       ]
     },
     19: {
       question: "આહાર અને જીવનશૈલી પસંદગીઓ",
       options: [
-        "મીઠો, ખાટો, ગરમ ખોરાક; સંગીત; જોક્સ; મુસાફરી કરવી",
-        "મીઠો, કડવો, તુરો, ઠંડો ખોરાક; કોસ્મેટિક્સ; પરફ્યુમ",
-        "મીઠો, તેલી ખોરાક; બૌદ્ધિક પ્રવૃત્તિઓ; શાસ્ત્રીય સંગીત"
+        "મીઠો, ખાટો અને ગરમ ખોરાક; મુસાફરી કરવી ગમવી",
+        "મીઠો, કડવો, તુરો અને ઠંડો ખોરાક; કોસ્મેટિક્સ ગમવા",
+        "ગરમ, તીખો અને કડવો ખોરાક; સક્રિય શોખ ગમવા"
       ]
     },
     20: {
       question: "સ્વભાવ",
       options: [
-        "ઉતાવળિયો સ્વભાવ, જલ્દી ગુસ્સે થવું, લાગણીશીલ, અધીરો",
-        "સાહસિક, નીડર, ગર્વ અનુભવવો, સ્વચ્છતા પ્રિય, સાહસી",
-        "ઓછો ગુસ્સો, કૃતજ્ઞતા, ક્ષમાશીલ, આદર આપવો, નરમ સ્વભાવ"
+        "ઝડપથી કામ શરૂ કરનાર, સર્જનાત્મક, ચંચળ અને ચિંતિત",
+        "સાહસિક, મહત્વાકાંક્ષી, ગુસ્સાવાળો અને વ્યવસ્થિત",
+        "શાંત, ધૈર્યવાન, ક્ષમાશીલ અને સહનશીલ"
       ]
     },
     21: {
       question: "પરચુરણ",
       options: [
-        "માલિશ પછી સારું અનુભવવું", "કોઈ ખાસ પસંદગી નથી/માલિશ પસંદ નથી"
+        "તેલ માલિશ પછી ખૂબ જ આરામ અને ઉર્જા અનુભવવી",
+        "માત્ર ઠંડા તેલથી માલિશ પસંદ કરવી",
+        "માલિશની જરૂર ન હોવી (માલિશથી ભારેપણું લાગવું)"
       ]
     },
     22: {
       question: "પ્રાણી વ્યક્તિત્વ",
       options: [
-        "કૂતરો, બકરી, શિયાળ, સસલું, ઉંદર, ઊંટ, કાગડો, ગધેડો",
-        "કોબ્રા, ઘુવડ, ગંધર્વ, યક્ષ, બિલાડી, વાંદરો, વાઘ, રીંછ",
-        "સિંહ, ઘોડો, હાથી, બળદ, ગરુડ, હંસ"
+        "બકરી, સસલું, ઉંદર, હરણ, કાગડો (ચપળ)",
+        "વાઘ, કોબ્રા, બિલાડી, વાંદરો (તીક્ષ્ણ/આક્રમક)",
+        "હાથી, સિંહ, ઘોડો, હંસ (રાજસી/શાંત)"
       ]
     }
   }
