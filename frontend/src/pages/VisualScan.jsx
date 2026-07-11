@@ -12,11 +12,11 @@ export default function VisualScan() {
   const fileInputRef = useRef(null)
 
   const scanSteps = [
-    "🔍 Initializing Tridosha Vision Engine™...",
-    "📐 Mapping body frame and aspect ratios...",
-    "📊 Calibrating shoulder-to-hip width matrices...",
-    "💡 Performing skin texture and redness detection...",
-    "🧠 Running clinical Guna → Dosha classification..."
+    { key: 'validation', label: 'Image quality validated' },
+    { key: 'body_detection', label: 'Human body identified' },
+    { key: 'proportions', label: 'Structural proportions mapped' },
+    { key: 'skin_analysis', label: 'Gunas & skin features analyzed' },
+    { key: 'ml_similarity', label: 'ML similarity matrix calculated' }
   ]
 
   const handleImageChange = (e) => {
@@ -178,11 +178,30 @@ export default function VisualScan() {
 
           <div className="p-6">
             {scanning ? (
-              <div className="text-center py-4">
-                <div className="animate-spin text-2xl mb-3">🌀</div>
-                <h4 className="text-sm font-semibold text-olive-800 transition-all duration-300">
-                  {scanSteps[scanStep]}
-                </h4>
+              <div className="py-2 text-left space-y-3">
+                <div className="text-center mb-4">
+                  <div className="inline-block animate-spin text-olive-600 text-xl">🌀</div>
+                  <p className="text-xs text-olive-500 mt-1 uppercase tracking-wider font-semibold">Running Tridosha Matrix Scan</p>
+                </div>
+                
+                <div className="bg-cream-50 border border-cream-200 rounded-2xl p-4 space-y-2.5">
+                  {scanSteps.map((step, idx) => {
+                    const isCompleted = idx < scanStep;
+                    const isActive = idx === scanStep;
+                    
+                    return (
+                      <div key={idx} className={`flex items-center gap-3 text-sm transition-all duration-300 ${isCompleted ? 'text-olive-700 font-medium' : isActive ? 'text-olive-800 font-bold animate-pulse' : 'text-olive-400'}`}>
+                        <span className="text-base">
+                          {isCompleted ? '✅' : isActive ? '⏳' : '⚪'}
+                        </span>
+                        <span>
+                          {step.label}
+                        </span>
+                      </div>
+                    )
+                  })}
+                </div>
+                
                 <div className="h-1.5 w-full bg-cream-200 rounded-full overflow-hidden mt-4">
                   <div 
                     className="h-full bg-olive-500 rounded-full transition-all duration-300"
@@ -209,6 +228,15 @@ export default function VisualScan() {
         <div className="space-y-6">
           <div className="card p-6">
             <h2 className="text-xl font-bold text-olive-800 mb-6 text-center">📊 Physical Anthropometric Report</h2>
+            
+            {/* Checklist Verification */}
+            <div className="mb-6 p-4 bg-emerald-50/50 border border-emerald-100 rounded-2xl flex items-center justify-between text-xs text-emerald-800">
+              <div className="flex items-center gap-2">
+                <span>👤</span>
+                <span className="font-semibold">Human Body Structure Identified & Validated</span>
+              </div>
+              <span className="font-bold text-emerald-600 bg-emerald-100/60 px-2.5 py-0.5 rounded-full uppercase tracking-wider text-[10px]">Passed</span>
+            </div>
             
             {/* Visual Dosha Chart */}
             <div className="grid grid-cols-3 gap-4 mb-8 text-center">

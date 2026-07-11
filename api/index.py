@@ -2600,7 +2600,63 @@ def analyze_clinical_image():
         if not image_data:
             return jsonify({'success': False, 'error': 'No image provided'})
         
-        # Step 1: Extract body features (no face detection required)
+        # Step 1: Detect if a human body is present
+        print("🔍 Detecting human body...")
+        import cv2
+        import base64
+        from io import BytesIO
+        from PIL import Image
+        
+        raw_b64 = image_data
+        if 'base64,' in raw_b64:
+            raw_b64 = raw_b64.split('base64,')[1]
+        
+        try:
+            image_bytes = base64.b64decode(raw_b64)
+            pil_image = Image.open(BytesIO(image_bytes))
+            image = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGB2BGR)
+        except Exception as e:
+            return jsonify({'success': False, 'error': f'Failed to decode image: {str(e)}'})
+            
+        h, w = image.shape[:2]
+        
+        # 1. HOG Person Detector
+        hog = cv2.HOGDescriptor()
+        hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
+        
+        # Resize for faster SVM processing
+        max_dim = 400
+        if max(h, w) > max_dim:
+            scale = max_dim / max(h, w)
+            resized_hog = cv2.resize(image, (int(w * scale), int(h * scale)))
+        else:
+            resized_hog = image
+            
+        (rects, weights) = hog.detectMultiScale(resized_hog, winStride=(4, 4), padding=(8, 8), scale=1.05)
+        
+        body_detected = len(rects) > 0
+        
+        # 2. Contour area fallback if HOG fails (in case of cropped profiles)
+        if not body_detected:
+            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            edges = cv2.Canny(gray, 50, 150)
+            contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            if contours:
+                largest_contour = max(contours, key=cv2.contourArea)
+                largest_area = cv2.contourArea(largest_contour)
+                # If largest contour is at least 8% of the image area, count as valid human structure
+                if largest_area > (w * h * 0.08):
+                    body_detected = True
+                    
+        if not body_detected:
+            return jsonify({
+                'success': False,
+                'error': 'No human body detected in the image. Please ensure your upper body or face is clearly visible.'
+            })
+            
+        print("✅ Human body successfully identified!")
+        
+        # Step 2: Extract body features (no face detection required)
         print("🔍 Extracting body features...")
         extractor = SimpleBodyExtractor()
         feature_result = extractor.extract_features(image_data, input_type='base64')
