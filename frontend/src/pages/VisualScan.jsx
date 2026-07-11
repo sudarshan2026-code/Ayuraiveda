@@ -71,7 +71,21 @@ export default function VisualScan() {
       setTimeout(() => {
         clearInterval(interval)
         if (res.success) {
-          setResult(res)
+          // Map backend format to UI format
+          const mappedResult = {
+            ...res,
+            vata_percentage: res.scores?.vata || 0,
+            pitta_percentage: res.scores?.pitta || 0,
+            kapha_percentage: res.scores?.kapha || 0,
+            analysis: {
+              gunas: Object.entries(res.guna_analysis || {})
+                .filter(([_, val]) => val > 0.6)
+                .map(([name, _]) => name.charAt(0).toUpperCase() + name.slice(1)),
+              imbalance: res.dominant,
+              description: res.explanation
+            }
+          }
+          setResult(mappedResult)
         } else {
           setError(res.error || 'Failed to analyze the body structure.')
         }
