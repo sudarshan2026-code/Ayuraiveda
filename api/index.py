@@ -2630,11 +2630,127 @@ def analyze_clinical_image():
         
         print("✅ Clinical assessment completed")
         
+        # ML model loading for hybrid calculation
+        ml_vata_score = ml_pitta_score = ml_kapha_score = 0
+        ml_calculated = False
+        
+        try:
+            from backend.utils.ml_loader import AyurMLModelLoader
+            from sklearn.metrics.pairwise import cosine_similarity
+            import numpy as np
+            import re
+            
+            ml_loader = AyurMLModelLoader()
+            if ml_loader.vectorizer and len(ml_loader.chunks) > 0:
+                # Compile features into a description
+                feature_text_list = []
+                
+                # Skin texture
+                if corrected_features.get('skin_texture', 0.5) > 0.6:
+                    feature_text_list.append("rough skin texture dry skin")
+                elif corrected_features.get('skin_texture', 0.5) < 0.4:
+                    feature_text_list.append("smooth skin soft skin")
+                    
+                # Oiliness
+                if corrected_features.get('oiliness', 0.5) > 0.6:
+                    feature_text_list.append("oily skin unctuous skin shine")
+                elif corrected_features.get('oiliness', 0.5) < 0.4:
+                    feature_text_list.append("dry skin lack of oil")
+                    
+                # Redness
+                if corrected_features.get('redness', 0.5) > 0.6:
+                    feature_text_list.append("redness red complexion skin heat flushed")
+                    
+                # Body frame
+                frame = corrected_features.get('body_frame', 0.5)
+                width = corrected_features.get('body_width', 0.5)
+                if frame > 0.6 or width > 0.6:
+                    feature_text_list.append("broad heavy body frame stout thick limbs solid structure")
+                elif frame < 0.4 or width < 0.4:
+                    feature_text_list.append("lean thin narrow body frame tall short slim structure")
+                    
+                # Limb thickness
+                if corrected_features.get('limb_thickness', 0.5) > 0.6:
+                    feature_text_list.append("thick joints heavy limbs robust")
+                elif corrected_features.get('limb_thickness', 0.5) < 0.4:
+                    feature_text_list.append("thin joints prominent veins bony joints")
+
+                user_profile_text = " ".join(feature_text_list)
+                
+                if user_profile_text:
+                    # Transform and similarity
+                    user_vec = ml_loader.vectorizer.transform([user_profile_text])
+                    similarities = cosine_similarity(user_vec, ml_loader.tfidf_matrix).flatten()
+                    top_indices = np.argsort(similarities)[-10:][::-1]
+                    
+                    # Score based on keyword occurrences
+                    vata_kws = r'\b(vata|vataja|vayu|dryness|roughness|coldness|lightness|unstable|cracking)\b'
+                    pitta_kws = r'\b(pitta|pittaja|heat|redness|acidity|sharpness|soft|sweat|flushed)\b'
+                    kapha_kws = r'\b(kapha|kaphaja|heaviness|oiliness|smoothness|stability|stout|nourish)\b'
+                    
+                    for idx in top_indices:
+                        sim = similarities[idx]
+                        if sim > 0:
+                            chunk_text = ml_loader.chunks[idx].lower()
+                            
+                            vata_cnt = len(re.findall(vata_kws, chunk_text))
+                            pitta_cnt = len(re.findall(pitta_kws, chunk_text))
+                            kapha_cnt = len(re.findall(kapha_kws, chunk_text))
+                            
+                            ml_vata_score += sim * vata_cnt
+                            ml_pitta_score += sim * pitta_cnt
+                            ml_kapha_score += sim * kapha_cnt
+                    
+                    # Convert to percentages
+                    ml_total = ml_vata_score + ml_pitta_score + ml_kapha_score
+                    if ml_total > 0:
+                        ml_vata_pct = (ml_vata_score / ml_total) * 100
+                        ml_pitta_pct = (ml_pitta_score / ml_total) * 100
+                        ml_kapha_pct = (ml_kapha_score / ml_total) * 100
+                        ml_calculated = True
+        except Exception as e:
+            print(f"[WARN] ML Image Analysis Scoring failed: {str(e)}")
+            ml_calculated = False
+
+        # Blend Rule-based and ML-based if ML was successfully calculated
+        if ml_calculated:
+            vata_percent = round(0.5 * clinical_result['dosha']['vata'] + 0.5 * ml_vata_pct)
+            pitta_percent = round(0.5 * clinical_result['dosha']['pitta'] + 0.5 * ml_pitta_pct)
+            kapha_percent = round(0.5 * clinical_result['dosha']['kapha'] + 0.5 * ml_kapha_pct)
+            
+            # Adjust rounding errors
+            diff = 100 - (vata_percent + pitta_percent + kapha_percent)
+            if diff != 0:
+                if vata_percent >= pitta_percent and vata_percent >= kapha_percent:
+                    vata_percent += diff
+                elif pitta_percent >= vata_percent and pitta_percent >= kapha_percent:
+                    pitta_percent += diff
+                else:
+                    kapha_percent += diff
+            
+            # Update values
+            clinical_result['dosha']['vata'] = vata_percent
+            clinical_result['dosha']['pitta'] = pitta_percent
+            clinical_result['dosha']['kapha'] = kapha_percent
+            
+            # Recalculate type
+            sorted_doshas = sorted(clinical_result['dosha'].items(), key=lambda x: x[1], reverse=True)
+            highest = sorted_doshas[0]
+            second = sorted_doshas[1]
+            lowest = sorted_doshas[2]
+            
+            if highest[1] - lowest[1] <= 5:
+                clinical_result['type'] = "Balanced (Sama Prakriti)"
+            elif highest[1] - second[1] <= 6:
+                clinical_result['type'] = f"{highest[0].capitalize()}-{second[0].capitalize()} Type"
+            else:
+                clinical_result['type'] = f"{highest[0].capitalize()} Predominant"
+
         # Convert numpy types
         def convert_to_native(obj):
-            if isinstance(obj, np.integer):
+            if isinstance(obj, (np.integer, np.int64)):
                 return int(obj)
-            elif isinstance(obj, np.floating):
+            elif isinstance(obj, (np.floating, np.float64)):
                 return float(obj)
             elif isinstance(obj, np.ndarray):
                 return obj.tolist()
