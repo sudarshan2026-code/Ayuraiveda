@@ -2648,10 +2648,23 @@ def analyze_clinical_image():
                 if largest_area > (w * h * 0.08):
                     body_detected = True
                     
+        # 3. Haar Cascade Face Detector as a final check (perfect for selfies / face close-ups)
+        face_detected = False
         if not body_detected:
+            try:
+                face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+                gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+                faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+                face_detected = len(faces) > 0
+                if face_detected:
+                    print("✅ Human face identified in selfie/close-up!")
+            except Exception as e:
+                print(f"[WARN] Face detection failed: {e}")
+                
+        if not body_detected and not face_detected:
             return jsonify({
                 'success': False,
-                'error': 'No human body detected in the image. Please ensure your upper body or face is clearly visible.'
+                'error': 'No human body or face detected in the image. Please ensure your upper body or face is clearly visible.'
             })
             
         print("✅ Human body successfully identified!")
