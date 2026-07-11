@@ -2,6 +2,7 @@
   "nav": {
     "home": "Home",
     "assessment": "Assessment",
+    "scan": "Visual Scan",
     "chat": "AI Chat",
     "simulator": "Simulator",
     "about": "About",

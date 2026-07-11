@@ -13,6 +13,7 @@ export default function Navbar() {
   const NAV = [
     { to: '/',           label: t('nav.home') },
     { to: '/assessment', label: t('nav.assessment') },
+    { to: '/scan',       label: t('nav.scan') },
     { to: '/chat',       label: t('nav.chat') },
     { to: '/about',      label: t('nav.about') },
     { to: '/contact',    label: t('nav.contact') },

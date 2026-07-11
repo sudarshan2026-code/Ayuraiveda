@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import MainLayout from './layouts/MainLayout'
 import Home from './pages/Home'
 import Assessment from './pages/Assessment'
+import VisualScan from './pages/VisualScan'
 import Chat from './pages/Chat'
 import About from './pages/About'
 import Contact from './pages/Contact'
@@ -23,6 +24,7 @@ export default function App() {
             <Route element={<MainLayout />}>
               <Route index element={<Home />} />
               <Route path="assessment" element={<Assessment />} />
+              <Route path="scan" element={<VisualScan />} />
               <Route path="chat" element={<Chat />} />
               <Route path="about" element={<About />} />
               <Route path="contact" element={<Contact />} />
