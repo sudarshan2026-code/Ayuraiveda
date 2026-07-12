@@ -2621,33 +2621,42 @@ def analyze_clinical_image():
         h, w = image.shape[:2]
         
         # 1. HOG Person Detector
-        hog = cv2.HOGDescriptor()
-        hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
-        
-        # Resize for faster SVM processing
-        max_dim = 400
-        if max(h, w) > max_dim:
-            scale = max_dim / max(h, w)
-            resized_hog = cv2.resize(image, (int(w * scale), int(h * scale)))
-        else:
-            resized_hog = image
+        body_detected = False
+        try:
+            hog = cv2.HOGDescriptor()
+            hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
             
-        (rects, weights) = hog.detectMultiScale(resized_hog, winStride=(4, 4), padding=(8, 8), scale=1.05)
-        
-        body_detected = len(rects) > 0
-        
+            # Resize for faster SVM processing
+            max_dim = 400
+            if max(h, w) > max_dim:
+                scale = max_dim / max(h, w)
+                resized_hog = cv2.resize(image, (int(w * scale), int(h * scale)))
+            else:
+                resized_hog = image
+                
+            # SVM HOG detector requires minimum dimensions of 64x128
+            if resized_hog.shape[0] >= 128 and resized_hog.shape[1] >= 64:
+                (rects, weights) = hog.detectMultiScale(resized_hog, winStride=(4, 4), padding=(8, 8), scale=1.05)
+                body_detected = len(rects) > 0
+        except Exception as e:
+            print(f"[WARN] HOG detector failed: {e}")
+            body_detected = False
+            
         # 2. Contour area fallback if HOG fails (in case of cropped profiles)
         if not body_detected:
-            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            edges = cv2.Canny(gray, 50, 150)
-            contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-            if contours:
-                largest_contour = max(contours, key=cv2.contourArea)
-                largest_area = cv2.contourArea(largest_contour)
-                # If largest contour is at least 8% of the image area, count as valid human structure
-                if largest_area > (w * h * 0.08):
-                    body_detected = True
-                    
+            try:
+                gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+                edges = cv2.Canny(gray, 50, 150)
+                contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+                if contours:
+                    largest_contour = max(contours, key=cv2.contourArea)
+                    largest_area = cv2.contourArea(largest_contour)
+                    # If largest contour is at least 8% of the image area, count as valid human structure
+                    if largest_area > (w * h * 0.08):
+                        body_detected = True
+            except Exception as e:
+                print(f"[WARN] Contour fallback failed: {e}")
+                
         # 3. Haar Cascade Face Detector as a final check (perfect for selfies / face close-ups)
         face_detected = False
         if not body_detected:
@@ -2781,39 +2790,92 @@ def analyze_clinical_image():
             print(f"[WARN] ML Image Analysis Scoring failed: {str(e)}")
             ml_calculated = False
 
-        # Blend Rule-based and ML-based if ML was successfully calculated
-        if ml_calculated:
+        # Load Prakriti Image Classifier model
+        classifier_calculated = False
+        classifier_vata = classifier_pitta = classifier_kapha = 0.0
+        
+        try:
+            import pickle
+            import numpy as np
+            image_model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../prakriti_image_model.pkl')
+            if os.path.exists(image_model_path):
+                with open(image_model_path, 'rb') as f:
+                    image_classifier = pickle.load(f)
+                
+                features_list = [
+                    corrected_features.get('skin_texture', 0.5),
+                    corrected_features.get('oiliness', 0.5),
+                    corrected_features.get('pigmentation', 0.5),
+                    corrected_features.get('redness', 0.5),
+                    corrected_features.get('brightness', 0.5),
+                    corrected_features.get('body_frame', 0.5),
+                    corrected_features.get('body_width', 0.5),
+                    corrected_features.get('body_height', 0.5),
+                    corrected_features.get('body_ratio', 0.5),
+                    corrected_features.get('shoulder_width', 0.5),
+                    corrected_features.get('hip_width', 0.5),
+                    corrected_features.get('torso_length', 0.5),
+                    corrected_features.get('limb_thickness', 0.5),
+                    corrected_features.get('posture', 0.5)
+                ]
+                
+                features_arr = np.array([features_list])
+                image_classifier_probs = image_classifier.predict_proba(features_arr)[0]
+                
+                classifier_vata = float(image_classifier_probs[0] * 100)
+                classifier_pitta = float(image_classifier_probs[1] * 100)
+                classifier_kapha = float(image_classifier_probs[2] * 100)
+                classifier_calculated = True
+                print(f"[OK] Image classifier prediction completed: V={classifier_vata:.1f}%, P={classifier_pitta:.1f}%, K={classifier_kapha:.1f}%")
+        except Exception as e:
+            print(f"[WARN] Image classifier prediction failed: {str(e)}")
+            classifier_calculated = False
+
+        # Blend Rule-based and ML-based models
+        vata_percent = clinical_result['dosha']['vata']
+        pitta_percent = clinical_result['dosha']['pitta']
+        kapha_percent = clinical_result['dosha']['kapha']
+        
+        if classifier_calculated and ml_calculated:
+            vata_percent = round(0.4 * clinical_result['dosha']['vata'] + 0.4 * classifier_vata + 0.2 * ml_vata_pct)
+            pitta_percent = round(0.4 * clinical_result['dosha']['pitta'] + 0.4 * classifier_pitta + 0.2 * ml_pitta_pct)
+            kapha_percent = round(0.4 * clinical_result['dosha']['kapha'] + 0.4 * classifier_kapha + 0.2 * ml_kapha_pct)
+        elif classifier_calculated:
+            vata_percent = round(0.5 * clinical_result['dosha']['vata'] + 0.5 * classifier_vata)
+            pitta_percent = round(0.5 * clinical_result['dosha']['pitta'] + 0.5 * classifier_pitta)
+            kapha_percent = round(0.5 * clinical_result['dosha']['kapha'] + 0.5 * classifier_kapha)
+        elif ml_calculated:
             vata_percent = round(0.5 * clinical_result['dosha']['vata'] + 0.5 * ml_vata_pct)
             pitta_percent = round(0.5 * clinical_result['dosha']['pitta'] + 0.5 * ml_pitta_pct)
             kapha_percent = round(0.5 * clinical_result['dosha']['kapha'] + 0.5 * ml_kapha_pct)
             
-            # Adjust rounding errors
-            diff = 100 - (vata_percent + pitta_percent + kapha_percent)
-            if diff != 0:
-                if vata_percent >= pitta_percent and vata_percent >= kapha_percent:
-                    vata_percent += diff
-                elif pitta_percent >= vata_percent and pitta_percent >= kapha_percent:
-                    pitta_percent += diff
-                else:
-                    kapha_percent += diff
-            
-            # Update values
-            clinical_result['dosha']['vata'] = vata_percent
-            clinical_result['dosha']['pitta'] = pitta_percent
-            clinical_result['dosha']['kapha'] = kapha_percent
-            
-            # Recalculate type
-            sorted_doshas = sorted(clinical_result['dosha'].items(), key=lambda x: x[1], reverse=True)
-            highest = sorted_doshas[0]
-            second = sorted_doshas[1]
-            lowest = sorted_doshas[2]
-            
-            if highest[1] - lowest[1] <= 5:
-                clinical_result['type'] = "Balanced (Sama Prakriti)"
-            elif highest[1] - second[1] <= 6:
-                clinical_result['type'] = f"{highest[0].capitalize()}-{second[0].capitalize()} Type"
+        # Adjust rounding errors to exactly 100%
+        diff = 100 - (vata_percent + pitta_percent + kapha_percent)
+        if diff != 0:
+            if vata_percent >= pitta_percent and vata_percent >= kapha_percent:
+                vata_percent += diff
+            elif pitta_percent >= vata_percent and pitta_percent >= kapha_percent:
+                pitta_percent += diff
             else:
-                clinical_result['type'] = f"{highest[0].capitalize()} Predominant"
+                kapha_percent += diff
+        
+        # Update scores
+        clinical_result['dosha']['vata'] = vata_percent
+        clinical_result['dosha']['pitta'] = pitta_percent
+        clinical_result['dosha']['kapha'] = kapha_percent
+        
+        # Recalculate type
+        sorted_doshas = sorted(clinical_result['dosha'].items(), key=lambda x: x[1], reverse=True)
+        highest = sorted_doshas[0]
+        second = sorted_doshas[1]
+        lowest = sorted_doshas[2]
+        
+        if highest[1] - lowest[1] <= 5:
+            clinical_result['type'] = "Balanced (Sama Prakriti)"
+        elif highest[1] - second[1] <= 6:
+            clinical_result['type'] = f"{highest[0].capitalize()}-{second[0].capitalize()} Type"
+        else:
+            clinical_result['type'] = f"{highest[0].capitalize()} Predominant"
 
         # Convert numpy types
         def convert_to_native(obj):
