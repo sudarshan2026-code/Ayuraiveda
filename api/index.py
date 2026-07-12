@@ -32,21 +32,21 @@ def add_cors_headers(response):
     response.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,OPTIONS'
     return response
 
-# Optional imports for YOLOv8 (only available locally)
-YOLO_AVAILABLE = False
-yolo_model = None
+# Optional imports for YOLOv8 (supported locally and on Vercel via OpenCV DNN)
+ONNX_YOLO_AVAILABLE = False
+onnx_net = None
 
 try:
-    from ultralytics import YOLO
-    yolo_model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../prakriti_yolo_model.pt')
-    if os.path.exists(yolo_model_path):
-        yolo_model = YOLO(yolo_model_path)
-        YOLO_AVAILABLE = True
-        print("[OK] YOLOv8 Prakriti classification model loaded successfully!")
+    import cv2
+    onnx_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../prakriti_yolo_model.onnx')
+    if os.path.exists(onnx_path):
+        onnx_net = cv2.dnn.readNetFromONNX(onnx_path)
+        ONNX_YOLO_AVAILABLE = True
+        print("[OK] YOLOv8 ONNX model loaded successfully via OpenCV DNN!")
     else:
-        print("[WARN] YOLO model weights not found at prakriti_yolo_model.pt")
-except ImportError:
-    print("[WARN] Ultralytics/YOLOv8 not available - bypassing YOLO features")
+        print("[WARN] YOLOv8 ONNX model not found at prakriti_yolo_model.onnx")
+except Exception as e:
+    print(f"[WARN] Failed to load YOLOv8 ONNX model: {e}")
 
 try:
     from auth_routes_sqlite import register_auth_routes
@@ -2883,34 +2883,28 @@ def analyze_clinical_image():
         yolo_calculated = False
         yolo_vata = yolo_pitta = yolo_kapha = 0.0
         
-        if YOLO_AVAILABLE and yolo_model is not None:
+        if ONNX_YOLO_AVAILABLE and onnx_net is not None:
             try:
-                # Run YOLOv8 classification inference directly on the BGR image
-                yolo_results = yolo_model(image)
-                if yolo_results and len(yolo_results) > 0:
-                    probs = yolo_results[0].probs
-                    if probs is not None:
-                        # Extract probabilities dynamically based on YOLO class name mapping
-                        names_dict = yolo_results[0].names
-                        probs_list = probs.data.tolist()
-                        
-                        yolo_vata = 0.0
-                        yolo_pitta = 0.0
-                        yolo_kapha = 0.0
-                        
-                        for idx, name in names_dict.items():
-                            val = float(probs_list[idx] * 100)
-                            if name == 'vata':
-                                yolo_vata = val
-                            elif name == 'pitta':
-                                yolo_pitta = val
-                            elif name == 'kapha':
-                                yolo_kapha = val
-                                
-                        yolo_calculated = True
-                        print(f"[OK] YOLO classifier completed: V={yolo_vata:.1f}%, P={yolo_pitta:.1f}%, K={yolo_kapha:.1f}%")
+                # Run YOLOv8 ONNX classification inference using OpenCV DNN
+                # YOLOv8 classification expects input size 128x128, scaled by 1/255.0, with swapRB=True
+                blob = cv2.dnn.blobFromImage(image, 1.0 / 255.0, (128, 128), swapRB=True, crop=False)
+                onnx_net.setInput(blob)
+                # Output shape is (1, 3) representing logits for kapha, pitta, vata
+                outputs = onnx_net.forward()
+                
+                # Softmax function to convert logits to percentages
+                exp_scores = np.exp(outputs[0] - np.max(outputs[0]))
+                probs_list = exp_scores / np.sum(exp_scores)
+                
+                # Indices (alphabetical order): 0 = kapha, 1 = pitta, 2 = vata
+                yolo_kapha = float(probs_list[0] * 100)
+                yolo_pitta = float(probs_list[1] * 100)
+                yolo_vata = float(probs_list[2] * 100)
+                
+                yolo_calculated = True
+                print(f"[OK] YOLO ONNX classifier completed: V={yolo_vata:.1f}%, P={yolo_pitta:.1f}%, K={yolo_kapha:.1f}%")
             except Exception as e:
-                print(f"[WARN] YOLO classifier prediction failed: {str(e)}")
+                print(f"[WARN] YOLO ONNX classifier prediction failed: {str(e)}")
                 yolo_calculated = False
 
         # Blend Rule-based and ML-based models
