@@ -9,14 +9,18 @@ export default function VisualScan() {
   const [scanStep, setScanStep] = useState(0)
   const [result, setResult] = useState(null)
   const [error, setError] = useState(null)
+  const [useCamera, setUseCamera] = useState(false)
+  
   const fileInputRef = useRef(null)
+  const videoRef = useRef(null)
+  const streamRef = useRef(null)
 
   const scanSteps = [
     { key: 'validation', label: 'Image quality validated' },
-    { key: 'body_detection', label: 'Human body identified' },
+    { key: 'body_detection', label: 'Human body/face identified' },
     { key: 'proportions', label: 'Structural proportions mapped' },
     { key: 'skin_analysis', label: 'Gunas & skin features analyzed' },
-    { key: 'ml_similarity', label: 'ML similarity matrix calculated' }
+    { key: 'ml_similarity', label: 'YOLOv8 & RF classification calculated' }
   ]
 
   const handleImageChange = (e) => {
@@ -35,6 +39,56 @@ export default function VisualScan() {
 
   const triggerFileSelect = () => {
     fileInputRef.current.click()
+  }
+
+  const startCamera = async () => {
+    try {
+      setUseCamera(true)
+      setError(null)
+      setImagePreview(null)
+      setResult(null)
+      
+      const constraints = {
+        video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } }
+      }
+      
+      const stream = await navigator.mediaDevices.getUserMedia(constraints)
+      streamRef.current = stream
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream
+      }
+    } catch (err) {
+      console.error("Camera access failed:", err)
+      setError("Failed to access camera. Please ensure camera permissions are granted.")
+      setUseCamera(false)
+    }
+  }
+
+  const stopCamera = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop())
+      streamRef.current = null
+    }
+    setUseCamera(false)
+  }
+
+  const capturePhoto = () => {
+    if (videoRef.current) {
+      const video = videoRef.current
+      const canvas = document.createElement('canvas')
+      canvas.width = video.videoWidth
+      canvas.height = video.videoHeight
+      const ctx = canvas.getContext('2d')
+      
+      // Mirror image for a natural selfie look
+      ctx.translate(canvas.width, 0)
+      ctx.scale(-1, 1)
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+      
+      const dataUri = canvas.toDataURL('image/jpeg')
+      setImagePreview(dataUri)
+      stopCamera()
+    }
   }
 
   const runSimulation = () => {
@@ -79,7 +133,7 @@ export default function VisualScan() {
             kapha_percentage: res.scores?.kapha || 0,
             analysis: {
               gunas: Object.entries(res.guna_analysis || {})
-                .filter(([_, val]) => val > 0.6)
+                .filter(([_, val]) => val > 0.5)
                 .map(([name, _]) => name.charAt(0).toUpperCase() + name.slice(1)),
               imbalance: res.dominant,
               description: res.explanation
@@ -105,6 +159,7 @@ export default function VisualScan() {
     setResult(null)
     setError(null)
     setScanning(false)
+    stopCamera()
   }
 
   return (
@@ -112,47 +167,93 @@ export default function VisualScan() {
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold text-olive-800 mb-2">🌿 Akriti Pariksha</h1>
         <p className="text-olive-600 text-sm max-w-xl mx-auto">
-          Digital Ayurvedic Body & Face Inspection. Upload a photo to map your physical frame, proportions, and skin attributes to estimate your Prakriti dosha balance.
+          Digital Ayurvedic Body & Face Inspection. Scan using your camera to map physical frame, proportions, and skin attributes to estimate your Prakriti dosha balance with YOLOv8.
         </p>
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600 flex items-center justify-between">
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600 flex items-center justify-between shadow-sm">
           <span>{error}</span>
           <button onClick={() => setError(null)} className="text-red-800 font-bold ml-2">×</button>
         </div>
       )}
 
-      {/* ── STEP 1: Upload or Capture ── */}
-      {!imagePreview && !result && (
-        <div 
-          onClick={triggerFileSelect}
-          className="border-2 border-dashed border-olive-300 rounded-3xl p-12 text-center bg-cream-50 hover:bg-cream-100/50 hover:border-olive-500 cursor-pointer transition-all duration-300 flex flex-col items-center justify-center min-h-[350px] shadow-sm"
-        >
-          <input 
-            type="file" 
-            ref={fileInputRef} 
-            onChange={handleImageChange} 
-            accept="image/*" 
-            capture="user" 
-            className="hidden" 
-          />
-          <div className="w-16 h-16 bg-olive-100 rounded-2xl flex items-center justify-center mb-4 text-olive-600 text-2xl shadow-inner">
-            📷
+      {/* ── STEP 1: Camera Stream View ── */}
+      {useCamera && (
+        <div className="card max-w-lg mx-auto overflow-hidden relative shadow-md">
+          <div className="relative aspect-[4/3] bg-black overflow-hidden rounded-2xl">
+            <video 
+              ref={videoRef}
+              autoPlay
+              playsInline
+              className="w-full h-full object-cover scale-x-[-1]"
+            />
+            {/* Target Face Bounding Box Guide Overlay */}
+            <div className="absolute inset-0 border-[3px] border-olive-500/35 m-12 rounded-3xl pointer-events-none flex items-center justify-center">
+              <div className="text-white/40 text-[10px] uppercase tracking-wider font-semibold bg-black/30 px-3 py-1 rounded-full backdrop-blur-sm">Align face / upper body here</div>
+            </div>
+            
+            {/* Live Camera Grid Overlay */}
+            <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 opacity-20 border border-white/20 pointer-events-none">
+              {[...Array(9)].map((_, i) => (
+                <div key={i} className="border-t border-l border-white/20" />
+              ))}
+            </div>
           </div>
-          <h3 className="text-lg font-semibold text-olive-800 mb-1">Take Photo or Upload Image</h3>
-          <p className="text-olive-500 text-xs max-w-xs mx-auto mb-4">
-            For best results, ensure your full upper body or face is clearly visible in a well-lit environment.
-          </p>
-          <button className="btn-primary py-2 px-6 text-sm">
-            Open Camera / Upload
-          </button>
+          <div className="p-6 flex gap-3">
+            <button onClick={stopCamera} className="btn-secondary flex-1 py-3 text-sm">
+              Cancel
+            </button>
+            <button onClick={capturePhoto} className="btn-primary flex-1 py-3 text-sm flex items-center justify-center gap-2">
+              📸 Capture Photo
+            </button>
+          </div>
         </div>
       )}
 
-      {/* ── STEP 2: Selected Image & Scan Process ── */}
-      {imagePreview && !result && (
-        <div className="card max-w-lg mx-auto overflow-hidden relative">
+      {/* ── STEP 2: Selection / Upload Mode ── */}
+      {!useCamera && !imagePreview && !result && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+          {/* Option A: Use Camera */}
+          <div 
+            onClick={startCamera}
+            className="border-2 border-olive-200 rounded-3xl p-8 text-center bg-cream-50 hover:bg-cream-100/50 hover:border-olive-500 cursor-pointer transition-all duration-300 flex flex-col items-center justify-center min-h-[250px] shadow-sm hover:shadow"
+          >
+            <div className="w-16 h-16 bg-olive-100 rounded-2xl flex items-center justify-center mb-4 text-olive-600 text-2xl shadow-inner">
+              📷
+            </div>
+            <h3 className="text-lg font-semibold text-olive-800 mb-1">Use App Camera</h3>
+            <p className="text-olive-500 text-xs max-w-xs mx-auto">
+              Open inline camera interface to capture selfie or body photo directly.
+            </p>
+          </div>
+
+          {/* Option B: Upload File */}
+          <div 
+            onClick={triggerFileSelect}
+            className="border-2 border-dashed border-olive-300 rounded-3xl p-8 text-center bg-cream-50 hover:bg-cream-100/50 hover:border-olive-500 cursor-pointer transition-all duration-300 flex flex-col items-center justify-center min-h-[250px] shadow-sm hover:shadow"
+          >
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              onChange={handleImageChange} 
+              accept="image/*" 
+              className="hidden" 
+            />
+            <div className="w-16 h-16 bg-olive-100 rounded-2xl flex items-center justify-center mb-4 text-olive-600 text-2xl shadow-inner">
+              📁
+            </div>
+            <h3 className="text-lg font-semibold text-olive-800 mb-1">Upload from Device</h3>
+            <p className="text-olive-500 text-xs max-w-xs mx-auto">
+              Select an existing photo from your gallery or files.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* ── STEP 3: Preview and Running Scan ── */}
+      {!useCamera && imagePreview && !result && (
+        <div className="card max-w-lg mx-auto overflow-hidden relative shadow-md">
           <div className="relative aspect-[4/3] bg-black flex items-center justify-center overflow-hidden rounded-2xl">
             <img 
               src={imagePreview} 
@@ -223,17 +324,41 @@ export default function VisualScan() {
         </div>
       )}
 
-      {/* ── STEP 3: Scan Results & Doshic Breakdown ── */}
-      {result && (
+      {/* ── STEP 4: Scan Results & YOLO Annotations ── */}
+      {!useCamera && result && (
         <div className="space-y-6">
-          <div className="card p-6">
+          <div className="card p-6 shadow-md">
             <h2 className="text-xl font-bold text-olive-800 mb-6 text-center">📊 Physical Anthropometric Report</h2>
+            
+            {/* Bounding Box YOLO Annotations Image */}
+            {result.annotated_image ? (
+              <div className="relative aspect-[4/3] bg-black flex items-center justify-center overflow-hidden rounded-3xl mb-6 shadow-inner border border-olive-200">
+                <img 
+                  src={result.annotated_image} 
+                  alt="YOLO Object Classification Overlay" 
+                  className="max-h-full max-w-full object-contain"
+                />
+                <div className="absolute top-3 right-3 bg-olive-800/80 text-white text-[10px] uppercase font-bold py-1 px-3 rounded-full tracking-wider backdrop-blur-sm shadow-sm">
+                  YOLOv8 Active
+                </div>
+              </div>
+            ) : (
+              imagePreview && (
+                <div className="relative aspect-[4/3] bg-black flex items-center justify-center overflow-hidden rounded-3xl mb-6 shadow-inner border border-olive-200">
+                  <img 
+                    src={imagePreview} 
+                    alt="Original Scan preview" 
+                    className="max-h-full max-w-full object-contain"
+                  />
+                </div>
+              )
+            )}
             
             {/* Checklist Verification */}
             <div className="mb-6 p-4 bg-emerald-50/50 border border-emerald-100 rounded-2xl flex items-center justify-between text-xs text-emerald-800">
               <div className="flex items-center gap-2">
                 <span>👤</span>
-                <span className="font-semibold">Human Body Structure Identified & Validated</span>
+                <span className="font-semibold">Human Structure Identified & Validated</span>
               </div>
               <span className="font-bold text-emerald-600 bg-emerald-100/60 px-2.5 py-0.5 rounded-full uppercase tracking-wider text-[10px]">Passed</span>
             </div>
