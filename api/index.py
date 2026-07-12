@@ -2661,12 +2661,47 @@ def analyze_clinical_image():
         face_detected = False
         if not body_detected:
             try:
-                face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-                gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-                faces = face_cascade.detectMultiScale(gray, 1.1, 4)
-                face_detected = len(faces) > 0
-                if face_detected:
-                    print("✅ Human face identified in selfie/close-up!")
+                cascade_path = cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'
+                face_cascade = cv2.CascadeClassifier(cascade_path)
+                
+                # Check if file failed to load (common in zipped serverless environments like Vercel)
+                if face_cascade.empty():
+                    print("[WARN] Haar Cascade empty, downloading fallback XML from GitHub...")
+                    github_xml_url = "https://raw.githubusercontent.com/opencv/opencv/master/data/haarcascades/haarcascade_frontalface_default.xml"
+                    local_xml_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "haarcascade_frontalface_default.xml")
+                    if not os.path.exists(local_xml_path):
+                        import urllib.request
+                        urllib.request.urlretrieve(github_xml_url, local_xml_path)
+                    face_cascade = cv2.CascadeClassifier(local_xml_path)
+                
+                if not face_cascade.empty():
+                    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+                    
+                    # Try 4 rotations: 0, 90, 180, 270 degrees to handle mobile camera EXIF orientation bugs
+                    for angle in [0, 90, 180, 270]:
+                        if angle == 0:
+                            rotated_gray = gray
+                        elif angle == 90:
+                            rotated_gray = cv2.rotate(gray, cv2.ROTATE_90_CLOCKWISE)
+                        elif angle == 180:
+                            rotated_gray = cv2.rotate(gray, cv2.ROTATE_180)
+                        elif angle == 270:
+                            rotated_gray = cv2.rotate(gray, cv2.ROTATE_90_COUNTERCLOCKWISE)
+                            
+                        faces = face_cascade.detectMultiScale(rotated_gray, 1.1, 4)
+                        if len(faces) > 0:
+                            face_detected = True
+                            # Rotate the actual image so feature extraction runs on the upright face
+                            if angle == 90:
+                                image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
+                            elif angle == 180:
+                                image = cv2.rotate(image, cv2.ROTATE_180)
+                            elif angle == 270:
+                                image = cv2.rotate(image, cv2.ROTATE_90_COUNTERCLOCKWISE)
+                            print(f"✅ Human face identified in selfie with {angle}-degree orientation!")
+                            break
+                else:
+                    print("[ERROR] Face cascade XML could not be loaded")
             except Exception as e:
                 print(f"[WARN] Face detection failed: {e}")
                 
