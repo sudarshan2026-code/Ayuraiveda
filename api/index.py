@@ -32,8 +32,21 @@ def add_cors_headers(response):
     response.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,OPTIONS'
     return response
 
-# Import authentication routes
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)) + '/..')
+# Optional imports for YOLOv8 (only available locally)
+YOLO_AVAILABLE = False
+yolo_model = None
+
+try:
+    from ultralytics import YOLO
+    yolo_model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../prakriti_yolo_model.pt')
+    if os.path.exists(yolo_model_path):
+        yolo_model = YOLO(yolo_model_path)
+        YOLO_AVAILABLE = True
+        print("[OK] YOLOv8 Prakriti classification model loaded successfully!")
+    else:
+        print("[WARN] YOLO model weights not found at prakriti_yolo_model.pt")
+except ImportError:
+    print("[WARN] Ultralytics/YOLOv8 not available - bypassing YOLO features")
 
 try:
     from auth_routes_sqlite import register_auth_routes
@@ -2866,19 +2879,71 @@ def analyze_clinical_image():
             print(f"[WARN] Image classifier prediction failed: {str(e)}")
             classifier_calculated = False
 
+        # Load YOLO Classifier model (if available)
+        yolo_calculated = False
+        yolo_vata = yolo_pitta = yolo_kapha = 0.0
+        
+        if YOLO_AVAILABLE and yolo_model is not None:
+            try:
+                # Run YOLOv8 classification inference directly on the BGR image
+                yolo_results = yolo_model(image)
+                if yolo_results and len(yolo_results) > 0:
+                    probs = yolo_results[0].probs
+                    if probs is not None:
+                        # Extract probabilities dynamically based on YOLO class name mapping
+                        names_dict = yolo_results[0].names
+                        probs_list = probs.data.tolist()
+                        
+                        yolo_vata = 0.0
+                        yolo_pitta = 0.0
+                        yolo_kapha = 0.0
+                        
+                        for idx, name in names_dict.items():
+                            val = float(probs_list[idx] * 100)
+                            if name == 'vata':
+                                yolo_vata = val
+                            elif name == 'pitta':
+                                yolo_pitta = val
+                            elif name == 'kapha':
+                                yolo_kapha = val
+                                
+                        yolo_calculated = True
+                        print(f"[OK] YOLO classifier completed: V={yolo_vata:.1f}%, P={yolo_pitta:.1f}%, K={yolo_kapha:.1f}%")
+            except Exception as e:
+                print(f"[WARN] YOLO classifier prediction failed: {str(e)}")
+                yolo_calculated = False
+
         # Blend Rule-based and ML-based models
         vata_percent = clinical_result['dosha']['vata']
         pitta_percent = clinical_result['dosha']['pitta']
         kapha_percent = clinical_result['dosha']['kapha']
         
-        if classifier_calculated and ml_calculated:
+        # Calculate scores using different available models
+        # Determine active components
+        if classifier_calculated and ml_calculated and yolo_calculated:
+            vata_percent = round(0.3 * clinical_result['dosha']['vata'] + 0.3 * classifier_vata + 0.2 * yolo_vata + 0.2 * ml_vata_pct)
+            pitta_percent = round(0.3 * clinical_result['dosha']['pitta'] + 0.3 * classifier_pitta + 0.2 * yolo_pitta + 0.2 * ml_pitta_pct)
+            kapha_percent = round(0.3 * clinical_result['dosha']['kapha'] + 0.3 * classifier_kapha + 0.2 * yolo_kapha + 0.2 * ml_kapha_pct)
+        elif classifier_calculated and yolo_calculated:
+            vata_percent = round(0.35 * clinical_result['dosha']['vata'] + 0.35 * classifier_vata + 0.3 * yolo_vata)
+            pitta_percent = round(0.35 * clinical_result['dosha']['pitta'] + 0.35 * classifier_pitta + 0.3 * yolo_pitta)
+            kapha_percent = round(0.35 * clinical_result['dosha']['kapha'] + 0.35 * classifier_kapha + 0.3 * yolo_kapha)
+        elif classifier_calculated and ml_calculated:
             vata_percent = round(0.4 * clinical_result['dosha']['vata'] + 0.4 * classifier_vata + 0.2 * ml_vata_pct)
             pitta_percent = round(0.4 * clinical_result['dosha']['pitta'] + 0.4 * classifier_pitta + 0.2 * ml_pitta_pct)
             kapha_percent = round(0.4 * clinical_result['dosha']['kapha'] + 0.4 * classifier_kapha + 0.2 * ml_kapha_pct)
+        elif yolo_calculated and ml_calculated:
+            vata_percent = round(0.4 * clinical_result['dosha']['vata'] + 0.4 * yolo_vata + 0.2 * ml_vata_pct)
+            pitta_percent = round(0.4 * clinical_result['dosha']['pitta'] + 0.4 * yolo_pitta + 0.2 * ml_pitta_pct)
+            kapha_percent = round(0.4 * clinical_result['dosha']['kapha'] + 0.4 * yolo_kapha + 0.2 * ml_kapha_pct)
         elif classifier_calculated:
             vata_percent = round(0.5 * clinical_result['dosha']['vata'] + 0.5 * classifier_vata)
             pitta_percent = round(0.5 * clinical_result['dosha']['pitta'] + 0.5 * classifier_pitta)
             kapha_percent = round(0.5 * clinical_result['dosha']['kapha'] + 0.5 * classifier_kapha)
+        elif yolo_calculated:
+            vata_percent = round(0.5 * clinical_result['dosha']['vata'] + 0.5 * yolo_vata)
+            pitta_percent = round(0.5 * clinical_result['dosha']['pitta'] + 0.5 * yolo_pitta)
+            kapha_percent = round(0.5 * clinical_result['dosha']['kapha'] + 0.5 * yolo_kapha)
         elif ml_calculated:
             vata_percent = round(0.5 * clinical_result['dosha']['vata'] + 0.5 * ml_vata_pct)
             pitta_percent = round(0.5 * clinical_result['dosha']['pitta'] + 0.5 * ml_pitta_pct)
