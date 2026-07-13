@@ -1,0 +1,85 @@
+# Need for a centralized repository of standardized validated scales and disease gradation tools for clinical research in Ayurveda
+
+Dear Editor,
+
+We recently read the article “Development and validation of an ama instrument for assessing the disease activity on the basis of constitutional features in Amavata (Rheumatoid Arthritis)” by Pandey et al. (2023), published in JAIM [1]. This communication highlights the imperative and scope for developing such tools to strengthen Ayurvedic research.
+
+Ayurveda has guided healthcare for millennia through its comprehensive and individualized clinical approach. Ayurvedic clinical reasoning relies on diagnostic constructs—prakriti (constitutional typing), vikriti (disease state), roga marga (disease pathways), nidan panchaka (fivefold diagnostic approach), and lakshanas (signs and symptoms)—providing a nuanced framework for disease assessment. Yet, in today's evidence-driven healthcare, these parameters remain undocumented in standardized, shareable formats, limiting Ayurveda's scientific validation and integration into mainstream medicine.
+
+Unlike modern medicine—which uses curated databases like ICD (International Classification of Diseases), SNOMED CT (Systematized Nomenclature of Medicine–Clinical Terms), and OMIM (Online Mendelian Inheritance in Man)—Ayurveda lacks a centralized repository consolidating its clinical presentation, gradation of signs and symptoms, and quantitative diagnostic criteria. This limits reproducibility, hampers comparative clinical research, inhibits universally accepted diagnostic guidelines, and hinders regulatory recognition and policy-level inclusion in integrative healthcare.
+
+
+## The need for standardized symptomatology and grading scales
+
+
+The nidan panchaka—nidana (etiology), purvarupa (premonitory symptoms), rupa (classical signs and symptoms), upashaya-anupashaya (aggravating & relieving factors), samprapti (pathogenesis)—is fundamental in Ayurvedic diagnostics [2]. However, the absence of uniform gradation (mild, moderate, severe) across diseases leads to practitioner subjectivity and variability. For example, in amavata (akin to rheumatoid arthritis), quantifiable scales for sandhishoola (joint pain) or stambha (stiffness) are often lacking, making it difficult to monitor disease progression or therapeutic response systematically. Additionally, in Amavata, Madhava notes bahumutrata and stheevan as important prodromal symptoms. It is vital to determine their prevalence in Amavata patients and identify other conditions presenting similarly. Such analysis reveals false positives and negatives, guiding appropriate emphasis on these symptoms in diagnosis and management.
+
+Developing the realistic scales and their validation is imperative for the growth of Ayurveda research as most scales use currently is invalid. Obviously the observations made through the invalid scales would also be invalid. Various studies have highlighted the need for standardization of research tools and methods in Ayurvedic research, alongside a multidisciplinary approach [3], [4]. A shared platform that preserves classical descriptions while supporting uniform clinical assessment is essential.
+
+Centralized Repository of Standardized Validated Scales and Disease Gradation Tools. A digital repository of Ayurvedic signs, symptoms, and disease gradation scales would serve multiple functions.•Documentation of classical knowledge from Charaka Samhita, Sushruta Samhita, Ashtanga Hridaya, and other authoritative texts, classified by disease, symptom, dosha involvement, and stage of disease progression.•Incorporation of clinical evidence: Structured symptom gradation tools like scales and questionnaires from published clinical studies can be digitized, validated, and updated continuously, following Good Clinical Practice (GCP) and CONSORT guidelines for Ayurveda.•Standardization of diagnostic criteria: A shared repository enables uniformity in disease identification, facilitating evidence-based diagnosis and enhancing interdisciplinary collaboration. Various scales for severity, functional status, quality of life can be developed using classical references and clinical knowledge.•Integration with modern research methodologies: A digital structure would support advanced analytics, including AI and machine learning for pattern recognition, symptom clustering, and predictive modeling for patient-specific treatment planning.
+
+Documentation of classical knowledge from Charaka Samhita, Sushruta Samhita, Ashtanga Hridaya, and other authoritative texts, classified by disease, symptom, dosha involvement, and stage of disease progression.
+
+Incorporation of clinical evidence: Structured symptom gradation tools like scales and questionnaires from published clinical studies can be digitized, validated, and updated continuously, following Good Clinical Practice (GCP) and CONSORT guidelines for Ayurveda.
+
+Standardization of diagnostic criteria: A shared repository enables uniformity in disease identification, facilitating evidence-based diagnosis and enhancing interdisciplinary collaboration. Various scales for severity, functional status, quality of life can be developed using classical references and clinical knowledge.
+
+Integration with modern research methodologies: A digital structure would support advanced analytics, including AI and machine learning for pattern recognition, symptom clustering, and predictive modeling for patient-specific treatment planning.
+
+A successful model is the Swasthya Assessment Scale, Agni Assessment Scale, and the tool for validation and reliability testing of Ayurvedic diagnostic tools developed under CCRAS and available on the CCRAS-ICT portal, which have made initial strides in standardizing clinical documentation for select conditions [5]. However, limited scalability and lack of open-access data restrict their utility in research and cross-platform integration.
+
+
+## Key benefits of a centralized database
+
+
+•Enhancement of research quality: Consistent grading and symptom definitions improve the methodological rigor of Ayurvedic clinical trials, enabling better meta-analyses and comparative studies.•Facilitating integrative healthcare: Standardized diagnostic terminologies enhance communication with allopathic systems, fostering integrative care. While the NAMASTE portal provides satndardized terminologies, contextualizing them for specific diseases and interventions is crucial to grasp their full implications.•Policy support and global recognition: A validated database would aid international health policy bodies (like WHO Traditional Medicine Strategy) in benchmarking Ayurveda alongside systems like Traditional Chinese Medicine (TCM), which has advanced through ICD-11 integration[6].•Education and training: A unified system would support evidence-informed teaching modules in Ayurvedic institutions, reducing variability in clinical instruction across regions.
+
+Enhancement of research quality: Consistent grading and symptom definitions improve the methodological rigor of Ayurvedic clinical trials, enabling better meta-analyses and comparative studies.
+
+Facilitating integrative healthcare: Standardized diagnostic terminologies enhance communication with allopathic systems, fostering integrative care. While the NAMASTE portal provides satndardized terminologies, contextualizing them for specific diseases and interventions is crucial to grasp their full implications.
+
+Policy support and global recognition: A validated database would aid international health policy bodies (like WHO Traditional Medicine Strategy) in benchmarking Ayurveda alongside systems like Traditional Chinese Medicine (TCM), which has advanced through ICD-11 integration[6].
+
+Education and training: A unified system would support evidence-informed teaching modules in Ayurvedic institutions, reducing variability in clinical instruction across regions.
+
+
+## Recommendations for implementation
+
+
+1.Constitution of a national consortium: A task force of Ayurvedic clinicians, academicians, data scientists, and informatics experts should design the architecture, taxonomy, and ethical framework for data use. Interdisciplinary focus groups with modern diagnosticians can align classical descriptions with clinical presentations to develop accurate integrative diagnostic tools. Small focus groups (SFGs) to validate the corelations and differentials will further benefit the multi-disciplinary integrative approach.2.Digitization and annotation of classical texts: With Sanskrit scholars and clinical experts, signs and symptoms from core texts should be tagged, annotated, and mapped to clinical entities in a structured XML/JSON format.3.Development of symptom grading scales: Validated scoring systems—akin to Visual Analogue Scales (VAS) or Likert-type gradations—should be created for common diseases like amavata, kasa, pandu, and prameha. Prodromal symptoms and signs, such as bahumutrata and stheevan in Amavata, also need consideration along with differentials to rule out other possibilities and enable precise diagnosis.4.Pilot testing and validation: Scales and symptom matrices should be tested in clinical settings, across multiple institutions, to ensure reliability and consistency, with validation as the primary goal, rather than comparison of interventions.5.Open access platform with secure user roles: The final database should be built using interoperable digital health standards (e.g., HL7 FHIR) and hosted on an open-access platform with tiered user roles. Users should be able to upload proposed scales and gradations for review; validated ones should be accessible to the community for uniformity in clinical and research settings.6.Periodic review and AI-enabled updates: With ongoing clinical input, the database should use Natural Language Processing (NLP) and machine learning to refine diagnostic pathways, symptom prioritization, and treatment correlations.
+
+Constitution of a national consortium: A task force of Ayurvedic clinicians, academicians, data scientists, and informatics experts should design the architecture, taxonomy, and ethical framework for data use. Interdisciplinary focus groups with modern diagnosticians can align classical descriptions with clinical presentations to develop accurate integrative diagnostic tools. Small focus groups (SFGs) to validate the corelations and differentials will further benefit the multi-disciplinary integrative approach.
+
+Digitization and annotation of classical texts: With Sanskrit scholars and clinical experts, signs and symptoms from core texts should be tagged, annotated, and mapped to clinical entities in a structured XML/JSON format.
+
+Development of symptom grading scales: Validated scoring systems—akin to Visual Analogue Scales (VAS) or Likert-type gradations—should be created for common diseases like amavata, kasa, pandu, and prameha. Prodromal symptoms and signs, such as bahumutrata and stheevan in Amavata, also need consideration along with differentials to rule out other possibilities and enable precise diagnosis.
+
+Pilot testing and validation: Scales and symptom matrices should be tested in clinical settings, across multiple institutions, to ensure reliability and consistency, with validation as the primary goal, rather than comparison of interventions.
+
+Open access platform with secure user roles: The final database should be built using interoperable digital health standards (e.g., HL7 FHIR) and hosted on an open-access platform with tiered user roles. Users should be able to upload proposed scales and gradations for review; validated ones should be accessible to the community for uniformity in clinical and research settings.
+
+Periodic review and AI-enabled updates: With ongoing clinical input, the database should use Natural Language Processing (NLP) and machine learning to refine diagnostic pathways, symptom prioritization, and treatment correlations.
+
+
+## Declaration of generative AI in scientific writing
+
+
+None.
+
+
+## Author contributions
+
+
+Both authors have equally contributed to the manuscript.
+
+
+## Funding sources
+
+
+None.
+
+
+## Conflict of interest
+
+
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.

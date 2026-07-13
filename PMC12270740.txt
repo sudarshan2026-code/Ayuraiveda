@@ -1,0 +1,243 @@
+# Comparative efficacy of Medhya Rasayana,Bacopa monnieri, and Centella asiatica in enhancing memory and IQ of 8–10 year-old healthy boys: A prakriti-based double-blind, randomized controlled trial
+
+## Abstract
+
+BackgroundCognitive problems like learning difficulties, memory problems, intellectual disability, and ADHD are highly associated with school absenteeism and high dropout rates. The novel approach to improving memory and learning in these children is using nootropic herbs known as Medhya Rasayana (intellect enhancer) in Ayurveda. Brahmi (Bacopa monnieri L. Pannel), one of the Medhya Rasayana, has proven to be useful through extensive research. Still, the other Medhya Rasayana requires thorough research based on the Ayurvedic principle of Prakriti (constitution) to utilize their optimum therapeutic effect.ObjectivesThe main objective of this study was to evaluate the comparative efficacy of Mandookaparni in enhancing the memory of healthy boys with dominant Prakriti.Material & methodsThe present study was a double-blind, randomized study to evaluate the comparative efficacy of Brahmi (Bacopa monnieri L. Pannel) and Mandookaparni (Centella asiatica L. Urban) in enhancing the memory of 8-10-year-old healthy boys with dominant Prakriti. After obtaining informed consent from parents and assent from the participants, the eligible study participants were randomized to either the Mandookaparni or the Brahmi group. The participants were assessed at baseline and end of the treatment (91st day) for efficacy measures, which included total memory score and various domains of memory assessed by the Post Graduate Institute- Children's Memory Scale (PGI-CMS) and Intelligence Quotient.ResultsOn analysis of 180 participants, the Brahmi group showed highly significant results in the total memory score, 9 out of 10 subsets of PGI-CMS, and IQ with p < 0.001. The Mandookaparni group showed highly significant results in 8 subsets of PGI-CMS, the total memory score, and IQ with p < 0.001. Brahmi increased the mean total memory score by 9.28 %, while a 13.45 % rise was observed with Mandookaparni. Significant differences were observed chiefly in Pitta Prakriti on Prakriti-wise analysis in the improvement of various memory domains between Brahmi and Mandookaparni.ConclusionsMandookaparni has clinically equivalent efficacy to Brahmi in enhancing memory. Mandookaparni is better in improving the memory of Pitta Prakriti people while Brahmi is more effective in Kapha and Vata Prakriti. Both drugs are safe and effective in the pediatric population.
+
+
+## Introduction
+
+
+Education is a great engine of personal and social development. Education is the basis of a child's progress into a cultured, productive, and sensitive adult. Free and compulsory education was made a fundamental human right by the 86th amendment in the Indian Constitution in 2002. Under this act, all children between six to fourteen years are eligible for free and compulsory education [1]. However, there is a high rate of school dropouts even in primary education in India. According to a 2019 UNESCO report, 18 % of children and adolescents aged 6 to 17 were out of school globally, while 9 % of children in primary school age (6–11 years) were out of school [2]. India has one of the highest dropout rates worldwide, with 18.2 % of children dropping out before completing primary education. UDISE+ 2021-22 report marks a 12.61 % dropout rate in secondary education in India [3]. A high dropout rate from school not only affects the growth and prosperity of the concerned children but also has far-reaching consequences on the overall progress of our country [4]. A high dropout rate has a multi-factorial origin, and dropout rates differ among various regions, socioeconomic strata, religions, castes, and even genders [5]. The inherent causes of dropout mostly included problems related to knowledge acquisition. They include difficulties in reading (like dyslexia), poor learning (IQ-related problems, poor attention span, etc.), poor memory (related to problems of attention & concentration, problems related to perception, etc.), subnormal IQ, ADHD, and other neurodevelopmental problems. These problems of learning and memory usually lead to school absenteeism, poor school performance, and early dropout [6].
+
+Our perspective, knowledge, and awareness of such problems have improved substantially in the last few decades. So have the methods and interventions to manage these problems of learning and memory and, thus, that of education and school dropouts. A lot of research is going on to improve learning and memory in children using specific teaching methods, learning techniques, and so on [7,8]. One of the novel approaches in this field is the use of herbal drugs to improve memory and, thus, learning. These drugs, which improve cognitive functions and act on memory, are now known as nootropics. There is a vast description of these smart drugs in Ayurveda under the class of Medhya Rasayana (intellect enhancer), and they are advised for the promotion of one's cognitive functions, including intelligence and memory. These herbs are thought to have been used by sages and pupils in ancient India to learn and memorize the Shrutis (that which is heard), the most ancient texts related to Hinduism. The Vedic hymns were learned, memorized, and passed on orally to the next generation without making manuscripts. This was made possible using these herbs.
+
+Brahmi, one of the Medhya (intellect enhancer) drugs, derives its name from Brahma, the Hindu God known for creation, knowledge, and the Vedas. Thus, Brahmi is one of the best medicines for enhancing one's knowledge and for promoting intellect. It has been used for ages to promote Medha (intellect). For this reason, it has been extensively researched in modern times and has been found effective in improving various cognitive functions [9] like attention, concentration, learning, and memory [[10], [11], [12], [13], [14]]. Brahmi has been reported to improve various childhood disorders like ADHD [15], intellectual disabilities, [16], etc., which are known to impair learning and education. However, other Medhya drugs mentioned in classical Ayurvedic texts have not been researched extensively. Thus, there is a dire need to escalate research on these time-tested herbs to benefit the pediatric population.
+
+Mandookaparni, one of the four Medhya drugs in Charaka Samhita [17], has been described abreast to Brahmi in various Ayurvedic classics like Samhita [18,19], and Nighantu (Ayurvedic Pharmacopeias) [20,21]. The concurrent description of both these drugs was primarily to highlight their analogous properties and therapeutic usages. However, Mandookaparni (Centella asiatica L. Urban) has not been researched clinically as extensively as Brahmi (Bacopa monnieri L. Pannel). There is evidence regarding the effectiveness of Mandookaparni in enhancing cognition as well as memory functions from recent in vitro and animal studies [[22], [23], [24]]. However, there is a dearth of conclusive randomized trials to validate its clinical efficacy. Puttaraka et al. in their review of C. asiatica, have not found conclusive evidence of its effect on cognitive functions [25]. They have suggested more clinical studies to find out its effectiveness on cognitive functions as proven in animal studies.
+
+Additionally, the use of these Medhya drugs without due consideration to various Ayurvedic principles regarding their usage may not optimally exploit their potential. The research not assimilating Ayurvedic principles for using various herbs may also result in doubts about their efficacy. Ayurveda advocates the use of any drug based on an individualistic approach. The drugs are to be administered considering various factors like Prakriti (constitution), Desha (region), Kala (season), disease condition, strength, and age of the patients, etc. [26] The Prakriti is based on the predominance of one, two, or all three doshas, i.e. Vata, Pitta, and Kapha, at the time of conception [27]. Only that physician is told to be the best, one who uses medicine with an emphasis on an individualistic Prakriti-based approach [28].
+
+Thus, there was a need for a research study to evaluate the effectiveness of Mandookaparni compared to Brahmi in improving memory. Also, this comparison between these two Medhya herbs was required for their differential and individualistic use. We could not find any previous research that had considered the Ayurvedic principle of Prakriti (physical constitution) for the individualistic use of these herbal nootropic medicines. Thus, we planned this research to assess the comparative efficacy of Mandookaparni to Brahmi in enhancing memory and fill this research gap.
+
+
+## Materials & methods
+
+
+
+## Study design
+
+
+The present study was a 90-day prospective, double-blind, randomized, two-arm, parallel-group, comparative clinical trial conducted in an Ayurvedic hospital following Institutional Ethics Committee approval with reference number MGACHRC/IEC/October-2020/141. The study was registered in the Clinical Trial Registry-India with a CTRI number- CTRI/2021/02/031368. The study followed various clinical research guidelines- Indian Good Clinical Practice 2001, Declaration of Helinski, ICMR guideline for Biomedical Research on Human Subjects, and CONSORT 2010 reporting guidelines.
+
+
+## Sample size calculation
+
+
+Sample size calculation was done using an appropriate formula [29] to determine the adequate number of participants to detect equivalence in the intervention (Mandookaparni) and control (Brahmi) drug effect sizes. The percentage improvement in memory score reported by Stough et al. was taken as the basis for calculation [30]. They have reported a 6 % improvement in memory score. The percentage of equivalent clinical efficacy in improving memory was fixed within 10 % i.e. 5 % on either side. The sample size was calculated to be 164 participants (82 in each group) with 80 % power and a significance level alpha of 5 %. Considering the 10 % dropout rate, the sample size was fixed at 182, i.e., 91 per group.
+
+
+## Study setting
+
+
+The study was conducted between July 2022 and February 2023. The study participants were enrolled in the outdoor patient department of an Ayurveda college and nearby schools in the Wardha district of Maharashtra. The potential participants were surveyed for eligibility, and eligible participants were enrolled after obtaining informed consent from their parents. There was no deviation from the study protocol during the conduction of the study.
+
+
+## Inclusion & exclusion criteria
+
+
+The present study included healthy boys aged between 8 and 10 years who have one of three dominant Deha Prakriti. Only boys were included, as previous studies have shown gender differences in various domains of memory [31,32]. Dominant Deha Prakriti was determined as participants possessing at least a 60 % overall score in the Prakriti questionnaire for the dominant dosha as done by Rotti et al. [33] Participants who gave verbal assent and whose parents were willing to give signed informed consent were included in the present study.
+
+The children possessing subnormal intelligence determined by below average IQ or a memory score of less than 40 percentile in PGI-CMS [35] or having been diagnosed with mental illness were excluded from the study. Children suffering from any acute or chronic illness and/or taking any other medication were also excluded.
+
+
+## Randomization, blinding, and allocation concealment
+
+
+Randomization was done through a computer-generated random allocation software method to avoid bias in the study. The boys who had given assent to the study and whose parents gave signed informed consent were screened for Prakriti. The boys possessing dominant Prakriti were assessed for eligibility, and eligible boys were randomized 1:1 into either of the two groups. As the study was double-blind, both participants and the researcher were blinded to the group being allocated to any participant. The study supervisor, i.e., RR, allocated participants into one of the groups. Both drug formulations were color-matched and adequately coded to blind the participants and researcher. For allocation concealment, a sequentially numbered, opaque, sealed envelope (SNOSE) method was adopted. In this method, the allocation for the control arm or trial arm was concealed in an opaque envelope. The envelope was opened only after writing details on the envelope of the participant being included in the study after he was found eligible and his parent had given consent. The carbon paper was placed inside to prevent any manipulation.
+
+
+## Study drugs
+
+
+Drug details: The trial drug was an Avleha (electuary) made from Mandookaparni (Centella asiatica L. Urban) as chief content. This Mandookaparni Avleha was made up of Mandookaparni (Centella asiatica L. Urban), Madhu (honey), Go Ghrita (cow ghee), and sugar in a ratio of 1 part, 1/10 part, 1/20 part, and 4 parts, respectively. The control drug was an Avleha (electuary) made from Brahmi (Bacopa monnieri L. Pannel) as the chief content. This Brahmi Avleha was made up of Brahmi (Bacopa monnieri L. Pannel), Madhu (honey), Go Ghrita (cow ghee), and sugar in a ratio of 1 part, 1/10 part, 1/20 part, and 4 parts, respectively. The drug formulations were made complying the standard procedure for manufacturing Avleha (electuary) preparation [34] by a GMP-certified pharmacy, “Dattatreya Ayurveda Rasashala.”
+
+Quality control: Both drugs were made after proper identification of raw drugs and quality assessment of main contents (Brahmi & Mandookaparni) through HPTLC in a central research laboratory. The drug formulations had undergone thorough post-production analysis for various physiochemical and microbiological parameters. Drug quality control reports are attached as supplementary file 1.
+
+
+## Intervention
+
+
+The boys fulfilling the inclusion criteria were randomized into either of the two groups, i.e., Group A (Brahmi group) or Group B (Mandookaparni group). Group A was given Brahmi Avleha, while Group B was given Mandookaparni Avleha. The dosage schedule was 20 g of Avleha daily in two divided doses 1 h before meals with lukewarm water. The drugs were given in 600 g packing for one month, and monthly follow-ups were done to assess compliance and any adverse drug reactions. The compliance was also enquired telephonically. The total duration of the intervention was 90 days.
+
+
+## Study procedure
+
+
+Before enrolling participants, assent from the participants and signed informed consent from either of the parents was taken. The consenting participants were screened for dominant Prakriti using the “Prakriti Vichaya” module (a standardized and validated software for constitution assessment) of AyuSoft software made by the Centre for Development of Advanced Computing (C-DAC), Pune, India. The dominant Prakriti participants were screened for brief medical history, vitals, general physical examinations, and systemic examinations through case record forms. After enrollment, memory and intelligence quotient were assessed through the ‘Post Graduate Institute-Children's Memory Scale’ (PGI-CMS) [35] and ‘Draw a Man’ scale [36], respectively. One of the medicines, as per the allocation procedure, was given for 90 days, and reassessment was done on the 91st day. The safety of the medicine was assessed through reported adverse events. There were no adverse events of any of the drugs reported during the study period.
+
+
+## Outcome measures
+
+
+
+## Primary outcome – memory
+
+
+Memory was assessed through PGI-CMS, a validated children's memory scale. This scale contains 10 subsets namely “remote memory (RM), recent memory (RC), mental balance (MB), attention and concentration (A-C), delayed recall (DR), immediate recall (IR), similar pairs (SP), dissimilar pairs (DP), visual retention (VT), and visual recognition (VR).” These subsets test working memory, short-term memory, and long-term memory. These subsets of PGI-CMS also provide an assessment of the three faculties of Budhhi (intellect/cognition), i.e., Dhi (perception), Dhriti (retention/mental control), and Smriti (recollection). The correlation between various tests and these three Budhhi faculties can be seen in supplementary file 2. The total memory score was calculated using scores obtained in these 10 subsets. Memory was assessed at baseline (0 day) and the 91st day of the study.
+
+The primary efficacy assessment was the change in scores of ten subsets and total memory score from baseline (0 day) to the end of the study (91st day).
+
+
+## Secondary outcome – intelligence quotient
+
+
+IQ was assessed through the ‘Draw-a-Man’ scale. In this scale, the child was asked to draw a person as perceived by him. The scale was used to calculate the IQ based on drawings done by the children.
+
+The secondary efficacy assessment was the change in IQ scores from baseline (0 day) to the end of the study (91st day).
+
+
+## Statistical analysis
+
+
+Statistical analysis was done using version 17 of IBM SPSS software. The difference between pre-treatment and post-treatment scores of memory subsets and IQ within individual groups were analysed using the Wilcoxon matched-pairs signed-rank test as data did not show normal distribution. The intragroup variance of effect between different Prakriti types was analysed using the Kruskal-Wallis test. The Mann-Whitney U test was used to analyse intergroup differences of effect on memory and IQ among various Prakriti types. The statistical significance was considered at a ‘p-value’ of p ≤ 0.05.
+
+
+## Results
+
+
+A total of 379 boys were screened for dominant Prakriti, out of which 198 participants possessing dominant Prakriti were enrolled for the study, 99 each in Brahmi group and Mandookaparni group. A total of 180 participants completed the study, with 90 participants from each group. Fig. 1 shows the study enrollments as per the CONSORT 2010 flow chart.Fig. 1CONSORT 2010 flow diagram.Fig. 1
+
+CONSORT 2010 flow diagram.
+
+
+## Demographic and baseline data
+
+
+Both groups had 90 participants each. There were no significant differences in the age of participants in both groups. Both groups had an equal number of dominant Prakriti participants, with 30 participants in each group of: Vata Pradhana, Pitta Pradhana, and Kapha Pradhana Prakriti.
+
+
+## Effect on Memory & IQ
+
+
+Brahmi group showed a highly significant improvement in the mean score of 9 subsets of PGI-CMS, while the Mandookaparni group showed a highly significant improvement in the mean score of 8 subsets and a significant improvement in 1 subset of PGI-CMS. Both groups showed highly significant improvement in the total memory score and IQ. On intergroup comparison of improvement in various subsets of memory, only remote memory, and delayed recall showed highly significant differences while visual recognition and total memory score showed significant differences among Brahmi Group and Mandookaparni Group with better improvement in later (Table 1).Table 1Shows the intragroup & intergroup comparison of scores at baseline and at the end of treatment.Table 1Memory subsetGroupDay 0 Mean (SD)Day 91 Mean (SD)Z (p-value) aMean Change (SD)Z (p-value)bRemote memoryBrahmi4.7(0.9)4.9(0.7)2.4 (<0.01)d0.2(0.7)3.8(<0.01)dMandookaparni4.5(1.0)5.1(0.7)6.1 (<0.01)d0.6(0.8)Recent memoryBrahmi4.5(0.6)4.7(0.4)2.9 (0.004)d0.2(0.6)0.6 (0.5)Mandookaparni4.4(0.6)4.5(0.5)1.9(0.06)0.1(0.6)Mental balanceBrahmi7.7(2.1)8.5(1.1)5.1 (<0.01)d0.8(1.3)0.4(0.7)Mandookaparni7.8(1.9)8.5(1.5)5.1(<0.01)d0.7(1.0)Attention & concentrationBrahmi9.2 (1.4)9.2(1.1)0.3(0.75)0.0(0.9)1.8 (0.06)Mandookaparni9.1 (1.6)9.4(1.4)3.0(0.03)c0.3(0.9)Delayed recallBrahmi7.1(1.3)7.7(0.9)5.2(<0.01)d0.6(0.9)2.9(<0.01)dMandookaparni6.7(1.5)7.7(1.0)7.1 (<0.01)d1.0(0.8)Immediate recallBrahmi7.6 (1.3)7.7(1.0)1.7(<0.01)d0.1(0.9)1.2(0.2)Mandookaparni7.0(1.4)7.3(1.0)3.3 (<0.01)d0.3(0.9)Similar pairsBrahmi4.1(0.9)4.4(0.6)4.1(<0.01)d0.3(0.6)1.0(0.3)Mandookaparni4.1(0.9)4.4(0.6)3.8(<0.01)d0.3(0.7)DissimilarPairsBrahmi9.7 (2.1)10.2(1.3)2.9 (<0.01)d0.5(1.3)0.7(0.5)Mandookaparni9.8(2.1)10.3(1.6)4.0 (<0.01)d0.5(1.2)Visual retentionBrahmi9.3(1.8)9.9(1.3)4.2(<0.01)d0.6(1.3)0.0(0.9)Mandookaparni9.7(1.9)10.4(1.5)4.3(<0.01)d0.7(1.3)Visual recognitionBrahmi8.1(1.4)8.4(0.9)2.5 (<0.01)d0.3(1.0)2.3(0.01)cMandookaparni8.1(1.4)8.7(1.1)4.3(<0.01)d0.6 (0.9)Total memory scoreBrahmi55.4(8.7)60.5(7.3)7.5(<0.01)d5.1(3.9)2.1(0.03)cMandookaparni53.8(8.8)61.0(7.1)7.5(<0.01)d7.2 (5.9)IQBrahmi91.7 (2.6)92.7 (2.5)6.1 (<0.01)d1.0 (1.3)1.3 (0.2)Mandookaparni91.9 (2.6)92.6 (2.5)5.7 (<0.01)d0.7 (0.9)Each group had 90 participants each.aZ test value and p-value using Wilcoxon matched-pairs signed rank test.bZ test value and p-value using Mann-Whitney test.cSignificant.dHighly significant.
+
+Shows the intragroup & intergroup comparison of scores at baseline and at the end of treatment.
+
+Each group had 90 participants each.
+
+Z test value and p-value using Wilcoxon matched-pairs signed rank test.
+
+Z test value and p-value using Mann-Whitney test.
+
+Significant.
+
+Highly significant.
+
+
+## Prakriti-wise differential effect on memory and IQ
+
+
+Table 2 shows a Prakriti-wise analysis of mean differences in memory scores of Brahmi group and Mandookaparni group. Pitta Pradhan Prakriti showed highly significant improvement in 9 memory subsets and total memory score in Mandookaparni group as compared to Brahmi group. Vata Pradhan Prakriti showed a highly significant improvement in remote memory in the Mandookaparni group and a significant improvement in the retention of dissimilar pairs in Brahmi group. However, the differences observed in Kapha Pradhan Prakriti were statistically insignificant in all memory subsets.Table 2Inter Group Prakriti-wise differential effect on memory & IQ.Table 2TestVata Pradhana (n = 60)Pitta Pradhana (n = 60)Kapha Pradhana (n = 60)Z valueP-valueZ valueP-valueZ valueP-valueRemote memory−3.0<0.01b−2.7<0.01b−0.70.5Recent memory−1.60.1−1.70.08−1.40.2Mental balance−1.80.06−2.9<0.01b−1.90.05Attention & concentration−0.80.4−3.7<0.01b−0.060.9Delayed recall−0.90.4−4.3<0.01b−0.031.0Immediate recall−0.50.6−3.6<0.01b−1.00.3Similar pairs−1.40.2−2.9<0.01b−0.10.9Dissimilar pairs−2.30.02a−3.6<0.01b−0.021.0Visual retention−1.20.2−2.9<0.01b−1.90.05Visual recognition−0.50.6−3.8<0.01b−0.40.6Total memory score−1.70.08−5.8<0.01b−1.60.1IQ−1.60.1−3.8<0.01b−4.2<0.01b#Z test value and p-value using Mann-Whitney U test.aSignificant.bHighly significant.
+
+Inter Group Prakriti-wise differential effect on memory & IQ.
+
+#Z test value and p-value using Mann-Whitney U test.
+
+Significant.
+
+Highly significant.
+
+There were highly significant differences observed in the improvement of IQ in Pitta Pradhan Prakriti and Kapha Pradhan Prakriti with the former showing better improvement in the Mandookaparni group and later in Brahmi group.
+
+
+## Safety assessment
+
+
+No participant reported any minor or major adverse event during the study.
+
+
+## Discussion
+
+
+The Medhya Rasayana (intellect enhancer) has been used for ages in India [37]. Recently, a lot of interest has been shown by researchers in their role in disorders of memory and cognition. The pediatric population also is being researched in the areas of learning, memory, and related disorders [38,39]. However, an individualistic approach to the use of these herbs has not been undertaken. Our study is the first reported study to have carried out a Prakriti-based effect evaluation of two nootropic individual herbs – Brahmi and Mandookaparni. These drugs have been described simultaneously in most of the Ayurvedic classic texts including various Samhita and Nighantu. There has been a lot of confusion about their identity and thus individualistic use [40]. This study was thus planned to have a clear vision for their use.
+
+The results of the study showed a statistically highly significant improvement of various memory domains (9 subsets of PGI-CMS viz. RM, RC, MB, DR, IR, SP, DP, VT, VR) with the Brahmi group. Previous studies also have proved the efficacy of Brahmi in improving working memory [41], spatial working memory [30], digit span backward [10], verbal working memory, logical memory [42,43], and delayed recall [11,12]. The only domain with insignificant improvement in the Brahmi group was attention and concentration. Previous studies also have reported the same results for attention with Bacopa [11,13,30]. However, Brahmi has been shown to improve working memory assessed on digit span backward [42]. In our study, the attention and concentration subset was assessed through digit span forward and digit span backward, and the total score was analysed. The large test variability may have resulted in these results.
+
+Mandookaparni showed highly significant improvement in 8 subsets namely RM, MB, DR, IR, SP, DP, VT, and VR, significant improvement in attention and concentration, and insignificant improvement in recent memory. The results contrast with the only available published double-blind study on Mandookaparni as a single drug used in healthy school children, which has shown an insignificant effect on mental abilities (mainly IQ) [44]. However, Dev et al. [45] in their study on healthy middle-aged adults, have demonstrated significant cognitive improvement with Mandookaparni. They also reported gender differences in cognitive improvement with males showing significant improvement in speed processing, long-term, and visual-spatial domains and females showing significant results in executive functioning, delayed recall, long-term, short-term, and working memory. Additionally, some other studies in mentally retarded children [46], age-related cognitive impairment [47], and vascular cognitive impairment [48] have shown significant improvement with Mandookaparni in cognitive functions.
+
+Insignificant intergroup difference in 8 subsets of memory and IQ indicates equivalent efficacy of these two nootropic herbs in different domains of memory. The same has been described for them in Ayurvedic classical texts [20,21]. However, statistically better improvement in remote memory and delayed recall with the Mandookaparni indicates its supremacy in the domains of episodic long-term memory. The performance of long-term memory depends on the functions of Dhriti (retention) and Smriti (recall). Mandookaparni with its Sheeta virya (cold potency), Madhura vipaka (sweet bio-transformed rasa), and Picchila guna (Slimy property) promotes Kapha which is responsible for Dhriti (retaining power), and Smriti (recollection) [49] and thus improves retention and recollection. Dhriti is concerned with consolidation and long-term storage of information and Smriti results in their efficient retrieval. Brahmi has shown comparatively better improvement in recent memory and mental balance. Both these subsets assessed Dhi or perception and processing speed which is a function of both Prana Vayu (a subtype of Vata) and Sadhaka Pitta (a subtype of Pitta). Brahmi with its Ushana Virya channelizes Vata while processing speed may be attributed to its Sara (mobility) property.
+
+The study was conducted with an individualistic approach that identified significant intergroup differences in improvement among various Prakriti groups. Pitta Prakriti participants showed the best improvement in all 10 subsets and total memory score in the Mandookaparni group however, in the Brahmi group, the effect on Pitta Prakriti was the least. In the Brahmi group, Kapha Prakriti showed the best improvement in 7 subsets and Vata Prakriti in 3 subsets. Based on Prakriti-wise analysis, statistically highly significant differences were noted in the improvement of total memory scores among different Prakriti in both groups. Mandookaparni showed the best improvement in Pitta followed by Vata and least in Kapha Prakriti. Brahmi showed the best improvement in Vata followed by Kapha and least in Pitta Prakriti. Mandookaparni being tikta rasa (bitter taste), Madhura vipaka (sweet bio-transformed rasa), and sheeta virya (cold potency); is good in pacifying Pitta [50]. Pitta persons are better in Dhi (perception) but their Dhriti (retention) is moderate and thus the drugs that promote Dhriti are beneficial to them. Thus, Mandookaparni being Pitta pacifying and promoting Dhriti, improved memory scores in Pitta Prakriti persons. Pitta being ushna (hot), Tikshna (sharp) and Pitta dominant Prakriti persons are more aggressive. This may result in relatively poorer improvement with ushna virya (hot potency) Brahmi [51].
+
+The intergroup difference among responses of both these drugs in various prakriti showed statistically significant or highly significant differences in 2 subsets in Vata, 9 subsets in Pitta, and none of the subsets in Kapha Prakriti. In the Vata Prakriti person, the remote memory subset showed statistically highly significant improvement in Mandookaparni compared to the Brahmi group while retention of dissimilar pairs showed significant improvement in the Brahmi group compared to Mandookaparni group. In Pitta Prakriti, all the subsets of memory except recent memory showed highly significant differences between the two groups. In all these subsets, the Mandookaparni group showed better improvement compared to the Brahmi group. In Kapha Prakriti, only IQ showed highly significant improvement in the Brahmi group compared to the Mandookaparni group.
+
+The inter-Prakriti differences noted may have multifactorial mechanisms. Firstly, they may be due to individualistic differences in the acquisition, storage, and usage of various memory domains in learning and behavior [52,53]. Also, every person has his unique characteristics of memory and it is dependent on genetic as well as environmental factors. Secondly, differences in response to medicine are based on the physiological, biochemical, and psychological variations among individuals based on their genetic makeup and epigenetic factors [54,55]. The differential effects of Brahmi and Mandookaparni may mainly be due to their differences in properties and virya (potency) resulting in differing effects on various dosha.
+
+Several studies have identified gene polymorphism associated with episodic memory in humans [[56], [57], [58]]. Pitta Prakriti people are better at mental processing as Medha is described as the physiological function of Pitta. However, these people do not have best of the remote (episodic) memory. Thus, Mandookaparni does best in remote memory, and delayed recall also does best among Pitta Prakriti participants. This may be due to its anxiolytic [59], anti-stress, and calming effects owing to its chemical composition [60]. Moreover, Mandookaparni by its properties like sheeta virya (cold potency) and Madhura vipaka (sweet bio-transformed rasa) promotes healthy Dhatus (tissues), Kapha, and sound sleep. Kapha is responsible for Dhriti (retaining power). Dhriti is concerned with consolidation and long-term storage of information. Kapha also promotes sleep which is well known for its effect on consolidation. Thus, Mandookaparni having several pentacyclic triterpenoids, is better at improving remote memory and delayed recall. Vata Prakriti people are good graspers but are not equipped to retain it for a longer duration (shruta grahi, alpa smriti) [61]. Diets, drugs, and lifestyles that pacify Vata and promote sleep will have a good effect on their retention power. Thus, Mandookaparni promotes remote memory in Vata Prakriti persons due to its anxiolytic and calming properties of aciaticoside and centellaoside. Brahmi is a good Vata pacifier by its Ushna virya (hot potency), and enhances working memory. Thus, it is good for improving various memory scores in Vata Prakriti. Kapha Prakriti people are poor graspers but have very good long-term memory (Chira Grahi smritimana). Thus, Brahmi which does good in working memory (mental balance, digit backward, immediate recall) and new paired learning domains (dissimilar pair); is good in improving memory in Kapha Prakriti. Brahmi being ushna virya (hot potency) and laghu (lightness), sara (mobility) attires is good in improving the sluggishness in Kapha Prakriti persons.
+
+The mechanisms of action for the cognitive functions of C. asiatica are multifactorial and include –a)Modulation of 5-HT receptors, dopamine, and norepinephrine systems leading to improved learning and memory [62].b)Improvement in dendritic arborizations in CA3 neurons in the hippocampus responsible for new learning and memory formation [63].c)Increase in dendritic length and branching in amygdaloid neurons [64]. The amygdala is concerned with arousal and emotion and is related to the formation of long-lasting memory [65].d)The polyphenols and flavonoids present in C. asiatica are responsible for its potent antioxidant and free radical scavenging activity [66].e)C. asiatica is proven to inhibit phospholipase A2 enzymes which play an important role in Aβ-induced neurotoxicity [67].f)Preserving mitochondrial functions and upregulating Sirt1 and PGC-1 genes which are responsible for mitochondrial biogenesis and functions [68].g)Reduction in anxiety and stress, two main factors that can impair the process of memory formation in human beings [69]. The anxiolytic action is thought to be through the inhibition of GABA receptors and reduction in corticosterone levels [59].
+
+Modulation of 5-HT receptors, dopamine, and norepinephrine systems leading to improved learning and memory [62].
+
+Improvement in dendritic arborizations in CA3 neurons in the hippocampus responsible for new learning and memory formation [63].
+
+Increase in dendritic length and branching in amygdaloid neurons [64]. The amygdala is concerned with arousal and emotion and is related to the formation of long-lasting memory [65].
+
+The polyphenols and flavonoids present in C. asiatica are responsible for its potent antioxidant and free radical scavenging activity [66].
+
+C. asiatica is proven to inhibit phospholipase A2 enzymes which play an important role in Aβ-induced neurotoxicity [67].
+
+Preserving mitochondrial functions and upregulating Sirt1 and PGC-1 genes which are responsible for mitochondrial biogenesis and functions [68].
+
+Reduction in anxiety and stress, two main factors that can impair the process of memory formation in human beings [69]. The anxiolytic action is thought to be through the inhibition of GABA receptors and reduction in corticosterone levels [59].
+
+To summarize, both the nootropic herbs Brahmi and Mandookaparni have significant effects on memory, and their efficacy varies according to the human constitution and domain of memory.
+
+The limitation of the study is that it is a single-centre study only on boys of the dominant Prakriti type. A multicentric study in both genders with varied study populations and Dwandaja Prakriti types may lead to more conclusive results. Future studies may be conducted to evaluate the mechanism of action involved in differential effects in various physical constitutions. Also, future studies may be planned to evaluate any synergetic actions of both these herbs on memory and other cognitive functions.
+
+
+## Conclusion
+
+
+A 90-day administration of Brahmi and Mandookaparni has significant improvement in most of the memory domains. Mandookaparni has equivalent efficacy to Brahmi in enhancing memory. Mandookaparni is better at improving Dhriti and Smriti components while Brahmi improves Dhi and Smriti components better. Mandookaparni is better in improving the memory of Pitta Prakriti while Brahmi is more effective in Kapha and Vata Prakriti. Both drugs are safe to use in the pediatric population. However, future studies with varied population strata and mechanistic evaluation protocols are needed to validate the findings from this study.
+
+
+## Ethical & data statement
+
+
+The study was approved by the Institutional Ethics Committee (Reference No. MGACHRC/IEC/October-2020/141. Approval Date 10-10-2020). Signed informed consent was taken from the parents of all the participants. The data was coded to maintain the confidentiality of the study subjects.
+
+CTRI number- CTRI/2021/02/031368
+
+
+## Funding sources
+
+
+No financial support was received from any public, commercial, or non-profit organization.
+
+
+## Author contributions
+
+
+JV- Conceptualization, Methodology, Formal analysis, Investigation, Resources, Data Curation, Writing original draft, Writing - Review and editing, Visualization, Supervision, Project administration.
+
+RR- Conceptualization, Methodology, Resources, Data Curation, Writing - Review and editing, Visualization, Project Supervision.
+
+A- Conceptualization, Formal analysis, Data Curation, Writing original draft, Writing - Review and editing, Visualization.
+
+BR- Resources, Writing - Review and editing, Visualization, Project supervision.
+
+VBP- Formal analysis, Data curation, Data Review and editing, Project administration.
+
+
+## Declaration of generative AI in scientific writing
+
+
+The authors declare that we have not taken the help of AI during the writing of this manuscript.
+
+
+## Conflict of interest
+
+
+The authors declare that they have no conflict of interest for the submitted manuscript.

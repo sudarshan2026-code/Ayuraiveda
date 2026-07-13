@@ -1,0 +1,299 @@
+# Conceptualization and design of an Ayurveda framework for the diagnosis of Duchenne Muscular Dystrophy: insights from a prospective cohort study
+
+## Abstract
+
+AbstractBackgroundDuchenne Muscular Dystrophy (DMD), an X-linked neuromuscular disorder is caused by dystrophin gene mutations. Ayurveda perceives DMD under adibalapravrittaroga (hereditary anomalies) and janmabalapravrttaroga (congenital anomalies) caused by bijabhagavayava dosha (defects in the subpart of seed) leading to innate vata imbalance progressively damaging the mamsadhatu (muscle tissue), medadhatu (fatty tissue), and asthimajjadhatu (bone-bone marrow), resulting in muscle atrophy and mobility loss.ObjectiveThe framework aims to establish a diagnostic protocol, elucidate the pathogenesis of DMD based on empirical evidence, and differentiate the stages of the disease using Ayurvedic concepts such as dosha, dhatu, mala, agni, and ojas.MethodsThe framework is based on cross-sectional data prior to intervention in a three-year prospective observational cohort study involving 67 participants with molecularly confirmed DMD not receiving steroid therapy for the past six months and consented. Participants underwent multidisciplinary clinical assessments, including Ayurvedic evaluations of Prakrti (individual constitutional typology), Sara (predominance of fundamental structural components), Doshavrddhi-laksana (indicators of Dosha aggravation), and Rogavastha (disease staging).ResultsTridosha prakrti and Mamsa-asthisarah were identified as the most prevalent classes, respectively. The kapha class demonstrated the longest duration of ambulation loss at 3.1 years. Ambulant individuals comprised 47 % in the asthisara class and 27 % in the Mamsa-asthisarah class. Vata dosha exhibited the highest deviation among the doshavrddhi-laksana. Under rogavastha, significant differences between ambulation stages were observed in Sarvagatavata, Asthimajjagatavata, and Ojovisramsa.ConclusionDMD follows a vata-vyadhi trajectory, with dhatu-specific involvement shaping functional decline. Early mamsavrtavata and persistent medavrtavata emphasize the need for tissue-targeted interventions, while progressive sarvagatavata and asthimajjagatavata drive neuromuscular and skeletal compromise. Advanced ojas disturbances contribute to systemic and cardiopulmonary decompensation. These findings support Ayurvedic strategies focused on dhatu nourishment and ojas restoration and provide a framework for further evidence-based studies.Trial registrationCTRI Reg No: CTRI/2020/07/026906.Keywords: Neuromuscular disorders, Multidisciplinary care, Vatavikara, Sarvagatavata, Asthimajjagatavata, Ojovisramsa
+
+## Abstract
+
+Highlights•Study presents an evidence based Ayurvedic framework for DMD using Dosha,
+Dhatu, Mala, Agni, Ojas and Marmasthana.•No single or dual dosa prakriti linked to DMD risk; Kapha
+prakriti and Asthi sara related to delayed ambulation loss.•Vata showed greatest pathology; Sarvagata vata, Asthimajjagata vata and Ojovisramsa tied to ambulation stages.•Findings indicate Vata vikara drives DMD progression by weakening Dhatu agni and Ojas, suggesting focus on dhatu stability and ojas support.
+
+
+## Introduction
+
+
+Duchenne muscular dystrophy is a neuromuscular disorder which is inherited as an X-linked recessive trait and is caused by mutations in the DMD gene on the X chromosome. These genetic changes lead to deficiency or complete loss of dystrophin affecting the integrity of the muscle fibers. DMD is characterised by muscle weakness, which usually starts in childhood between the ages of 4 and 7 years, and the child becomes wheelchair bound by the age of 12 years. Premature mortality is common and is caused due to respiratory or cardiac complications in the second decade of life. DMD is genetically heterogeneous and the mutations mainly include deletions, duplications, point mutations or small insertions/deletions [1,2].
+
+DMD is usually managed by conventional treatment measures such as glucocorticoids; prednisone and deflazacort to help reduce inflammation and thus the progression of the disease. The use of deflazacort has been found to have some benefits over prednisone including delayed loss of ambulation. Although these pharmacological treatments can delay the individuals’ loss of the ability to walk within the following 14 years, they also come with many side effects [3]. Therefore, alternative strategies must be identified to improve quality of life by slowing disease progression while minimizing intervention-related adverse effects [4].
+
+Ayurveda, a holistic medical system, focuses on maintaining homeostasis through the balance of dosha (regulatory functional factors of the body formed by the synchronized interplay between the five basic elements within any living system), dhatu (fundamental structural component), mala (excretory products), agni (Digestive, metabolic factors), and ojas (essence of seven fundamental structural components: vital for life, providing strength and resistance to disease and supporting mental function) [5]. The tridosha—vata, pitta, and kapha—regulate physiological processes, and their dysregulation is linked to pathogenesis [6]. Disease etiology is classified as nija (internal) or aganthu (external) [7]. While the disorder DMD lacks a direct analogue in classical Ayurvedic literature, understanding its pathology within the context of Ayurvedic principles necessitates an integrative, evidence-based approach to align traditional concepts with modern clinical frameworks.
+
+DMD can be attempted to be conceptualized in Ayurveda under the adibalapravrittaroga (hereditary anomalies) and janmabalapravrttarogah (congenital anomalies), primarily caused by bijabhagavayava dosha (defects in the subpart of seed) which leads to vata prakopa (aggravation of the vata dosha) [8]. This altered vata subsequently affects the mamsadhatu (muscle tissue) and medadhatu (fatty tissue), resulting in mamsaksaya (diminution of muscle) which then further impacts the asthidhatu (bone) and majjadhatu (bone marrow), leading to mamsa balaksaya (loss of muscle strength) and impaired ambulation [9]. This condition is traditionally considered incurable due to its deep-seated etiology rooted in the individual's genetic constitution [10].
+
+Existing literature suggests that bijabhagavayava dosha impairs the circulation of rasadhatu (nutritive fluid) within the mother, disrupting prithvi bhitagni (transforming factors acting at the level of earth) and mamsadhatvagnih (metabolic factors located in the muscle). Such disruptions result in imbalances in dhatu metabolism, notably affecting mamsadhatu. This imbalance may lead to vitiation of vata through srotorodha (obstructive pathology) or dhatuksaya (diminution of structural components), while a reduction in kapha contributes to decreased muscle stability, weakness, and loss of tissue integrity [[10], [11], [12], [13]]. Some sources attribute DMD to etiological factors such as atmakarmaja or papma (A disease-state originating from the individual's physical or mental transgressions or demerits in present or past life), leading to mamsaksaya, srotorodha, and ama (state of incomplete digestion, transformation or metabolism) resulting in medovrddhi (morbid increase of fat) [13]. Additionally, literature links DMD to Paurashadini jataharini, a condition described in the Kasyapa Samhita, characterized by early mortality before age 16 [14].
+
+Despite the availability of modern biomedical tools for evaluating and staging Duchenne Muscular Dystrophy, there is a dearth of equivalent methodologies from an Ayurvedic perspective. In response to this gap, a prospective observational cohort study was undertaken as part of a public health initiative. This study represents an initial effort to conceptualize and design an integrated, multidisciplinary framework for evaluating and diagnosing DMD. The framework aims to establish a diagnostic protocol, elucidate the pathogenesis of DMD based on empirical evidence, and differentiate the stages of the disease using Ayurvedic concepts such as dosha, dhatu, mala, agni, and ojas.
+
+
+## Materials and methods
+
+
+
+## Study design
+
+
+This study conceptualizes and designs an integrated framework for evaluating and diagnosing Duchenne Muscular Dystrophy (DMD) through a multidisciplinary approach. The framework is based on an cross-sectional data obtained from the subjects before ayurvedic intervention from a three-year prospective observational cohort study, collaboratively conducted by MDCRC, Coimbatore and AVPRF, Coimbatore Sponsored by the Ministry of AYUSH under the PHI initiative (Z-28014/29/2017-PHI).
+
+
+## Participants
+
+
+A total of 75 participants were enrolled, with the sample size determined on an exploratory basis. Recruitment followed molecular confirmation of suspected Duchenne Muscular Dystrophy (DMD) cases using multiplex PCR (mPCR), multiplex ligation-dependent probe amplification (MLPA), and next-generation sequencing (NGS), in accordance with the protocol described by Kumar et al. [15].
+
+Inclusion criteria comprised molecular confirmation of DMD, willingness to receive Ayurvedic treatment, absence of prior steroid therapy or discontinuation of steroids for at least six months, preference for ambulatory status, and the ability to comply with functional testing procedures. Written informed consent was obtained from parents or legal guardians, and assent was obtained from participants as appropriate. The study was registered with the Clinical Trial Registry of India (CTRI Reg. No.: CTRI/2020/07/026906) and approved by the Institutional Ethics Committees of the collaborating institutions (IEC-MDCRC Approval No.: MDCRC/RES-AYUR-DMD/03/IEC-020/022019; IEC-AVPRF Approval No.: 01/2019). The study was conducted from June 2020 to September 2023.
+
+
+## Ayurveda diagnostic framework
+
+
+In the development of this Ayurvedic diagnostic protocol, we utilized a series of tools incorporating a multidimensional approach aligned with Ayurveda-specific concepts of etiology and pathogenesis. The assessment instruments were administered by registered Ayurveda physicians and were integral to the comprehensive clinical evaluation of participants. The tools encompassed Prakrti (individual constitutional typology) [Charaka Samhitha Vimana 8/95–100], Sara (predominance of fundamental structural components) [Charaka Samhitha Vimana 8/102–110], Doshavrddhi-laksana (indicators of Dosha aggravation) [Ashtanga Hridaya Sutra 9/5–7], and Rogavastha (disease staging) [Charaka Samhitha Chikitsa 6/64–67]. The reliability and internal consistency of these instruments were examined within the DMD cohort (Table 1). Detailed operational definitions and measurement specifications of each tool are described below.
+
+Reliability analysis.
+
+NA – Not applicable.
+
+∗p value significant at 95 % CI.
+
+Reliability co-efficient computed using Cronbach's alpha.
+
+Reliability co-efficient computed two-way random effects, consistency model while accounting for multidimensionality.
+
+Prakrti Assessment:
+Prakrti refers to the inherent constitution of an individual, determined by the predominance of the three doshas. Prakrti assessment provides insight into an individual's susceptibility to diseases and aids in prognosis. In this study, we employed the Prakrti Health Assessment Questionnaire developed by the CSIR-Ayurgenomics Unit-TRISUTRA at CSIR-IGIB, New Delhi [16]. While this questionnaire has demonstrated reliability in healthy populations, we reassessed its internal consistency within the DMD cohort. The results confirmed acceptable internal consistency, supporting its use in this specific population (Refer Supplementary Form 1).
+
+Scoring. Attributes corresponding to Vata, Pitta, and Kapha were scored individually, with each attribute assessed for its contribution to Prakriti classification. Attribute-wise response scores were analysed to determine differences among the three dosha types. As the data were non-normally distributed, the Kruskal–Wallis test was applied to compare ranked responses. When no significant differences were observed among the three doshas, the Prakriti was classified as Tridosha. When significant differences were detected, Bonferroni-corrected pairwise comparisons were performed. Based on these results and the relative average ranks, final classification was assigned as single-dosha (one predominant dosha with a secondary influence) or Dwidosha (two doshas showing comparable prominence).
+
+Sara Assessment:
+Sara represents the essence of a dhatu and is critical for determining bala (strength) and sthira (stability). It serves as an important indicator of the properties and functional status of the dhatus. A Sara assessment questionnaire was specifically developed for this study (Supplementary Form 2) to exploratorily understand these characteristics. The reliability of this questionnaire, measured through internal consistency, was confirmed to be acceptable, validating its utility in assessing core characteristics within the DMD cohort.
+
+Scoring. Attributes corresponding to Mamsa, Asthi, and Majja Sara were scored individually, with each attribute assessed for its contribution to Sara classification. Attribute-wise response scores were analysed to determine differences among the three Sara types. As the data were non-normally distributed, the Kruskal–Wallis test was applied to compare ranked responses. When significant differences were detected, Bonferroni-corrected pairwise comparisons were performed. Based on these results and the relative average ranks, final classification was assigned as Mamsa Sara, Asthi Sara, or Mamsa–asthi Sara where both types showed comparable prominence.
+
+Doshavrddhi-laksana Assessment:
+Doshavrddhi-laksana refers to the quantitative increase of dosha, leading to disease manifestation. A Doshavrddhi-laksana assessment questionnaire to assess the vrddhi of vata, pitta, and kapha was developed for this study (Supplementary form 3) and demonstrated moderate internal consistency, indicating a reasonable level of reliability for DMD. The kshaya of the doshas was not directly assessed, as according to classical literature [Ashtanga Hridaya], the vriddhi of one dosha inherently leads to the kshaya of another. Therefore, evaluating vriddhi alone was considered sufficient for assessment.
+
+Scoring. The questionnaire was scored using a combination of Boolean and fuzzy logic. Binary-response items were scored as either 0 or 1, while multiple-response items were assigned values reflecting the degree of membership within a range from 0 to 1. Domain scores were calculated by aggregating the scores of individual items within each domain. Dosha deviation from the ideal state was assessed, with zero deviation representing perfect balance. Increasing deviation indicated Vriddhi of the respective dosha, which corresponded to a decrease in quality of life.
+
+Rogavastha Assessment:
+Rogavastha pertains to the ayurveda based stages of disease progression or manifestation. A Rogavastha questionnaire assessing mamsavrtavata (vata occluded by muscle tissue), medavrtavata (vata occluded by fatty tissue), asthimajjagatavata (Aggravation of vata in bone and bone marrow), sarvagatavata (Aggravation of vata in the entire body), ojovisramsa (Dislodgement of ojas), ojovyapat (Derangement of ojas), and ojaksaya (Diminution of ojas) was developed for this study to assess disease stages. This tool displayed moderate to good internal consistency, demonstrating it to be a generally reliable instrument for staging DMD (Refer Supplementary Form 4).
+
+Scoring. The questionnaire was scored using an integrated approach combining Boolean and fuzzy logic. Binary-response items were scored as 0 or 1, whereas multiple-response items were assigned fuzzy membership values ranging from 0 to 1, with reverse scoring applied such that higher values reflected greater deterioration. Item-level scores were subsequently aggregated to derive domain-specific scores across all seven domains, providing a standardized and quantitative assessment of deterioration within each domain.
+
+
+## Assessments from a modern medicine perspective
+
+
+A Multi-Disciplinary clinical assessment under various specialities was provided to the participants as per international guidelines [[17], [18], [19]]. During the clinical care session, demographic details, signs and symptoms of the disease from each patient were collected (Refer Supplementary Tables 2 and 3)
+
+Staging as per modern perspective: The participants were classified as early ambulant, late ambulant, early non ambulant and late non-ambulant based on their assessment of ambulation status.
+
+Carrier analysis was performed based on the child's specific mutation, utilizing either MLPA (Multiplex Ligation-dependent Probe Amplification) or Sanger sequencing [15].
+
+
+## Statistical analysis
+
+
+The analysis utilized R (Version 4.3.2) or SAS (Version 9.4). Continuous variables were presented either as mean/standard deviation or median/interquartile range (IQR), depending on whether the variable is normally distributed or not. Categorical variables were presented as frequency (in percentage) with a 95 % confidence interval (CI). A two-step clustering analysis was performed, using both categorical and continuous variables, with group quality assessed via. the silhouette measure of cohesion and separation. Depending on normality and cluster size, either One-way ANOVA or the Kruskal-Wallis test at 95 % CI, was used for comparing group means. Associations between variables and dosha-based symptoms by ambulation stage were tested using Pearson χ2 test or Fisher's Exact test. Sensitivity analysis using Ayurvedic variables confirmed the robustness of the clustering results.
+
+
+## Results
+
+
+A total of 75 boys aged 5–17 years with a diagnosis of Duchenne muscular dystrophy (DMD) were initially screened for study inclusion, of whom 8 were subsequently excluded, yielding a final cohort of 67 participants (see Fig. 1). In the cohort, 46.3 % of participants were classified as early ambulant, 16.4 % as late ambulant, 28.3 % as early non-ambulant, and 8.9 % as late non-ambulant. Genetic analysis revealed that deletions were the most prevalent type of mutation, followed by point mutations. Among the mothers, 95.6 % underwent carrier testing, with 43.9 % testing positive and 56.1 % testing negative for carrier status.
+
+Participant flow.
+
+Prakrti assessment:
+Tridosha prakrti was most common in all the groups followed by pitta kapha for the Early Ambulant group, dvidosha kapha pitta in the late ambulant and kapha pitta in the non-ambulant group (Refer Table 2.1, Table 2.2). The tridosha group exhibited 63.4 % deletion mutations, 4.9 % duplication mutations, and 31.7 % point mutations. In the dvidosha kapha pitta group, 66.7 % had deletions and 33.3 % had point mutations. The dvidosha pitta kapha and kapha pitta groups both showed 85.7 % deletions and 14.3 % point mutations. The pitta kapha group had 62.5 % deletions, 12.5 % duplications, and 25 % point mutations. In the pitta vata group, only point mutations were observed (Refer Supplementary Table 1).
+
+Details of Prakriti, Sara and mutation pattern.
+
+Time to loss of ambulation in relation to Prakrti and Sara.
+
+Sara assessment:
+Mamsa-asthisara was the predominant type across all groups. Specifically, 37 % of individuals in the Early Ambulant group were classified as asthisara, 42 % in the Late Ambulant group, and 12 % in the Non-Ambulant group. (Refer Table 2.2).
+
+Time to loss of ambulation in relation to Prakrti and Sara: In the ambulant cohort, the average time to loss of ambulation is 2.4 years. Descriptive analysis across prakrti classes indicates that kapha class has the longest duration at 3.1 years. Similarly, across sarah classes, Mamsa-asthisara and asthisara classes exhibit comparable durations at 2.3 years (Refer Table 2.2). However, the proportion of ambulant individuals is 47 % in the asthisara class and 27 % in the Mamsa-asthisarah class.
+
+Cluster Analysis: To explore natural groupings within the cohort, a two-step cluster analysis based on creatine phosphokinase (CPK) levels identified three distinct clusters: early ambulant (Group 1), late ambulant (Group 2), and non-ambulant (Group 3), with a silhouette measure of 0.7, indicating good cluster quality (see Table 3). Demographic and physical characteristics such as age, height, and weight differed significantly between clusters. Vital signs were consistent across all groups (see Supplementary Table 2).
+
+Cluster analysis.
+
+Based on a two-step clustering analysis using creatinine phosphokinase (CPK) levels and stages of ambulation, three clusters were identified. CPK was chosen for its diagnostic role in DMD. The analysis showed good cluster quality with a silhouette measure of 0.7.
+
+Clinical characteristics varied significantly across the clusters. The most commonly reported initial symptoms of DMD included frequent falls, Gower's sign, and difficulty climbing stairs. Calf muscle hypertrophy was observed in all clusters, with greater tendo Achilles tightness noted in the non-ambulant group (see Supplementary Table 3).
+
+Doshavrddhi-laksana assessment:The analysis identified significant dosha deviations, with vata scores showing the highest deviation. Notable differences were observed among groups, with the early ambulant group showing less deviation from the ideal compared to the non-ambulant group. No significant differences were found in pitta and kapha scores between groups (See Table 4, Supplementary Table 4).
+
+Rogavastha and Dosavrddhi-laksana: DMD from an Ayurveda perspective.
+
+p value significant between the groups at 95 % confidence interval by Kruskal Wallis test.
+
+Rogavastha assessment: Statistically significant disparities were observed among the groups concerning sarvagatavata, asthimajjagatavata, and ojovisramsa, with notably elevated values evident in the non-ambulant group. Conversely, no statistically significant differences were discerned between groups in relation to mamsavrtavata, medavrtavata, ojovyapat, and ojaksaya (See Table 4, Supplementary Table 5).
+
+To further delineate disease evolution across rogavastha in relation to age, correlation with clinical progression in Duchenne Muscular Dystrophy (DMD) revealed that sarvagatavata, asthimajjagatavata, ojovyapat and ojaksaya increased progressively with advancing age, paralleling loss of ambulation and cardiopulmonary decline. Conversely, mamsavrtavata and medasavrtavata laksanas demonstrated only mild variation across age groups, reflecting limited association with age-dependent functional deterioration and suggesting deeper dhatu involvement with advancing disease (See Table 5).
+
+Correlation of Rogavastha with age-dependent clinical progression in Duchenne muscular dystrophy (DMD).
+
+∗p value indicates a statistically significant difference in the expression of laksanas across age groups at a 95 % confidence interval, as determined by the Kruskal–Wallis test.
+
+Sensitivity analysis: In the sensitivity analysis, clustering patterns from asthimajjagatavata, chosen for its differential diagnosis, closely mirrored those from Creatinine Phosphokinase (CPK). The three clusters identified, with a silhouette measure of 0.7, indicating good cluster quality, which appeared to correspond to the early ambulant, late ambulant, and non-ambulant phases. These clusters were similar to those based on CPK, and the results aligned with the initial analysis (See Supplementary Table 6).
+
+
+## Discussion
+
+
+This study represents the first attempt to conceptualize and develop an integrated framework from an ayurveda perspective for the evaluation and diagnosis of Duchenne Muscular Dystrophy (DMD) through a multidisciplinary, evidence-based approach, utilizing unpublished data from the baseline data of our prospective cohort study. A key aspect of this framework is the understanding of the clinical stages of DMD to the Ayurvedic concept of vatavikara (vata disorder) for interpreting the disease's progression, especially in relation to genetic predispositions and the role of dosha imbalances.
+
+The doshas are considered the primary cause of all diseases. However, factors such as asatmyendriyarthasamyogah (improper engagement of the senses), kalah (time), and prajnaparadhah (behavior based on erroneous judgment) are recognized as fundamental contributors to disease development [20]. Each of these causes can manifest in three distinct states: hinayoga (Downregulated expression), mithyayoga (Mutant expression), and atiyoga (Upregulated expression) [Charaka Samhitha Sutra 8/102–110]. These imbalances in the interaction of the body with external and internal factors contribute to the pathogenesis of diseases.
+
+Adibalapravrittaroga refers to genetically predisposed disorders that arise from defects in the reproductive elements, specifically the sukra (sperm) or sonita (ovum). These conditions originate from abnormalities in the germ cells, known as bija or bijabhagavayava, which can be inherited from either parent. The disorders are further classified as pitrjaroga (hereditary diseases of paternal origin) or matrjaroga (hereditary diseases of maternal origin), based on the genetic abnormalities in the sonita or sukra which might be transmitted to the offspring.
+
+As per modern medicine or genetics, DMD is an X linked recessive disorder, where the mother is generally the carrier of the disease. susrutha supports this association by explaining that pesi (muscle) are derived from the maternal mamsadhatu and are influenced by vata dosha during organogenesis [21]. These tissues become susceptible to mithyayoga of vata dosha inherently which drives the progression of disorders like DMD. The resulting molecular, physiological, and anatomical changes in mamsadhatu are driven by kalah in conjunction with dysfunctional vata activity which disturbs the balance of preceding and succeeding dhatu by altering dhatvagni (metabolic factors located in structural components) and bhutagni (transforming factors acting at the level of the basic elements) [22]. The disruption of metabolic processes leads to kleda (pro-inflammatory pathological conditions and syndromes) within the dhatu, which progresses to sopha (Edema), koṭhah (tissue necrosis), and ultimately sosa (wasting or progressive tissue loss). This chain of events impairs the expression of sara and eventually leads to different levels of Ojas pathology which adversely affects the individual's life expectancy.
+
+In DMD, approximately two-thirds of affected males typically inherit the mutation from carrier mothers. Our study observed a carrier frequency of 43.9 %, notably lower than the commonly reported range of 57.6 %–66.6 % in prior research [23]. This discrepancy warrants further investigation through larger studies with broader, more diverse cohorts to better understand the reduced incidence of carrier frequency. A negative carrier status may be explained by “spontaneous” or “de novo” mutations, where the mother of an affected child does not carry the mutation [24]. Additionally, some families may exhibit multiple generations predominantly or exclusively consisting of female offspring, potentially lacking affected males and thereby remaining unaware of carrier status across generations. Germline mosaicism also presents a plausible explanation for negative maternal carrier status in such cases [[25], [26], [27]]. From an ayurveda perspective, a potential explanation for negative carrier status may be linked to matrja ahara-viharah (maternal diet and lifestyle) during pregnancy, where mithya-ahara (inappropriate diet) and mithya-vihara (improper lifestyle) could adversely affect fetal development, contributing to congenital anomalies [Sushrutha Samhitha Sharira 3/7]. Another consideration is the role of karma, particularly the concept of purvajanmapapa (unresolved actions from past lives), which is believed to affect the manifestation of congenital disorders. Additionally, Ayurvedic literature identifies asadhyaroga (diseases that are incurable) such as Paurashadini jataharini or revati, as potential causative factors for conditions like DMD [14].
+
+The tridosha theory in Ayurveda outlines three fundamental bio-regulatory forces, or doshas, that regulate individual physiology. Kapha, one of these doshas, governs structural stability, cohesion, and tissue integrity, playing a vital role in the growth, maintenance, and storage of tissues [16][Sushruta Samhitha Nidana 6/13]. In our study, DMD patients who exhibited a Kapha-dominant prakrti exhibited a longer time to loss of ambulation. This observation corresponds with Kapha's association with the structural integrity of dhatu, suggesting that the inflammatory degradation of dhatu in DMD may progress more slowly in individuals with a Kapha-dominant constitution, potentially delaying disease progression.
+
+Asthi, inherited through pitrbhava (paternal inheritance), plays a key role in shaping physical and functional traits [Sushruta Samhitha Sharira 3/7]. Individuals with asthisara exhibit superior musculoskeletal endurance and greater physical strength. Their stable body structure reduces the impact of vata dosha on disease progression, particularly in vata-related disorders. Notably, asthisara patients in our study showed prolonged ambulatory ability compared to other sara types, suggesting that paternal inheritance may significantly influence disease progression in DMD. Further research into the role of paternal factors in DMD progression could yield valuable insights.
+
+In this study, CPK was instrumental in clustering, with its elevated levels, typically linked to muscle damage, serving as a reliable indicator for stratifying disease progression. This facilitated a deeper understanding of the underlying pathology and helped classify the severity of the disease across the subtypes. Existing literature has demonstrated a correlation between CPK levels and muscle damage in Duchenne and Becker muscular dystrophies, emphasizing the critical role of CPK in patient clustering to evaluate variability in the progression of muscle degeneration and their application in biostatistical models for predicting clinical outcomes and therapeutic responses [[28], [29], [30]].
+
+DMD can be understood within the framework of vatavikara (Vata disorder), as it manifests with symptoms commonly associated with vata-related conditions. These include samkoca (contractures), parvasthambhana (joint stiffness), and pralapa (tremors) in the panih (hands), prsṭha (back), and sirah (head). Additional symptoms such as supti (limb numbness), khañjah paṅguh kubjatva (hunchback posture), and aṅgasosah (limb atrophy) are also frequently observed in the clinical presentation of muscular dystrophy [Charaka Samhitha Chikitsa 28/20–21].
+
+In this study, mamsavrtavata, characterized by symptoms such as harsa (horripilations), pipilika-samcarana (sensation of ants crawling), and piḍaka (hard boils), was predominantly observed during the early ambulatory stage of DMD, likely resulting from avarana (Obstruction) pathology affecting the peshi in these early-stage ambulant children [Charaka Samhitha Chikitsa 28/64].
+
+Dysregulation of the medovahasrota (channel carrying fat) showing medasavrtavata is evident in the early ambulant, late ambulant, and early non-ambulant stages, as indicated by the presence of sopha, which exhibits phenotypic characteristics of sita (cold), mrdu (soft), kaṭhinah (hard), and snigdha (unctuous) qualities. This pathophysiology parallels findings in modern biomedicine, where pseudohypertrophy arises from the accumulation of fat and connective tissue that replaces necrotic muscle cells [31]. Furthermore, aversion to food suggests both medoavarana and a compromised state of agni, which may further contribute to the development of ama [Charaka Samhitha Chikitsa 28/65].
+
+Sarvagatavatah is characterized by symptoms such as stambhana (stiffness) and sandhi-sankoca (joint contraction), which manifest in all stages of DMD and intensify as the disease progresses, ultimately compromising the flexibility of the peshi [Sushruta Samhitha Nidana 1/30–31]. From a biomedical perspective, these symptoms result from intrinsic alterations in muscle tissue associated with dystrophic myopathies, leading to contractures due to muscle fiber loss, abnormal residual fibers, segmental necrosis, and increased adipose and connective tissue. The replacement of functional muscle fibers with collagen and fatty tissue, along with a chronically shortened resting muscle length, contributes to contractures and increased resistance to passive stretching [32,33].
+
+Our study indicates that asthimajjagatavata plays a significant role in the progression of DMD, particularly by delaying the onset of loss of ambulation. As the intensity of vata transitions from mamsadhatu to asthidhatu and majjadhatu, early symptoms, such as bone pain, become increasingly pronounced Notably, the loss of muscle strength—an essential characteristic of asthimajjagatavata—is critical for maintaining ambulation [34]. From a modern biomedical perspective, muscle dysfunction in the advanced stages of muscular dystrophy primarily results from the loss of functional myofibers, with compromised membrane integrity contributing to myofiber dysfunction through various mechanisms [35].
+
+In Ayurvedic pathology, the progression of DMD unfolds through a specific cascade, beginning with avarana of vata, advancing to dhatugati (tissue infiltration), then dhatu-paka (cell and tissue damage), and finally dhatuksaya [36]. This progression disrupts agni, resulting in ama and kaphaprakopa (aggravation of Kapha), which further weakens dhatu-sarata (tissue resilience).
+
+In this context, prana (vital life), primarily located in the sirah (head), extends through the gala (throat), mukhakuharam (oral cavity), indriyam (sensory organs), and ura (chest), supporting critical functions of buddhi (intellect), hrdya (cardiac region), indriyam, citta (memories), and respiratory processes like the nihsvasa (Inspiration) and ucchvasa (Expiration) [[37], [38], [39]]. In DMD pathology, vitiated Kapha initiates avarana in the phuphphusa (lungs) and hrdya, creating a recurring pattern that impairs prana and manifests as kaphavrtapranavata (pranavata occluded by kapha) symptoms [Ashtanga Hridaya Nidana 16/46]. These include durbala (weakness), sadana (lack of energy), tandra (drowsiness), vivarnata (deranged complexion), kapha nisṭhivika (excess phlegm), aruci (Anorexia), chardi (vomiting), and svasa (dyspnea). This cascade of obstruction and tissue depletion progressively advances to Ojas pathologies, progressing through stages of ojovisramsa, ojovyapat, and ultimately ojaksaya alongside weakening of the ojosthanam (Seat of Ojas) [Sushruta Samhitha Sutra 15/23]. In accordance with the defined pathology, our data indicate that ojovisramsa,—manifesting as stiffness, rigidity, and edema—is most prominent in the early and late ambulant stages and the early non-ambulant stage, with forehead discoloration observed primarily in the late non-ambulant stage. Ojovyapat, characterized by pain, appears notably in the early and late ambulant and early non-ambulant stages, with fatigue prevalent in the early ambulant stage. Ojaksaya, marked by reduced muscle mass, is most evident in the late non-ambulant stage.
+
+In the terminal stages, ojaksaya may critically impact phuphphusa and the hrdaya-marma (heart region within the chest), potentially resulting in fatality. This Ayurvedic perspective parallels modern biomedical insights into the factors contributing to mortality in DMD, where primary causes include respiratory failure from progressive muscle weakness, fibrosis, and scoliosis, along with cardiac complications such as dilated cardiomyopathy due to left ventricular fibrosis [40].
+
+This study is one of the first evidence-based observational research efforts aimed at developing a conceptual framework for understanding DMD through Ayurvedic principles. By creating Ayurvedic-based assessment tools, it bridges the gap between traditional Ayurvedic knowledge and modern clinical understanding of this rare disorder. The analysis of data from both Ayurvedic and modern medical perspectives has been conducted using robust statistical methodologies, adding scientific rigor to the findings.
+
+The study has certain limitations that must be acknowledged. A significant constraint is the lack of a healthy control group, which limits the ability to make comparative analyses with the DMD cohort. Additionally, the analysis does not encompass other forms of muscular dystrophies, potentially limiting the generalizability of the findings. The validation of the Ayurvedic questionnaires, through a novel approach, has not been fully established, particularly in terms of their applicability across different populations and subtypes of muscular dystrophies.
+
+Future research should aim to validate the developed Ayurvedic assessment tools and questionnaires in larger and more diverse populations to ensure their generalizability and reliability. Enhancing the scope of the questionnaires to incorporate more detailed assessments of Ayurvedic concepts is warranted. Extending the analysis to encompass other forms of muscular dystrophies would improve the comprehensiveness of the study and provide a broader understanding of Ayurvedic management in neuromuscular disorders. The inclusion of a healthy control group, along with the application of more robust statistical methodologies, could further strengthen the findings, enabling more precise comparisons and deeper insights into the therapeutic potential of Ayurveda in Duchenne Muscular Dystrophy.
+
+
+## Conclusion
+
+
+The progression of Duchenne Muscular Dystrophy reflects a Vatavyadhi trajectory, with distinct dhatu-specific manifestations shaping functional decline. Early predominance of mamsavrtavata and persistent medavrtavata highlight the importance of targeting these tissues during the ambulatory stages, while the progressive involvement of sarvagatavata and asthimajjagatavata underscores their role in neuromuscular weakening and skeletal compromise. Advanced-stage disturbances of ojas appear to contribute to systemic decompensation, including reduced cardiopulmonary function. These observations collectively support the rationale for therapeutic interventions aimed at dhatu nourishment and ojas restoration. Importantly, this framework offers a structured Ayurvedic perspective for understanding DMD and provides a basis for future studies in larger and more diverse populations to refine and validate clinically relevant strategies.
+
+
+## Ethics approval and consent to participate
+
+
+Informed consent was obtained from the parents or legal guardians of all participating children, and assent was obtained from the children as appropriate, in accordance with ethical guidelines for research involving minors.The study was registered in the Clinical Trial Registry of India (CTRI Reg No: CTRI/2020/07/026906) and approved by the Institutional Ethics Committee of both the collaborating institutions (IEC-MDCRC Approval No: MDCRC/RES-AYUR-DMD/03/IEC-020/022019 and IEC-AVPRF Approval No: 01/2019).
+
+
+## Consent for publication
+
+
+Not applicable.
+
+
+## Author contributions
+
+
+Dr. Somit Kumar (S.K), Dr. Raveendran Kannalayam (R.K), and Dr. Lakshmi Bremadesam Raman (L.B.R) made substantial contributions to the conception and design of the study. The acquisition of data was carried out by Dr. Somit Kumar (S.K), Dr. Raveendran Kannalayam (R.K), Divya Venugopal (D.V), and Dr. Lakshmi Bremadesam Raman (L.B.R). Analysis and interpretation of data were performed by Dr. Somit Kumar (S.K), Dr. Raveendran Kannalayam (R.K), Mitravinda Sai Kakarla (M.S.K), Divya Venugopal (D.V), and Dr. Lakshmi Bremadesam Raman (L.B.R). The manuscript was drafted or critically revised for important intellectual content by Dr. Somit Kumar (S.K), Dr. Raveendran Kannalayam (R.K), Mitravinda Sai Kakarla (M.S.K), Divya Venugopal (D.V), and Dr. Lakshmi Bremadesam Raman (L.B.R). All authors gave final approval of the version to be published.
+
+
+## Availability of data and material
+
+
+The data that support the findings of this study will be available from the corresponding author upon reasonable request.
+
+
+## Declaration of generative AI in scientific writing
+
+
+The manuscript has been prepared without the use of generative AI or AI-assisted technologies.
+
+
+## Funding assistance
+
+
+The clinical study was done jointly by MDCRC, Coimbatore and AVP Research Foundation, Coimbatore with funding by the Ministry of AYUSH, Government of India under the PHI initiative (Z-28014/29/2017-PHI).
+
+
+## Conflict of interest
+
+
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+
+
+## Acknowledgements
+
+
+The authors gratefully acknowledge the conceptual guidance and administrative support provided by Dr. P. R. Krishnakumar, Mr. Devidas Varier, Dr. Indual U., Dr Ragavendran D, Dr. Aramya A. R., and Dr. Reji Joseph. The contributions of Dr. Vinitha N., Dr. Mahavaishali, Dr. Sivaranjani T., and Dr. Adithya M. in data collection are duly recognized. The authors also extend their appreciation to the team at MDCRC for their meticulous coordination in facilitating multidisciplinary clinical care and ensuring systematic data collection in alignment with modern medical protocols. Special thanks are due to Dr. Shalini Kumar, Mr. Elango, Dr. Mary Shoba Das, Ms. Preethika, Mr. Karthik A., Mr. Ragav Krishna, Dr. Noorul Ameen Shahid, and the team of specialists at MDCRC for their dedicated efforts and valuable contributions. The authors express their sincere gratitude to all the patients and their families at MDCRC for their participation and support in this collaborative study.
+
+
+## Footnotes
+
+
+Supplementary data to this article can be found online at https://doi.org/10.1016/j.jaim.2025.101311.
+
+
+## Supplementary data
+
+
+The following are the Supplementary data to this article.
+
+
+## Multimedia component 1
+
+
+
+## Multimedia component 2
+
+
+
+## Multimedia component 3
+
+
+
+## Multimedia component 4
+
+
+
+## References
+
+
+
+## Associated Data
+
+
+
+## Supplementary Materials
+
+
+
+## Multimedia component 1
+
+
+
+## Multimedia component 2
+
+
+
+## Multimedia component 3
+
+
+
+## Multimedia component 4
+
+
+
+## Data Availability Statement
+
+
+The data that support the findings of this study will be available from the corresponding author upon reasonable request.
